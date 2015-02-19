@@ -1,0 +1,24 @@
+# build folders
+bin/
+obj/
+
+# build results
+debug/
+release/
+publish/
+
+# user-specific files
+*.suo
+*.user
+*.sln.docstates
+
+# ncrunch
+*.crunchsolution*
+*.ncrunchsolution*
+*.ncrunchproject*
+
+# nuget
+packages/
+
+# other
+*.cache
