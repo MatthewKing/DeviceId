@@ -37,6 +37,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DeviceIdBuilder.cs" />
+    <Compile Include="DeviceIdBuilderExtensions.cs" />
     <Compile Include="DeviceIdComponent.cs" />
     <Compile Include="DeviceIdComponentEqualityComparer.cs" />
     <Compile Include="FileTokenDeviceIdComponent.cs" />
