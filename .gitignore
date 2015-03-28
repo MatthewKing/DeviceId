@@ -1,11 +1,12 @@
-# build folders
+# build
 bin/
 obj/
-
-# build results
 debug/
 release/
 publish/
+build/tools/
+build/temp/
+build/output/
 
 # user-specific files
 *.suo
