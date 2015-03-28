@@ -15,6 +15,13 @@ Use the `DeviceIdBuilder` class to build up a device ID.
         .AddMotherboardSerialNumber()
         .GetDeviceId();
 
+Installation
+============
+
+Just grab it from [NuGet](https://www.nuget.org/packages/DeviceId/)
+
+`PM> Install-Package DeviceId`
+
 License and copyright
 ---------------------
 Copyright Matthew King 2015.
