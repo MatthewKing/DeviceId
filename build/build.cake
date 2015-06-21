@@ -36,8 +36,8 @@ Task("NuGetPack")
         settings.Version = assemblyInfo.AssemblyInformationalVersion;
         settings.Files = new[]
         {
-            new NuSpecContent() { Source = workingDir.CombineWithFilePath("DeviceId.dll").FullPath, Target = "lib/net40-client" },
-            new NuSpecContent() { Source = workingDir.CombineWithFilePath("DeviceId.xml").FullPath, Target = "lib/net40-client" },
+            new NuSpecContent() { Source = workingDir.CombineWithFilePath("DeviceId.dll").FullPath, Target = "lib/net40" },
+            new NuSpecContent() { Source = workingDir.CombineWithFilePath("DeviceId.xml").FullPath, Target = "lib/net40" },
         };
 
         NuGetPack(nuspec, settings);
