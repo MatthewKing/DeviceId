@@ -13,7 +13,7 @@ Use the `DeviceIdBuilder` class to build up a device ID.
         .AddMacAddress()
         .AddProcessorId()
         .AddMotherboardSerialNumber()
-        .GetDeviceId();
+        .ToString();
 
 Installation
 ============

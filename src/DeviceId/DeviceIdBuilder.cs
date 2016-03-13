@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel;
     using System.Linq;
     using System.Security.Cryptography;
     using System.Text;
@@ -50,22 +51,22 @@
         }
 
         /// <summary>
-        /// Returns a string uniquely identifying this device, using the components specified
+        /// Returns a unique identifier for this device, using the components specified
         /// in this DeviceIdBuilder instance.
         /// </summary>
-        /// <returns>A string uniquely identifying the device.</returns>
-        public string GetDeviceId()
+        /// <returns>A unique identifier for this device.</returns>
+        public byte[] ToByteArray()
         {
-            return this.GetDeviceId("SHA256");
+            return this.ToByteArray("SHA256");
         }
 
         /// <summary>
-        /// Returns a string uniquely identifying this device, using the components specified
+        /// Returns a unique identifier for this device, using the components specified
         /// in this DeviceIdBuilder instance.
         /// </summary>
         /// <param name="hashName">The hash algorithm implementation to use.</param>
-        /// <returns>A string uniquely identifying the device.</returns>
-        public string GetDeviceId(string hashName)
+        /// <returns>A unique identifier for this device.</returns>
+        public byte[] ToByteArray(string hashName)
         {
             if (this.components.Count == 0)
             {
@@ -75,6 +76,7 @@
             IEnumerable<string> orderedValues = this.components
                 .OrderBy(o => o.Name)
                 .Select(o => String.Concat(o.Name, ":", o.GetValue()));
+
             string combinedValue = String.Join(",", orderedValues) ?? String.Empty;
 
             byte[] data, hash;
@@ -84,7 +86,56 @@
                 hash = algorithm.ComputeHash(data);
             }
 
-            return Convert.ToBase64String(hash);
+            return hash;
+        }
+
+        /// <summary>
+        /// Returns a unique identifier for this device, using the components specified
+        /// in this DeviceIdBuilder instance.
+        /// </summary>
+        /// <returns>A unique identifier for this device.</returns>
+        public override string ToString()
+        {
+            return this.ToString("SHA256");
+        }
+
+        /// <summary>
+        /// Returns a unique identifier for this device, using the components specified
+        /// in this DeviceIdBuilder instance.
+        /// </summary>
+        /// <param name="hashName">The hash algorithm to use.</param>
+        /// <returns>A unique identifier for this device.</returns>
+        public string ToString(string hashName)
+        {
+            byte[] bytes = this.ToByteArray(hashName);
+            return bytes != null
+                ? Convert.ToBase64String(bytes)
+                : null;
+        }
+
+        /// <summary>
+        /// Returns a string uniquely identifying this device, using the components specified
+        /// in this DeviceIdBuilder instance.
+        /// </summary>
+        /// <returns>A string uniquely identifying the device.</returns>
+        [Obsolete("Use ToString() instead")]
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public string GetDeviceId()
+        {
+            return this.GetDeviceId("SHA256");
+        }
+
+        /// <summary>
+        /// Returns a string uniquely identifying this device, using the components specified
+        /// in this DeviceIdBuilder instance.
+        /// </summary>
+        /// <param name="hashName">The hash algorithm to use.</param>
+        /// <returns>A string uniquely identifying the device.</returns>
+        [Obsolete("Use ToString(hashName) instead")]
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public string GetDeviceId(string hashName)
+        {
+            return this.ToString(hashName);
         }
     }
 }
