@@ -24,5 +24,5 @@ Just grab it from [NuGet](https://www.nuget.org/packages/DeviceId/)
 
 License and copyright
 ---------------------
-Copyright Matthew King 2015.
+Copyright Matthew King 2015-2016.
 Distributed under the [MIT License](http://opensource.org/licenses/MIT). Refer to license.txt for more information.
