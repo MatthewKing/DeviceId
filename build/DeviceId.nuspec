@@ -10,7 +10,7 @@
     <description>Provides functionality to generate a 'device ID' that can be used to uniquely identify a computer.</description>
     <projectUrl>https://github.com/MatthewKing/DeviceId</projectUrl>
     <licenseUrl>http://opensource.org/licenses/MIT</licenseUrl>
-    <copyright>Copyright 2015 Matthew King. All rights reserved.</copyright>
+    <copyright>Copyright 2015-2016 Matthew King. All rights reserved.</copyright>
     <tags>deviceid unique device identifier</tags>
     <frameworkAssemblies>
       <frameworkAssembly assemblyName="System.Management" />
