@@ -1,9 +1,9 @@
-﻿namespace DeviceId
-{
-    using System;
+﻿using System;
 
+namespace DeviceId
+{
     /// <summary>
-    /// Extension methods for DeviceIdBuilder.
+    /// Extension methods for <see cref="DeviceIdBuilder"/>.
     /// </summary>
     public static class DeviceIdBuilderExtensions
     {
