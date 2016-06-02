@@ -1,10 +1,10 @@
-﻿namespace DeviceId
-{
-    using System;
-    using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
+namespace DeviceId
+{
     /// <summary>
-    /// Defines methods to support the comparison of IDeviceIdComponent instances for equality.
+    /// Defines methods to support the comparison of <see cref="IDeviceIdComponent"/> instances for equality.
     /// </summary>
     internal sealed class DeviceIdComponentEqualityComparer : IEqualityComparer<IDeviceIdComponent>
     {

@@ -1,11 +1,11 @@
-﻿namespace DeviceId
-{
-    using System;
-    using System.IO;
-    using System.Text;
+﻿using System;
+using System.IO;
+using System.Text;
 
+namespace DeviceId
+{
     /// <summary>
-    /// An implementation of IDeviceIdComponent that retrieves its value from a file.
+    /// An implementation of <see cref="IDeviceIdComponent"/> that retrieves its value from a file.
     /// </summary>
     /// <remarks>
     /// If the file exists, the contents of that file will be used as the component value.
@@ -17,28 +17,28 @@
         /// <summary>
         /// The name of the component.
         /// </summary>
-        private readonly string name;
+        private readonly string _name;
 
         /// <summary>
         /// The path where the token will be stored.
         /// </summary>
-        private readonly string path;
+        private readonly string _path;
 
         /// <summary>
-        /// Initializes a new instance of the FileTokenDeviceIdComponent class.
+        /// Initializes a new instance of the <see cref="FileTokenDeviceIdComponent"/> class.
         /// </summary>
         /// <param name="name">The name of the component.</param>
         /// <param name="path">The path where the component will be stored.</param>
         public FileTokenDeviceIdComponent(string name, string path)
         {
-            this.name = name;
-            this.path = path;
+            _name = name;
+            _path = path;
         }
 
         /// <summary>
         /// Gets the name of the component.
         /// </summary>
-        public string Name { get { return this.name; } }
+        public string Name { get { return _name; } }
 
         /// <summary>
         /// Gets the component value.
@@ -48,11 +48,11 @@
         {
             string value = Guid.NewGuid().ToString().ToUpper();
 
-            if (File.Exists(this.path))
+            if (File.Exists(_path))
             {
                 try
                 {
-                    byte[] bytes = File.ReadAllBytes(this.path);
+                    byte[] bytes = File.ReadAllBytes(_path);
                     value = Encoding.ASCII.GetString(bytes);
                 }
                 catch { }
@@ -62,7 +62,7 @@
                 try
                 {
                     byte[] bytes = Encoding.ASCII.GetBytes(value);
-                    File.WriteAllBytes(this.path, bytes);
+                    File.WriteAllBytes(_path, bytes);
                 }
                 catch { }
             }

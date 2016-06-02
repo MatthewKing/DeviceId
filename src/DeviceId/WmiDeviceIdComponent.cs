@@ -1,46 +1,46 @@
-﻿namespace DeviceId
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Management;
+﻿using System;
+using System.Collections.Generic;
+using System.Management;
 
+namespace DeviceId
+{
     /// <summary>
-    /// An implementation of IDeviceIdComponent that retrieves data from a WMI class.
+    /// An implementation of <see cref="IDeviceIdComponent"/> that retrieves data from a WMI class.
     /// </summary>
     public sealed class WmiDeviceIdComponent : IDeviceIdComponent
     {
         /// <summary>
         /// The name of the component.
         /// </summary>
-        private readonly string name;
+        private readonly string _name;
 
         /// <summary>
         /// The WMI class name.
         /// </summary>
-        private readonly string wmiClass;
+        private readonly string _wmiClass;
 
         /// <summary>
         /// The WMI property name.
         /// </summary>
-        private readonly string wmiProperty;
+        private readonly string _wmiProperty;
 
         /// <summary>
-        /// Initializes a new instance of the WmiDeviceIdComponent class.
+        /// Initializes a new instance of the <see cref="WmiDeviceIdComponent"/> class.
         /// </summary>
         /// <param name="name">The name of the component..</param>
         /// <param name="wmiClass">The WMI class name.</param>
         /// <param name="wmiProperty">The WMI property name.</param>
         public WmiDeviceIdComponent(string name, string wmiClass, string wmiProperty)
         {
-            this.name = name;
-            this.wmiClass = wmiClass;
-            this.wmiProperty = wmiProperty;
+            _name = name;
+            _wmiClass = wmiClass;
+            _wmiProperty = wmiProperty;
         }
 
         /// <summary>
         /// Gets the name of the component.
         /// </summary>
-        public string Name { get { return this.name; } }
+        public string Name { get { return _name; } }
 
         /// <summary>
         /// Gets the component value.
@@ -50,13 +50,13 @@
         {
             List<string> values = new List<string>();
 
-            using (ManagementClass mc = new ManagementClass(this.wmiClass))
+            using (ManagementClass mc = new ManagementClass(_wmiClass))
             {
                 foreach (ManagementObject mo in mc.GetInstances())
                 {
                     try
                     {
-                        string value = mo[this.wmiProperty] as string;
+                        string value = mo[_wmiProperty] as string;
                         if (value != null)
                         {
                             values.Add(value);
