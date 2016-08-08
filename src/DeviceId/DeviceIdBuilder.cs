@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
@@ -116,31 +115,6 @@ namespace DeviceId
             return bytes != null
                 ? Convert.ToBase64String(bytes)
                 : null;
-        }
-
-        /// <summary>
-        /// Returns a string uniquely identifying this device, using the components specified
-        /// in this <see cref="DeviceIdBuilder"/> instance.
-        /// </summary>
-        /// <returns>A string uniquely identifying the device.</returns>
-        [Obsolete("Use ToString() instead")]
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public string GetDeviceId()
-        {
-            return GetDeviceId(DefaultHashAlgorithm);
-        }
-
-        /// <summary>
-        /// Returns a string uniquely identifying this device, using the components specified
-        /// in this <see cref="DeviceIdBuilder"/> instance.
-        /// </summary>
-        /// <param name="hashName">The name of the hash algorithm to use.</param>
-        /// <returns>A string uniquely identifying the device.</returns>
-        [Obsolete("Use ToString(hashName) instead")]
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public string GetDeviceId(string hashName)
-        {
-            return ToString(hashName);
         }
     }
 }
