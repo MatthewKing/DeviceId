@@ -72,23 +72,24 @@ namespace DeviceId
         /// <returns>A unique identifier for this device.</returns>
         public byte[] ToByteArray(string hashName)
         {
-            if (_components.Count == 0)
-            {
-                return null;
-            }
-
-            IEnumerable<string> orderedValues = _components
-                .OrderBy(o => o.Name)
-                .Select(o => String.Concat(o.Name, ":", o.GetValue()));
-
-            string combinedValue = String.Join(",", orderedValues) ?? String.Empty;
-
-            byte[] data, hash;
             using (HashAlgorithm algorithm = HashAlgorithm.Create(hashName))
             {
-                data = Encoding.UTF8.GetBytes(combinedValue);
-                hash = algorithm.ComputeHash(data);
+                return ToByteArray(algorithm);
             }
+        }
+
+        /// <summary>
+        /// Returns a unique identifier for this device, using the components specified
+        /// in this <see cref="DeviceIdBuilder"/> instance.
+        /// </summary>
+        /// <param name="hashAlgorithm">The <see cref="HashAlgorithm"/> to use to hash the value.</param>
+        /// <returns>A unique identifier for this device.</returns>
+        public byte[] ToByteArray(HashAlgorithm hashAlgorithm)
+        {
+            IEnumerable<string> orderedValues = _components.OrderBy(x => x.Name).Select(x => x.Name + ":" + x.GetValue());
+            string combinedValue = String.Join(",", orderedValues);
+            byte[] data = Encoding.UTF8.GetBytes(combinedValue);
+            byte[] hash = hashAlgorithm.ComputeHash(data);
 
             return hash;
         }
@@ -100,21 +101,45 @@ namespace DeviceId
         /// <returns>A unique identifier for this device.</returns>
         public override string ToString()
         {
-            return ToString(DefaultHashAlgorithm);
+            return HexString(ToByteArray());
         }
 
         /// <summary>
         /// Returns a unique identifier for this device, using the components specified
         /// in this <see cref="DeviceIdBuilder"/> instance.
         /// </summary>
-        /// <param name="hashName">The name of the hash algorithm to use.</param>
+        /// <param name="hashName">The name of the hash algorithm implementation to use.</param>
         /// <returns>A unique identifier for this device.</returns>
         public string ToString(string hashName)
         {
-            byte[] bytes = ToByteArray(hashName);
-            return bytes != null
-                ? Convert.ToBase64String(bytes)
-                : null;
+            return HexString(ToByteArray(hashName));
+        }
+
+        /// <summary>
+        /// Returns a unique identifier for this device, using the components specified
+        /// in this <see cref="DeviceIdBuilder"/> instance.
+        /// </summary>
+        /// <param name="hashAlgorithm">The <see cref="HashAlgorithm"/> to use to hash the value.</param>
+        /// <returns>A unique identifier for this device.</returns>
+        public string ToString(HashAlgorithm hashAlgorithm)
+        {
+            return HexString(ToByteArray(hashAlgorithm));
+        }
+
+        /// <summary>
+        /// Converts the specified byte array into a hex string.
+        /// </summary>
+        /// <param name="bytes">The byte array to convert.</param>
+        /// <returns>A hex string representing the specified byte array.</returns>
+        private static string HexString(byte[] bytes)
+        {
+            StringBuilder sb = new StringBuilder(bytes.Length * 2);
+            foreach (byte b in bytes)
+            {
+                sb.AppendFormat("{0:x2}", b);
+            }
+
+            return sb.ToString();
         }
     }
 }
