@@ -19,7 +19,7 @@ namespace DeviceId
         /// <summary>
         /// The comparer to use when comparing components for equality.
         /// </summary>
-        private static IEqualityComparer<IDeviceIdComponent> _comparer;
+        private static IEqualityComparer<IDeviceIdComponent> comparer;
 
         /// <summary>
         /// A HashSet containing the components that will make up the device identifier.
@@ -31,7 +31,7 @@ namespace DeviceId
         /// </summary>
         static DeviceIdBuilder()
         {
-            _comparer = new DeviceIdComponentEqualityComparer();
+            comparer = new DeviceIdComponentEqualityComparer();
         }
 
         /// <summary>
@@ -39,7 +39,7 @@ namespace DeviceId
         /// </summary>
         public DeviceIdBuilder()
         {
-            _components = new HashSet<IDeviceIdComponent>(_comparer);
+            _components = new HashSet<IDeviceIdComponent>(comparer);
         }
 
         /// <summary>
