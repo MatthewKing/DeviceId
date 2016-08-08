@@ -27,7 +27,7 @@ namespace DeviceId
         /// <summary>
         /// Initializes a new instance of the <see cref="WmiDeviceIdComponent"/> class.
         /// </summary>
-        /// <param name="name">The name of the component..</param>
+        /// <param name="name">The name of the component.</param>
         /// <param name="wmiClass">The WMI class name.</param>
         /// <param name="wmiProperty">The WMI property name.</param>
         public WmiDeviceIdComponent(string name, string wmiClass, string wmiProperty)
@@ -68,6 +68,8 @@ namespace DeviceId
                     }
                 }
             }
+
+            values.Sort();
 
             return String.Join(",", values);
         }
