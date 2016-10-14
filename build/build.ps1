@@ -3,7 +3,7 @@ if (!(Test-Path -path $toolsDirectory )) { New-Item $toolsDirectory -Type Direct
 
 $nuget = '.\tools\nuget.exe'
 if ((Test-Path $nuget) -eq $false) {
-  Invoke-WebRequest -Uri http://nuget.org/nuget.exe -OutFile $nuget
+  Invoke-WebRequest -Uri https://dist.nuget.org/win-x86-commandline/latest/nuget.exe -OutFile $nuget
 }
 Set-Alias nuget $nuget
 
