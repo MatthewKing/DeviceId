@@ -1,12 +1,12 @@
 ﻿using System;
 
-namespace DeviceId
+namespace DeviceId.Components
 {
     /// <summary>
     /// An implementation of <see cref="IDeviceIdComponent"/> that uses either a specified value
     /// or the result of a specified function as its component value.
     /// </summary>
-    public sealed class DeviceIdComponent : IDeviceIdComponent
+    public class DeviceIdComponent : IDeviceIdComponent
     {
         /// <summary>
         /// The name of the component.

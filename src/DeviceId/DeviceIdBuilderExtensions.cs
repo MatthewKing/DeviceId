@@ -1,4 +1,5 @@
 ﻿using System;
+using DeviceId.Components;
 
 namespace DeviceId
 {
@@ -8,10 +9,22 @@ namespace DeviceId
     public static class DeviceIdBuilderExtensions
     {
         /// <summary>
+        /// Adds the specified component to the device identifier.
+        /// </summary>
+        /// <param name="builder">The <see cref="DeviceIdBuilder"/> to add the component to.</param>
+        /// <param name="component">The <see cref="IDeviceIdComponent"/> to add.</param>
+        /// <returns>The <see cref="DeviceIdBuilder"/> instance.</returns>
+        public static DeviceIdBuilder AddComponent(this DeviceIdBuilder builder, IDeviceIdComponent component)
+        {
+            builder.Components.Add(component);
+            return builder;
+        }
+
+        /// <summary>
         /// Adds the current user name to the device identifier. 
         /// </summary>
-        /// <param name="builder">The DeviceIdBuilder to add the component to.</param>
-        /// <returns>The DeviceIdBuilder instance.</returns>
+        /// <param name="builder">The <see cref="DeviceIdBuilder"/> to add the component to.</param>
+        /// <returns>The <see cref="DeviceIdBuilder"/> instance.</returns>
         public static DeviceIdBuilder AddUserName(this DeviceIdBuilder builder)
         {
             return builder.AddComponent(new DeviceIdComponent("UserName", Environment.UserName));
@@ -20,8 +33,8 @@ namespace DeviceId
         /// <summary>
         /// Adds the machine name to the device identifier.
         /// </summary>
-        /// <param name="builder">The DeviceIdBuilder to add the component to.</param>
-        /// <returns>The DeviceIdBuilder instance.</returns>
+        /// <param name="builder">The <see cref="DeviceIdBuilder"/> to add the component to.</param>
+        /// <returns>The <see cref="DeviceIdBuilder"/> instance.</returns>
         public static DeviceIdBuilder AddMachineName(this DeviceIdBuilder builder)
         {
             return builder.AddComponent(new DeviceIdComponent("MachineName", Environment.MachineName));
@@ -30,8 +43,8 @@ namespace DeviceId
         /// <summary>
         /// Adds the operating system version to the device identifier.
         /// </summary>
-        /// <param name="builder">The DeviceIdBuilder to add the component to.</param>
-        /// <returns>The DeviceIdBuilder instance.</returns>
+        /// <param name="builder">The <see cref="DeviceIdBuilder"/> to add the component to.</param>
+        /// <returns>The <see cref="DeviceIdBuilder"/> instance.</returns>
         public static DeviceIdBuilder AddOSVersion(this DeviceIdBuilder builder)
         {
             return builder.AddComponent(new DeviceIdComponent("OSVersion", Environment.OSVersion.ToString()));
@@ -40,8 +53,8 @@ namespace DeviceId
         /// <summary>
         /// Adds the MAC address to the device identifier.
         /// </summary>
-        /// <param name="builder">The DeviceIdBuilder to add the component to.</param>
-        /// <returns>The DeviceIdBuilder instance.</returns>
+        /// <param name="builder">The <see cref="DeviceIdBuilder"/> to add the component to.</param>
+        /// <returns>The <see cref="DeviceIdBuilder"/> instance.</returns>
         public static DeviceIdBuilder AddMacAddress(this DeviceIdBuilder builder)
         {
             return builder.AddComponent(new WmiDeviceIdComponent("MACAddress", "Win32_NetworkAdapterConfiguration", "MACAddress"));
@@ -50,8 +63,8 @@ namespace DeviceId
         /// <summary>
         /// Adds the processor ID to the device identifier.
         /// </summary>
-        /// <param name="builder">The DeviceIdBuilder to add the component to.</param>
-        /// <returns>The DeviceIdBuilder instance.</returns>
+        /// <param name="builder">The <see cref="DeviceIdBuilder"/> to add the component to.</param>
+        /// <returns>The <see cref="DeviceIdBuilder"/> instance.</returns>
         public static DeviceIdBuilder AddProcessorId(this DeviceIdBuilder builder)
         {
             return builder.AddComponent(new WmiDeviceIdComponent("ProcessorId", "Win32_Processor", "ProcessorId"));
@@ -60,8 +73,8 @@ namespace DeviceId
         /// <summary>
         /// Adds the motherboard serial number to the device identifier.
         /// </summary>
-        /// <param name="builder">The DeviceIdBuilder to add the component to.</param>
-        /// <returns>The DeviceIdBuilder instance.</returns>
+        /// <param name="builder">The <see cref="DeviceIdBuilder"/> to add the component to.</param>
+        /// <returns>The <see cref="DeviceIdBuilder"/> instance.</returns>
         public static DeviceIdBuilder AddMotherboardSerialNumber(this DeviceIdBuilder builder)
         {
             return builder.AddComponent(new WmiDeviceIdComponent("MotherboardSerialNumber", "Win32_BaseBoard", "SerialNumber"));
@@ -70,9 +83,9 @@ namespace DeviceId
         /// <summary>
         /// Adds a file-based token to the device identifier.
         /// </summary>
-        /// <param name="builder">The DeviceIdBuilder to add the component to.</param>
+        /// <param name="builder">The <see cref="DeviceIdBuilder"/> to add the component to.</param>
         /// <param name="path">The path of the token.</param>
-        /// <returns>The DeviceIdBuilder instance.</returns>
+        /// <returns>The <see cref="DeviceIdBuilder"/> instance.</returns>
         public static DeviceIdBuilder AddFileToken(this DeviceIdBuilder builder, string path)
         {
             var name = String.Concat("FileToken", path.GetHashCode());
