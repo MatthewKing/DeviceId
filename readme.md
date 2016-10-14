@@ -3,8 +3,10 @@ DeviceId
 
 A simple library providing functionality to generate a 'device ID' that can be used to uniquely identify a computer.
 
-Simple usage
-------------
+Quickstart
+----------
+
+### Building a device identifier
 
 Use the `DeviceIdBuilder` class to build up a device ID.
 
@@ -15,6 +17,17 @@ string deviceId = new DeviceIdBuilder()
     .AddProcessorId()
     .AddMotherboardSerialNumber()
     .ToString();
+```
+
+### Controlling had the device identifier is formatted
+
+Use the various implementations of `IDeviceIdFormatter` in the `DeviceId.Formatters` namespace (or create your own).
+
+```csharp
+string deviceId = new DeviceIdBuilder()
+    .AddProcessorId()
+    .AddMotherboardSerialNumber()
+    .ToString(new Base64DeviceIdFormatter(hashName: "MD5", urlEncode: true));
 ```
 
 Installation
