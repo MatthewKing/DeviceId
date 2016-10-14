@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace DeviceId
+namespace DeviceId.Internal
 {
     /// <summary>
     /// Defines methods to support the comparison of <see cref="IDeviceIdComponent"/> instances for equality.

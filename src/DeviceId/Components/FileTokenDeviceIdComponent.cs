@@ -2,7 +2,7 @@
 using System.IO;
 using System.Text;
 
-namespace DeviceId
+namespace DeviceId.Components
 {
     /// <summary>
     /// An implementation of <see cref="IDeviceIdComponent"/> that retrieves its value from a file.
@@ -12,7 +12,7 @@ namespace DeviceId
     /// If the file does not exist, a new file will be created and populated with a new GUID,
     /// which will be used as the component value.
     /// </remarks>
-    public sealed class FileTokenDeviceIdComponent : IDeviceIdComponent
+    public class FileTokenDeviceIdComponent : IDeviceIdComponent
     {
         /// <summary>
         /// The name of the component.

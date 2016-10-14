@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Management;
 
-namespace DeviceId
+namespace DeviceId.Components
 {
     /// <summary>
     /// An implementation of <see cref="IDeviceIdComponent"/> that retrieves data from a WMI class.
     /// </summary>
-    public sealed class WmiDeviceIdComponent : IDeviceIdComponent
+    public class WmiDeviceIdComponent : IDeviceIdComponent
     {
         /// <summary>
         /// The name of the component.
