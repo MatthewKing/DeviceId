@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using System.Xml.Linq;
 
 namespace DeviceId
 {
@@ -124,6 +125,58 @@ namespace DeviceId
         public string ToString(HashAlgorithm hashAlgorithm)
         {
             return HexString(ToByteArray(hashAlgorithm));
+        }
+
+        /// <summary>
+        /// Returns a unique identifier for this device, using the components specified
+        /// in this <see cref="DeviceIdBuilder"/> instance.
+        /// </summary>
+        /// <returns>A unique identifier for this device.</returns>
+        public string ToXml()
+        {
+            return ToXml(DefaultHashAlgorithm);
+        }
+
+        /// <summary>
+        /// Returns a unique identifier for this device, using the components specified
+        /// in this <see cref="DeviceIdBuilder"/> instance.
+        /// </summary>
+        /// <param name="hashName">The name of the hash algorithm to use.</param>
+        /// <returns>A unique identifier for this device.</returns>
+        public string ToXml(string hashName)
+        {
+            using (HashAlgorithm algorithm = HashAlgorithm.Create(hashName))
+            {
+                return ToXml(algorithm);
+            }
+        }
+
+        /// <summary>
+        /// Returns a unique identifier for this device, using the components specified
+        /// in this <see cref="DeviceIdBuilder"/> instance.
+        /// </summary>
+        /// <param name="hashAlgorithm">The <see cref="HashAlgorithm"/> to use to hash the value.</param>
+        /// <returns>A unique identifier for this device.</returns>
+        public string ToXml(HashAlgorithm hashAlgorithm)
+        {
+            var xml = new XDocument(new XElement("DeviceId", _components.OrderBy(x => x.Name).Select(x => XElement(x, hashAlgorithm))));
+            return xml.ToString(SaveOptions.DisableFormatting);
+        }
+
+        /// <summary>
+        /// Returns an <see cref="XElement"/> representing the specified <see cref="IDeviceIdComponent"/>.
+        /// </summary>
+        /// <param name="component">The <see cref="IDeviceIdComponent"/> to represent.</param>
+        /// <param name="hashAlgorithm">The <see cref="HashAlgorithm"/> to use to hash the value.</param>
+        /// <returns></returns>
+        private static XElement XElement(IDeviceIdComponent component, HashAlgorithm hashAlgorithm)
+        {
+            var name = component.Name;
+            var value = component.GetValue();
+            var valueBytes = Encoding.UTF8.GetBytes(value);
+            var valueHash = hashAlgorithm.ComputeHash(valueBytes);
+            var valueHex = HexString(valueHash);
+            return new XElement("Component", new XAttribute("Name", name), new XAttribute("Value", valueHex));
         }
 
         /// <summary>
