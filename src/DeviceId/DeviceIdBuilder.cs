@@ -23,9 +23,9 @@ namespace DeviceId
         private static IEqualityComparer<IDeviceIdComponent> comparer;
 
         /// <summary>
-        /// A HashSet containing the components that will make up the device identifier.
+        /// A set containing the components that will make up the device identifier.
         /// </summary>
-        private readonly HashSet<IDeviceIdComponent> _components;
+        public ISet<IDeviceIdComponent> Components { get; }
 
         /// <summary>
         /// Initializes static members of the <see cref="DeviceIdBuilder"/> class.
@@ -40,7 +40,7 @@ namespace DeviceId
         /// </summary>
         public DeviceIdBuilder()
         {
-            _components = new HashSet<IDeviceIdComponent>(comparer);
+            Components = new HashSet<IDeviceIdComponent>(comparer);
         }
 
         /// <summary>
@@ -51,7 +51,7 @@ namespace DeviceId
         /// <returns>This DeviceIdBuilder instance.</returns>
         public DeviceIdBuilder AddComponent(IDeviceIdComponent component)
         {
-            _components.Add(component);
+            Components.Add(component);
             return this;
         }
 
@@ -87,7 +87,7 @@ namespace DeviceId
         /// <returns>A unique identifier for this device.</returns>
         public byte[] ToByteArray(HashAlgorithm hashAlgorithm)
         {
-            IEnumerable<string> orderedValues = _components.OrderBy(x => x.Name).Select(x => x.Name + ":" + x.GetValue());
+            IEnumerable<string> orderedValues = Components.OrderBy(x => x.Name).Select(x => x.Name + ":" + x.GetValue());
             string combinedValue = String.Join(",", orderedValues);
             byte[] data = Encoding.UTF8.GetBytes(combinedValue);
             byte[] hash = hashAlgorithm.ComputeHash(data);
@@ -159,7 +159,7 @@ namespace DeviceId
         /// <returns>A unique identifier for this device.</returns>
         public string ToXml(HashAlgorithm hashAlgorithm)
         {
-            var xml = new XDocument(new XElement("DeviceId", _components.OrderBy(x => x.Name).Select(x => XElement(x, hashAlgorithm))));
+            var xml = new XDocument(new XElement("DeviceId", Components.OrderBy(x => x.Name).Select(x => XElement(x, hashAlgorithm))));
             return xml.ToString(SaveOptions.DisableFormatting);
         }
 
