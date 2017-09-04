@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if NET40
+using System;
 using System.Collections.Generic;
 using System.Management;
 
@@ -75,3 +76,4 @@ namespace DeviceId.Components
         }
     }
 }
+#endif

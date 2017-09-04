@@ -1,64 +1,24 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{02A96024-620B-4E75-AD22-439A7943BD4E}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DeviceId</RootNamespace>
-    <AssemblyName>DeviceId</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <PackageId>DeviceId</PackageId>
+    <Title>DeviceId</Title>
+    <Description>Provides functionality to generate a 'device ID' that can be used to uniquely identify a computer.</Description>
+    <Author>Matthew King</Author>
+    <Copyright>Copyright 2015-2017 Matthew King.</Copyright>
+    <PackageProjectUrl>https://github.com/MatthewKing/DeviceId</PackageProjectUrl>
+    <PackageLicenseUrl>https://opensource.org/licenses/MIT</PackageLicenseUrl>
+    <PackageTags>deviceid;unique;device;identifier</PackageTags>
+    <VersionPrefix>3.0.0</VersionPrefix>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+
+  <PropertyGroup>
+    <TargetFrameworks>net40;netstandard2.0</TargetFrameworks>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Release\DeviceId.xml</DocumentationFile>
-  </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net40' ">
     <Reference Include="System.Management" />
-    <Reference Include="System.Xml" />
-    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Components\DeviceIdComponent.cs" />
-    <Compile Include="Components\FileTokenDeviceIdComponent.cs" />
-    <Compile Include="Components\WmiDeviceIdComponent.cs" />
-    <Compile Include="Formatters\Base64DeviceIdFormatter.cs" />
-    <Compile Include="Formatters\HexDeviceIdFormatter.cs" />
-    <Compile Include="Formatters\XmlDeviceIdFormatter.cs" />
-    <Compile Include="Internal\ConvertEx.cs" />
-    <Compile Include="Internal\DeviceIdComponentEqualityComparer.cs" />
-    <Compile Include="DeviceIdBuilder.cs" />
-    <Compile Include="DeviceIdBuilderExtensions.cs" />
-    <Compile Include="IDeviceIdComponent.cs" />
-    <Compile Include="IDeviceIdFormatter.cs" />
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+
 </Project>

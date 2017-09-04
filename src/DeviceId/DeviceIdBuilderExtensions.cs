@@ -50,6 +50,7 @@ namespace DeviceId
             return builder.AddComponent(new DeviceIdComponent("OSVersion", Environment.OSVersion.ToString()));
         }
 
+#if NET40
         /// <summary>
         /// Adds the MAC address to the device identifier.
         /// </summary>
@@ -79,6 +80,7 @@ namespace DeviceId
         {
             return builder.AddComponent(new WmiDeviceIdComponent("MotherboardSerialNumber", "Win32_BaseBoard", "SerialNumber"));
         }
+#endif
 
         /// <summary>
         /// Adds a file-based token to the device identifier.

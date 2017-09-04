@@ -1,25 +1,4 @@
-# build
+.vs/
 bin/
 obj/
-debug/
-release/
-publish/
-build/tools/
-build/temp/
-build/output/
-
-# user-specific files
-*.suo
-*.user
-*.sln.docstates
-
-# ncrunch
-*.crunchsolution*
-*.ncrunchsolution*
-*.ncrunchproject*
-
-# nuget
-packages/
-
-# other
-*.cache
+artifacts/
