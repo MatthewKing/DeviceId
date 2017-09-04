@@ -19,7 +19,7 @@ string deviceId = new DeviceIdBuilder()
     .ToString();
 ```
 
-### Controlling had the device identifier is formatted
+### Controlling how the device identifier is formatted
 
 Use the various implementations of `IDeviceIdFormatter` in the `DeviceId.Formatters` namespace (or create your own).
 
