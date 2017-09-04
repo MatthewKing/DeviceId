@@ -9,6 +9,18 @@ namespace DeviceId
     public static class DeviceIdBuilderExtensions
     {
         /// <summary>
+        /// Use the specified formatter.
+        /// </summary>
+        /// <param name="builder">The <see cref="DeviceIdBuilder"/> to use the formatter.</param>
+        /// <param name="formatter">The <see cref="IDeviceIdFormatter"/> to use.</param>
+        /// <returns>The <see cref="DeviceIdBuilder"/> instance.</returns>
+        public static DeviceIdBuilder UseFormatter(this DeviceIdBuilder builder, IDeviceIdFormatter formatter)
+        {
+            builder.Formatter = formatter;
+            return builder;
+        }
+
+        /// <summary>
         /// Adds the specified component to the device identifier.
         /// </summary>
         /// <param name="builder">The <see cref="DeviceIdBuilder"/> to add the component to.</param>

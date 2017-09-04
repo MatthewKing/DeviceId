@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Security.Cryptography;
+using DeviceId.Encoders;
 using DeviceId.Formatters;
 using DeviceId.Internal;
 
@@ -10,9 +13,9 @@ namespace DeviceId
     public class DeviceIdBuilder
     {
         /// <summary>
-        /// Gets the default formatter to use.
+        /// Gets or sets the formatter to use.
         /// </summary>
-        private static IDeviceIdFormatter DefaultFormatter { get; } = new HexDeviceIdFormatter("MD5");
+        public IDeviceIdFormatter Formatter { get; set; }
 
         /// <summary>
         /// A set containing the components that will make up the device identifier.
@@ -24,6 +27,7 @@ namespace DeviceId
         /// </summary>
         public DeviceIdBuilder()
         {
+            Formatter = new HashDeviceIdFormatter(() => SHA256.Create(), new Base64UrlByteArrayEncoder());
             Components = new HashSet<IDeviceIdComponent>(new DeviceIdComponentEqualityComparer());
         }
 
@@ -33,17 +37,12 @@ namespace DeviceId
         /// <returns>A string representation of the device identifier.</returns>
         public override string ToString()
         {
-            return ToString(DefaultFormatter);
-        }
+            if (Formatter == null)
+            {
+                throw new InvalidOperationException($"The {nameof(Formatter)} property must not be null in order for {nameof(ToString)} to be called.");
+            }
 
-        /// <summary>
-        /// Returns a string representation of the device identifier.
-        /// </summary>
-        /// <param name="formatter">The <see cref="IDeviceIdFormatter"/> to use to produce the string.</param>
-        /// <returns>A string representation of the device identifier.</returns>
-        public string ToString(IDeviceIdFormatter formatter)
-        {
-            return formatter.GetDeviceId(Components);
+            return Formatter.GetDeviceId(Components);
         }
     }
 }
