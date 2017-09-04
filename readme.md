@@ -35,7 +35,13 @@ Installation
 
 Just grab it from [NuGet](https://www.nuget.org/packages/DeviceId/)
 
-`PM> Install-Package DeviceId`
+```
+PM> Install-Package DeviceId
+```
+
+```
+$ dotnet add package DeviceId
+```
 
 License and copyright
 ---------------------
