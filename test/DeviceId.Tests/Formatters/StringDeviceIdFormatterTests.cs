@@ -1,0 +1,55 @@
+﻿using System;
+using System.Security.Cryptography;
+using DeviceId.Components;
+using DeviceId.Encoders;
+using DeviceId.Formatters;
+using FluentAssertions;
+using Xunit;
+
+namespace DeviceId.Tests.Formatters
+{
+    public class StringDeviceIdFormatterTests
+    {
+        [Fact]
+        public void Constructor_EncoderIsNull_ThrowsArgumentNullException()
+        {
+            Action act = () => new StringDeviceIdFormatter(null);
+
+            act.ShouldThrow<ArgumentNullException>().WithMessage("Value cannot be null.\r\nParameter name: encoder");
+        }
+
+        [Fact]
+        public void GetDeviceId_ComponentsIsNull_ThrowsArgumentNullException()
+        {
+            var formatter = new StringDeviceIdFormatter(new HashDeviceIdComponentEncoder(() => MD5.Create(), new HexByteArrayEncoder()));
+
+            Action act = () => formatter.GetDeviceId(null);
+
+            act.ShouldThrow<ArgumentNullException>().WithMessage("Value cannot be null.\r\nParameter name: components");
+        }
+
+        [Fact]
+        public void GetDeviceId_ComponentsIsEmpty_ReturnsEmptyString()
+        {
+            var formatter = new StringDeviceIdFormatter(new HashDeviceIdComponentEncoder(() => MD5.Create(), new HexByteArrayEncoder()));
+
+            var deviceId = formatter.GetDeviceId(new IDeviceIdComponent[] { });
+
+            deviceId.Should().Be(String.Empty);
+        }
+
+        [Fact]
+        public void GetDeviceId_ComponentsAreValid_ReturnsDeviceId()
+        {
+            var formatter = new StringDeviceIdFormatter(new HashDeviceIdComponentEncoder(() => MD5.Create(), new HexByteArrayEncoder()));
+
+            var deviceId = formatter.GetDeviceId(new IDeviceIdComponent[]
+            {
+                new DeviceIdComponent("Test1", "Test1"),
+                new DeviceIdComponent("Test2", "Test2"),
+            });
+
+            deviceId.Should().Be("e1b849f9631ffc1829b2e31402373e3c.c454552d52d55d3ef56408742887362b");
+        }
+    }
+}

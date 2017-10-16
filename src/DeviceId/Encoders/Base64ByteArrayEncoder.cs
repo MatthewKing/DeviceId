@@ -19,6 +19,11 @@ namespace DeviceId.Encoders
         /// <returns>The byte array encoded as a string.</returns>
         public string Encode(byte[] bytes)
         {
+            if (bytes == null)
+            {
+                throw new ArgumentNullException(nameof(bytes));
+            }
+
             return Convert.ToBase64String(bytes);
         }
     }

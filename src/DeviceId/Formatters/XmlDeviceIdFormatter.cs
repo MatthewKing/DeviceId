@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 
@@ -20,7 +21,7 @@ namespace DeviceId.Formatters
         /// <param name="encoder">The <see cref="IDeviceIdComponentEncoder"/> instance to use to encode individual components.</param>
         public XmlDeviceIdFormatter(IDeviceIdComponentEncoder encoder)
         {
-            _encoder = encoder;
+            _encoder = encoder ?? throw new ArgumentNullException(nameof(encoder));
         }
 
         /// <summary>
@@ -30,6 +31,11 @@ namespace DeviceId.Formatters
         /// <returns>The device identifier string.</returns>
         public string GetDeviceId(IEnumerable<IDeviceIdComponent> components)
         {
+            if (components == null)
+            {
+                throw new ArgumentNullException(nameof(components));
+            }
+
             var document = new XDocument(GetElement(components));
             return document.ToString(SaveOptions.DisableFormatting);
         }

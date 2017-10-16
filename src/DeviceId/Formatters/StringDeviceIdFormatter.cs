@@ -5,9 +5,9 @@ using System.Linq;
 namespace DeviceId.Formatters
 {
     /// <summary>
-    /// The default implementation of <see cref="IDeviceIdFormatter"/> that combines the components into a concatenated string.
+    /// An implementation of <see cref="IDeviceIdFormatter"/> that combines the components into a concatenated string.
     /// </summary>
-    public class ConcatenatedStringDeviceIdFormatter : IDeviceIdFormatter
+    public class StringDeviceIdFormatter : IDeviceIdFormatter
     {
         /// <summary>
         /// The <see cref="IDeviceIdComponentEncoder"/> instance to use to encode individual components.
@@ -18,9 +18,9 @@ namespace DeviceId.Formatters
         /// Initializes a new instance of the <see cref="XmlDeviceIdFormatter"/> class.
         /// </summary>
         /// <param name="encoder">The <see cref="IDeviceIdComponentEncoder"/> instance to use to encode individual components.</param>
-        public ConcatenatedStringDeviceIdFormatter(IDeviceIdComponentEncoder encoder)
+        public StringDeviceIdFormatter(IDeviceIdComponentEncoder encoder)
         {
-            _encoder = encoder;
+            _encoder = encoder ?? throw new ArgumentNullException(nameof(encoder));
         }
 
         /// <summary>
@@ -30,6 +30,11 @@ namespace DeviceId.Formatters
         /// <returns>The device identifier string.</returns>
         public string GetDeviceId(IEnumerable<IDeviceIdComponent> components)
         {
+            if (components == null)
+            {
+                throw new ArgumentNullException(nameof(components));
+            }
+
             return String.Join(".", components.OrderBy(x => x.Name).Select(x => _encoder.Encode(x)));
         }
     }

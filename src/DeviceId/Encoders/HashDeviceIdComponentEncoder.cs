@@ -26,8 +26,8 @@ namespace DeviceId.Encoders
         /// <param name="byteArrayEncoder">The <see cref="IByteArrayEncoder"/> to use to encode the resulting hash.</param>
         public HashDeviceIdComponentEncoder(Func<HashAlgorithm> hashAlgorithm, IByteArrayEncoder byteArrayEncoder)
         {
-            _hashAlgorithm = hashAlgorithm;
-            _byteArrayEncoder = byteArrayEncoder;
+            _hashAlgorithm = hashAlgorithm ?? throw new ArgumentNullException(nameof(hashAlgorithm));
+            _byteArrayEncoder = byteArrayEncoder ?? throw new ArgumentNullException(nameof(byteArrayEncoder));
         }
 
         /// <summary>

@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
 
 namespace DeviceId.Encoders
 {
@@ -19,6 +20,11 @@ namespace DeviceId.Encoders
         /// <returns>The byte array encoded as a string.</returns>
         public string Encode(byte[] bytes)
         {
+            if (bytes == null)
+            {
+                throw new ArgumentNullException(nameof(bytes));
+            }
+
             var sb = new StringBuilder(bytes.Length * 2);
             foreach (var b in bytes)
             {
