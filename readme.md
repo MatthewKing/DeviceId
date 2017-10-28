@@ -27,7 +27,7 @@ Use the `UseFormatter` method to set the formatter.
 string deviceId = new DeviceIdBuilder()
     .AddProcessorId()
     .AddMotherboardSerialNumber()
-    .UseFormatter(new XmlDeviceIdFormatter(new HashDeviceIdComponentEncoder(() => SHA256.Create(), new Base64UrlByteArrayEncoder())))
+    .UseFormatter(new HashDeviceIdFormatter(() => SHA256.Create(), new Base64UrlByteArrayEncoder()))
     .ToString();
 ```
 
