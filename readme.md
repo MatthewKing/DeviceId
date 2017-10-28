@@ -19,6 +19,21 @@ string deviceId = new DeviceIdBuilder()
     .ToString();
 ```
 
+### What can you include in a device identifier
+
+The following extension methods are available out of the box to suit some common use cases:
+
+* `AddUserName()` adds the current user's username to the device ID.
+* `AddMachineName()` adds the machine name to the device ID.
+* `AddOSVersion()` adds the current OS version (as returned by `Environment.OSVersion`) to the device ID.
+* `AddMacAddress()` adds the MAC address to the device ID.
+* `AddProcessorId()` adds the processor ID to the device ID.
+* `AddMotherboardSerialNumber()` adds the motherboard serial number to the device ID.
+* `AddFileToken(path)` adds a token stored at the specified path to the device ID.
+* `AddComponent(component)` adds a custom component (see below) to the device ID.
+
+Custom components can be built by implementing `IDeviceIdComponent`. There is also a simple `DeviceIdComponent` class that allows you to specify an arbitrary component value to use, and a `WmiDeviceIdComponent` class that uses a specified WMI property (example: `new WmiDeviceIdComponent("MACAddress", "Win32_NetworkAdapterConfiguration", "MACAddress"`).
+
 ### Controlling how the device identifier is formatted
 
 Use the `UseFormatter` method to set the formatter.
