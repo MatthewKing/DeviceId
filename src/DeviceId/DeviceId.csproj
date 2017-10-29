@@ -4,7 +4,7 @@
     <PackageId>DeviceId</PackageId>
     <Title>DeviceId</Title>
     <Description>Provides functionality to generate a 'device ID' that can be used to uniquely identify a computer.</Description>
-    <Author>Matthew King</Author>
+    <Authors>Matthew King</Authors>
     <Copyright>Copyright 2015-2017 Matthew King.</Copyright>
     <PackageProjectUrl>https://github.com/MatthewKing/DeviceId</PackageProjectUrl>
     <PackageLicenseUrl>https://opensource.org/licenses/MIT</PackageLicenseUrl>
