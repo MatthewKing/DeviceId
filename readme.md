@@ -76,5 +76,5 @@ $ dotnet add package DeviceId
 License and copyright
 ---------------------
 
-Copyright Matthew King 2015-2017.
+Copyright Matthew King 2015-2018.
 Distributed under the [MIT License](http://opensource.org/licenses/MIT). Refer to license.txt for more information.
