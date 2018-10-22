@@ -93,6 +93,16 @@ namespace DeviceId
         }
 
         /// <summary>
+        /// Adds the system drive's serial number to the device identifier.
+        /// </summary>
+        /// <param name="builder">The <see cref="DeviceIdBuilder"/> to add the component to.</param>
+        /// <returns>The <see cref="DeviceIdBuilder"/> instance.</returns>
+        public static DeviceIdBuilder AddSystemDriveSerialNumber(this DeviceIdBuilder builder)
+        {
+            return builder.AddComponent(new SystemDriveSerialNumberDeviceIdComponent());
+        }
+
+        /// <summary>
         /// Adds a file-based token to the device identifier.
         /// </summary>
         /// <param name="builder">The <see cref="DeviceIdBuilder"/> to add the component to.</param>
