@@ -9,7 +9,7 @@
     <PackageProjectUrl>https://github.com/MatthewKing/DeviceId</PackageProjectUrl>
     <PackageLicenseUrl>https://opensource.org/licenses/MIT</PackageLicenseUrl>
     <PackageTags>deviceid;unique;device;identifier</PackageTags>
-    <VersionPrefix>4.1.0</VersionPrefix>
+    <VersionPrefix>4.2.0</VersionPrefix>
   </PropertyGroup>
 
   <PropertyGroup>
