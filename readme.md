@@ -13,9 +13,9 @@ Use the `DeviceIdBuilder` class to build up a device ID.
 ```csharp
 string deviceId = new DeviceIdBuilder()
     .AddMachineName()
-    .AddMacAddress()
     .AddProcessorId()
     .AddMotherboardSerialNumber()
+    .AddSystemDriveSerialNumber()
     .ToString();
 ```
 
@@ -29,6 +29,7 @@ The following extension methods are available out of the box to suit some common
 * `AddMacAddress()` adds the MAC address to the device ID.
 * `AddProcessorId()` adds the processor ID to the device ID.
 * `AddMotherboardSerialNumber()` adds the motherboard serial number to the device ID.
+* `AddSystemDriveSerialNumber()` adds the system drive's serial number to the device ID.
 * `AddFileToken(path)` adds a token stored at the specified path to the device ID.
 * `AddComponent(component)` adds a custom component (see below) to the device ID.
 
