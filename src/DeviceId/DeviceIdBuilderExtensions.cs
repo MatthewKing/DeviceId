@@ -113,5 +113,16 @@ namespace DeviceId
             var name = String.Concat("FileToken", path.GetHashCode());
             return builder.AddComponent(new FileTokenDeviceIdComponent(name, path));
         }
+
+        /// <summary>
+        /// Adds the machine UUID to the device identifier.
+        /// </summary>
+        /// <param name="builder">The <see cref="DeviceIdBuilder"/> to add the component to.</param>
+        /// <param name="path">The path of the token.</param>
+        /// <returns>The <see cref="DeviceIdBuilder"/> instance.</returns>
+        public static DeviceIdBuilder AddUUID(this DeviceIdBuilder builder)
+        {
+            return builder.AddComponent(new UUIDComponent());
+        }
     }
 }
