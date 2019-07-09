@@ -30,6 +30,7 @@ The following extension methods are available out of the box to suit some common
 * `AddProcessorId()` adds the processor ID to the device ID.
 * `AddMotherboardSerialNumber()` adds the motherboard serial number to the device ID.
 * `AddSystemDriveSerialNumber()` adds the system drive's serial number to the device ID.
+* `AddSystemUUID()` adds the system UUID to the device ID.
 * `AddFileToken(path)` adds a token stored at the specified path to the device ID.
 * `AddComponent(component)` adds a custom component (see below) to the device ID.
 
@@ -77,5 +78,5 @@ $ dotnet add package DeviceId
 License and copyright
 ---------------------
 
-Copyright Matthew King 2015-2018.
+Copyright Matthew King 2015-2019.
 Distributed under the [MIT License](http://opensource.org/licenses/MIT). Refer to license.txt for more information.
