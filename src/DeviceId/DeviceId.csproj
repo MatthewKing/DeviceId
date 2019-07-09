@@ -5,11 +5,13 @@
     <Title>DeviceId</Title>
     <Description>Provides functionality to generate a 'device ID' that can be used to uniquely identify a computer.</Description>
     <Authors>Matthew King</Authors>
-    <Copyright>Copyright 2015-2018 Matthew King.</Copyright>
+    <Copyright>Copyright 2015-2019 Matthew King.</Copyright>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/MatthewKing/DeviceId</PackageProjectUrl>
-    <PackageLicenseUrl>https://opensource.org/licenses/MIT</PackageLicenseUrl>
+    <RepositoryUrl>https://github.com/MatthewKing/DeviceId</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
     <PackageTags>deviceid;unique;device;identifier</PackageTags>
-    <VersionPrefix>4.2.0</VersionPrefix>
+    <VersionPrefix>4.3.0</VersionPrefix>
   </PropertyGroup>
 
   <PropertyGroup>
