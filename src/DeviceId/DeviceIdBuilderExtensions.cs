@@ -93,7 +93,7 @@ namespace DeviceId
         }
 
         /// <summary>
-        /// Adds the machine UUID to the device identifier.
+        /// Adds the system UUID to the device identifier.
         /// </summary>
         /// <param name="builder">The <see cref="DeviceIdBuilder"/> to add the component to.</param>
         /// <returns>The <see cref="DeviceIdBuilder"/> instance.</returns>
