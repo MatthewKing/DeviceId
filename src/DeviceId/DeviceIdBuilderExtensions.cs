@@ -93,6 +93,16 @@ namespace DeviceId
         }
 
         /// <summary>
+        /// Adds the system UUID to the device identifier.
+        /// </summary>
+        /// <param name="builder">The <see cref="DeviceIdBuilder"/> to add the component to.</param>
+        /// <returns>The <see cref="DeviceIdBuilder"/> instance.</returns>
+        public static DeviceIdBuilder AddSystemUUID(this DeviceIdBuilder builder)
+        {
+            return builder.AddComponent(new WmiDeviceIdComponent("SystemUUID", "Win32_ComputerSystemProduct", "UUID"));
+        }
+
+        /// <summary>
         /// Adds the system drive's serial number to the device identifier.
         /// </summary>
         /// <param name="builder">The <see cref="DeviceIdBuilder"/> to add the component to.</param>
@@ -112,16 +122,6 @@ namespace DeviceId
         {
             var name = String.Concat("FileToken", path.GetHashCode());
             return builder.AddComponent(new FileTokenDeviceIdComponent(name, path));
-        }
-
-        /// <summary>
-        /// Adds the system UUID to the device identifier.
-        /// </summary>
-        /// <param name="builder">The <see cref="DeviceIdBuilder"/> to add the component to.</param>
-        /// <returns>The <see cref="DeviceIdBuilder"/> instance.</returns>
-        public static DeviceIdBuilder AddSystemUUID(this DeviceIdBuilder builder)
-        {
-            return builder.AddComponent(new SystemUUIDComponent());
         }
     }
 }
