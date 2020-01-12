@@ -36,6 +36,14 @@ The following extension methods are available out of the box to suit some common
 
 Custom components can be built by implementing `IDeviceIdComponent`. There is also a simple `DeviceIdComponent` class that allows you to specify an arbitrary component value to use, and a `WmiDeviceIdComponent` class that uses a specified WMI property (example: `new WmiDeviceIdComponent("MACAddress", "Win32_NetworkAdapterConfiguration", "MACAddress"`).
 
+#### Dealing with MAC Address randomization and virtual network adapters
+
+Non physcial network adapters like VPN connections tend not to have fixed MAC addresses. For wireless (802.11 based) adapters hardware
+(MAC) address randomization is frequently applied to avoid tracking with many modern operating systems support this out of the box. This
+makes wireless network adapters bad candidates for device indentification.
+
+Use `AddMacAddress(true, true)` to exclude both virtual and wireless network adapters.
+
 ### Controlling how the device identifier is formatted
 
 Use the `UseFormatter` method to set the formatter.
