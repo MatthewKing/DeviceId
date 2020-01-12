@@ -36,7 +36,7 @@ namespace DeviceId.Components
         public string Name => "MACAddress";
 
         /// <summary>
-        /// Retrieves the MAC 
+        /// Retrieves the MAC using the (old) Win32_NetworkAdapter WMI class.
         /// </summary>
         /// <returns></returns>
         internal List<string> GetMacAddressesUsingWmi()
@@ -109,6 +109,10 @@ namespace DeviceId.Components
                         var value = adapter["PermanentAddress"] as string;
                         if (value != null)
                         {
+
+                            // Ensure the hardware addresses are formatted as MAC addresses if possible.
+                            // This is a discrepancy between the MSFT_NetAdapter and Win32_NetworkAdapter
+                            // interfaces.
                             value = FormatMacAddress(value);
                             values.Add(value);
                         }
