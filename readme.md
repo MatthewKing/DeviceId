@@ -38,9 +38,7 @@ Custom components can be built by implementing `IDeviceIdComponent`. There is al
 
 #### Dealing with MAC Address randomization and virtual network adapters
 
-Non physcial network adapters like VPN connections tend not to have fixed MAC addresses. For wireless (802.11 based) adapters hardware
-(MAC) address randomization is frequently applied to avoid tracking with many modern operating systems support this out of the box. This
-makes wireless network adapters bad candidates for device indentification.
+Non physical network adapters like VPN connections tend not to have fixed MAC addresses. For wireless (802.11 based) adapters hardware (MAC) address randomization is frequently applied to avoid tracking with many modern operating systems support this out of the box. This makes wireless network adapters bad candidates for device identification.
 
 Use `AddMacAddress(true, true)` to exclude both virtual and wireless network adapters.
 
