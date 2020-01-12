@@ -73,6 +73,18 @@ namespace DeviceId
         }
 
         /// <summary>
+        /// Adds the MAC address to the device identifier, optionally excluding
+        /// </summary>
+        /// <param name="builder">The <see cref="DeviceIdBuilder"/> to add the component to.</param>
+        /// <param name="excludeNonPhysical">Indicates if non physcial adapters should be excluded.</param>
+        /// <param name="excludeWireless">Indicates if wireless adapters should be excluded.</param>
+        /// <returns>The <see cref="DeviceIdBuilder"/> instance.</returns>
+        public static DeviceIdBuilder AddMacAddress(this DeviceIdBuilder builder, bool excludeNonPhysical = false, bool excludeWireless = false)
+        {
+            return builder.AddComponent(new NetworkAdapterDeviceIdComponent(excludeNonPhysical, excludeWireless));
+        }
+
+        /// <summary>
         /// Adds the processor ID to the device identifier.
         /// </summary>
         /// <param name="builder">The <see cref="DeviceIdBuilder"/> to add the component to.</param>
