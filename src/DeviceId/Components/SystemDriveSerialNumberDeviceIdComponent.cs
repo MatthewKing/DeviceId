@@ -9,14 +9,14 @@ namespace DeviceId.Components
     public class SystemDriveSerialNumberDeviceIdComponent : IDeviceIdComponent
     {
         /// <summary>
+        /// Gets the name of the component.
+        /// </summary>
+        public string Name { get; } = "SystemDriveSerialNumber";
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="SystemDriveSerialNumberDeviceIdComponent"/> class.
         /// </summary>
         public SystemDriveSerialNumberDeviceIdComponent() { }
-
-        /// <summary>
-        /// Gets the name of the component.
-        /// </summary>
-        public string Name => "SystemDriveSerialNumber";
 
         /// <summary>
         /// Gets the component value.
@@ -26,17 +26,17 @@ namespace DeviceId.Components
         {
             var systemLogicalDiskDeviceId = Environment.GetFolderPath(Environment.SpecialFolder.System).Substring(0, 2);
 
-            using (ManagementObjectSearcher searcher = new ManagementObjectSearcher($"SELECT * FROM Win32_LogicalDisk where DeviceId = '{systemLogicalDiskDeviceId}'"))
+            var queryString = $"SELECT * FROM Win32_LogicalDisk where DeviceId = '{systemLogicalDiskDeviceId}'";
+            using var searcher = new ManagementObjectSearcher(queryString);
+
+            foreach (ManagementObject disk in searcher.Get())
             {
-                foreach (ManagementObject disk in searcher.Get())
+                foreach (ManagementObject partition in disk.GetRelated("Win32_DiskPartition"))
                 {
-                    foreach (ManagementObject partition in disk.GetRelated("Win32_DiskPartition"))
+                    foreach (ManagementObject drive in partition.GetRelated("Win32_DiskDrive"))
                     {
-                        foreach (ManagementObject drive in partition.GetRelated("Win32_DiskDrive"))
-                        {
-                            var serialNumber = drive["SerialNumber"] as string;
-                            return serialNumber;
-                        }
+                        var serialNumber = drive["SerialNumber"] as string;
+                        return serialNumber;
                     }
                 }
             }

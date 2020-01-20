@@ -44,14 +44,11 @@ namespace DeviceId.Formatters
                 throw new ArgumentNullException(nameof(components));
             }
 
-            var value = String.Join(",", components.OrderBy(x => x.Name).Select(x => x.GetValue()));
+            var value = string.Join(",", components.OrderBy(x => x.Name).Select(x => x.GetValue()));
             var bytes = Encoding.UTF8.GetBytes(value);
-
-            using (var algorithm = _hashAlgorithm())
-            {
-                var hash = algorithm.ComputeHash(bytes);
-                return _byteArrayEncoder.Encode(hash);
-            }
+            using var algorithm = _hashAlgorithm.Invoke();
+            var hash = algorithm.ComputeHash(bytes);
+            return _byteArrayEncoder.Encode(hash);
         }
     }
 }

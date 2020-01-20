@@ -9,14 +9,14 @@ namespace DeviceId.Components
     public class DeviceIdComponent : IDeviceIdComponent
     {
         /// <summary>
-        /// The name of the component.
+        /// Gets the name of the component.
         /// </summary>
-        private readonly string _name;
+        public string Name { get; }
 
         /// <summary>
         /// A function that returns the component value.
         /// </summary>
-        private readonly Func<string> _value;
+        private readonly Func<string> _valueFactory;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DeviceIdComponent"/> class.
@@ -30,17 +30,12 @@ namespace DeviceId.Components
         /// Initializes a new instance of the <see cref="DeviceIdComponent"/> class.
         /// </summary>
         /// <param name="name">The name of the component.</param>
-        /// <param name="value">A function that returns the component value.</param>
-        public DeviceIdComponent(string name, Func<string> value)
+        /// <param name="valueFactory">A function that returns the component value.</param>
+        public DeviceIdComponent(string name, Func<string> valueFactory)
         {
-            _name = name;
-            _value = value;
+            Name = name;
+            _valueFactory = valueFactory;
         }
-
-        /// <summary>
-        /// Gets the name of the component.
-        /// </summary>
-        public string Name { get { return _name; } }
 
         /// <summary>
         /// Gets the component value.
@@ -48,7 +43,7 @@ namespace DeviceId.Components
         /// <returns>The component value.</returns>
         public string GetValue()
         {
-            return _value();
+            return _valueFactory.Invoke();
         }
     }
 }

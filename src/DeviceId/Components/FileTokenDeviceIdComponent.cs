@@ -15,9 +15,9 @@ namespace DeviceId.Components
     public class FileTokenDeviceIdComponent : IDeviceIdComponent
     {
         /// <summary>
-        /// The name of the component.
+        /// Gets the name of the component.
         /// </summary>
-        private readonly string _name;
+        public string Name { get; }
 
         /// <summary>
         /// The path where the token will be stored.
@@ -31,14 +31,9 @@ namespace DeviceId.Components
         /// <param name="path">The path where the component will be stored.</param>
         public FileTokenDeviceIdComponent(string name, string path)
         {
-            _name = name;
+            Name = name;
             _path = path;
         }
-
-        /// <summary>
-        /// Gets the name of the component.
-        /// </summary>
-        public string Name { get { return _name; } }
 
         /// <summary>
         /// Gets the component value.
@@ -46,13 +41,13 @@ namespace DeviceId.Components
         /// <returns>The component value.</returns>
         public string GetValue()
         {
-            string value = Guid.NewGuid().ToString().ToUpper();
+            var value = Guid.NewGuid().ToString().ToUpper();
 
             if (File.Exists(_path))
             {
                 try
                 {
-                    byte[] bytes = File.ReadAllBytes(_path);
+                    var bytes = File.ReadAllBytes(_path);
                     value = Encoding.ASCII.GetString(bytes);
                 }
                 catch { }
@@ -61,7 +56,7 @@ namespace DeviceId.Components
             {
                 try
                 {
-                    byte[] bytes = Encoding.ASCII.GetBytes(value);
+                    var bytes = Encoding.ASCII.GetBytes(value);
                     File.WriteAllBytes(_path, bytes);
                 }
                 catch { }

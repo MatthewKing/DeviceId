@@ -39,13 +39,10 @@ namespace DeviceId.Encoders
         {
             var value = component.GetValue();
             var bytes = Encoding.UTF8.GetBytes(value);
-
-            using (var algorithm = _hashAlgorithm())
-            {
-                var hash = algorithm.ComputeHash(bytes);
-                var output = _byteArrayEncoder.Encode(hash);
-                return output;
-            }
+            using var algorithm = _hashAlgorithm.Invoke();
+            var hash = algorithm.ComputeHash(bytes);
+            var output = _byteArrayEncoder.Encode(hash);
+            return output;
         }
     }
 }

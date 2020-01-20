@@ -73,11 +73,11 @@ namespace DeviceId
         }
 
         /// <summary>
-        /// Adds the MAC address to the device identifier, optionally excluding
+        /// Adds the MAC address to the device identifier, optionally excluding non-physical adapters and/or wireless adapters.
         /// </summary>
         /// <param name="builder">The <see cref="DeviceIdBuilder"/> to add the component to.</param>
-        /// <param name="excludeNonPhysical">Indicates if non physcial adapters should be excluded.</param>
-        /// <param name="excludeWireless">Indicates if wireless adapters should be excluded.</param>
+        /// <param name="excludeNonPhysical">A value indicating whether non-physical adapters should be excluded.</param>
+        /// <param name="excludeWireless">A value indicating whether wireless adapters should be excluded.</param>
         /// <returns>The <see cref="DeviceIdBuilder"/> instance.</returns>
         public static DeviceIdBuilder AddMacAddress(this DeviceIdBuilder builder, bool excludeNonPhysical = false, bool excludeWireless = false)
         {
@@ -132,7 +132,7 @@ namespace DeviceId
         /// <returns>The <see cref="DeviceIdBuilder"/> instance.</returns>
         public static DeviceIdBuilder AddFileToken(this DeviceIdBuilder builder, string path)
         {
-            var name = String.Concat("FileToken", path.GetHashCode());
+            var name = string.Concat("FileToken", path.GetHashCode());
             return builder.AddComponent(new FileTokenDeviceIdComponent(name, path));
         }
     }

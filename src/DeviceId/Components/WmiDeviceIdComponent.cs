@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Management;
 
 namespace DeviceId.Components
@@ -10,9 +9,9 @@ namespace DeviceId.Components
     public class WmiDeviceIdComponent : IDeviceIdComponent
     {
         /// <summary>
-        /// The name of the component.
+        /// Gets the name of the component.
         /// </summary>
-        private readonly string _name;
+        public string Name { get; }
 
         /// <summary>
         /// The WMI class name.
@@ -32,15 +31,10 @@ namespace DeviceId.Components
         /// <param name="wmiProperty">The WMI property name.</param>
         public WmiDeviceIdComponent(string name, string wmiClass, string wmiProperty)
         {
-            _name = name;
+            Name = name;
             _wmiClass = wmiClass;
             _wmiProperty = wmiProperty;
         }
-
-        /// <summary>
-        /// Gets the name of the component.
-        /// </summary>
-        public string Name { get { return _name; } }
 
         /// <summary>
         /// Gets the component value.
@@ -48,30 +42,29 @@ namespace DeviceId.Components
         /// <returns>The component value.</returns>
         public string GetValue()
         {
-            List<string> values = new List<string>();
+            var values = new List<string>();
 
-            using (ManagementClass mc = new ManagementClass(_wmiClass))
+            using var mc = new ManagementClass(_wmiClass);
+
+            foreach (var mo in mc.GetInstances())
             {
-                foreach (ManagementObject mo in mc.GetInstances())
+                try
                 {
-                    try
+                    var value = mo[_wmiProperty] as string;
+                    if (value != null)
                     {
-                        string value = mo[_wmiProperty] as string;
-                        if (value != null)
-                        {
-                            values.Add(value);
-                        }
+                        values.Add(value);
                     }
-                    finally
-                    {
-                        mo.Dispose();
-                    }
+                }
+                finally
+                {
+                    mo.Dispose();
                 }
             }
 
             values.Sort();
 
-            return String.Join(",", values);
+            return string.Join(",", values);
         }
     }
 }
