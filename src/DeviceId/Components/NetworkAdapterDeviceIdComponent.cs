@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Management;
+using System.Net.NetworkInformation;
 
 namespace DeviceId.Components
 {
@@ -17,6 +18,11 @@ namespace DeviceId.Components
         /// Gets the name of the component.
         /// </summary>
         public string Name { get; } = "MACAddress";
+
+        /// <summary>
+        /// Value to use when a result is not obtainable
+        /// </summary>
+        private const string NoValue = "NoValue";
 
         /// <summary>
         /// A value indicating whether non-physical adapters should be excluded.
@@ -53,6 +59,7 @@ namespace DeviceId.Components
         {
             List<string> values;
 
+#if Windows
             try
             {
                 // First attempt to retrieve the addresses using the CIMv2 interface.
@@ -72,7 +79,18 @@ namespace DeviceId.Components
                     throw;
                 }
             }
-
+#else
+            try
+            {
+                NetworkInterface[] interfaces = NetworkInterface.GetAllNetworkInterfaces();
+                values = interfaces.Where(inter => !_excludeWireless || inter.NetworkInterfaceType != NetworkInterfaceType.Wireless80211).Select(inter => inter.GetPhysicalAddress().ToString()).ToList();
+            }
+            catch // can fail on weird systems, such as WSL
+            {
+                return NoValue;
+            }
+#endif
+            values = values.Where(mac => mac != "000000000000").ToList();
             return string.Join(",", values);
         }
 
