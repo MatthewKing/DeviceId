@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.InteropServices;
 using DeviceId.Components;
 
 namespace DeviceId
@@ -59,7 +60,11 @@ namespace DeviceId
         /// <returns>The <see cref="DeviceIdBuilder"/> instance.</returns>
         public static DeviceIdBuilder AddOSVersion(this DeviceIdBuilder builder)
         {
+#if NETFRAMEWORK
             return builder.AddComponent(new DeviceIdComponent("OSVersion", Environment.OSVersion.ToString()));
+#else
+            return builder.AddComponent(new DeviceIdComponent("OSVersion", Microsoft.DotNet.PlatformAbstractions.RuntimeEnvironment.OperatingSystem + " " + Microsoft.DotNet.PlatformAbstractions.RuntimeEnvironment.OperatingSystemVersion)); // examples are "Ubuntu 18.04"
+#endif
         }
 
         /// <summary>
@@ -69,7 +74,14 @@ namespace DeviceId
         /// <returns>The <see cref="DeviceIdBuilder"/> instance.</returns>
         public static DeviceIdBuilder AddMacAddress(this DeviceIdBuilder builder)
         {
+#if NETFRAMEWORK
             return builder.AddComponent(new WmiDeviceIdComponent("MACAddress", "Win32_NetworkAdapterConfiguration", "MACAddress"));
+#else
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                return builder.AddComponent(new WmiDeviceIdComponent("MACAddress", "Win32_NetworkAdapterConfiguration", "MACAddress"));
+
+            return builder.AddComponent(new NetworkAdapterDeviceIdComponent(true, true));
+#endif
         }
 
         /// <summary>
@@ -91,27 +103,54 @@ namespace DeviceId
         /// <returns>The <see cref="DeviceIdBuilder"/> instance.</returns>
         public static DeviceIdBuilder AddProcessorId(this DeviceIdBuilder builder)
         {
+#if NETFRAMEWORK
             return builder.AddComponent(new WmiDeviceIdComponent("ProcessorId", "Win32_Processor", "ProcessorId"));
+#else
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                return builder.AddComponent(new WmiDeviceIdComponent("ProcessorId", "Win32_Processor", "ProcessorId"));
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                return builder.AddComponent(new FileDeviceIdComponent("ProcessorId", "/proc/cpuinfo", true));
+
+            return builder.AddComponent(new UnsupportedDeviceIdComponent("ProcessorId"));
+#endif
         }
 
         /// <summary>
-        /// Adds the motherboard serial number to the device identifier.
+        /// Adds the motherboard serial number to the device identifier. On Linux, this requires root privilege.
         /// </summary>
         /// <param name="builder">The <see cref="DeviceIdBuilder"/> to add the component to.</param>
         /// <returns>The <see cref="DeviceIdBuilder"/> instance.</returns>
         public static DeviceIdBuilder AddMotherboardSerialNumber(this DeviceIdBuilder builder)
         {
+#if NETFRAMEWORK
             return builder.AddComponent(new WmiDeviceIdComponent("MotherboardSerialNumber", "Win32_BaseBoard", "SerialNumber"));
+#else
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                return builder.AddComponent(new WmiDeviceIdComponent("MotherboardSerialNumber", "Win32_BaseBoard", "SerialNumber"));
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                return builder.AddComponent(new FileDeviceIdComponent("MotherboardSerialNumber", "/sys/class/dmi/id/board_serial"));           
+
+            return builder.AddComponent(new UnsupportedDeviceIdComponent("MotherboardSerialNumber"));
+#endif
         }
 
         /// <summary>
-        /// Adds the system UUID to the device identifier.
+        /// Adds the system UUID to the device identifier. On Linux, this requires root privilege.
         /// </summary>
         /// <param name="builder">The <see cref="DeviceIdBuilder"/> to add the component to.</param>
         /// <returns>The <see cref="DeviceIdBuilder"/> instance.</returns>
         public static DeviceIdBuilder AddSystemUUID(this DeviceIdBuilder builder)
         {
+#if NETFRAMEWORK
             return builder.AddComponent(new WmiDeviceIdComponent("SystemUUID", "Win32_ComputerSystemProduct", "UUID"));
+#else
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                return builder.AddComponent(new WmiDeviceIdComponent("SystemUUID", "Win32_ComputerSystemProduct", "UUID"));
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                return builder.AddComponent(new FileDeviceIdComponent("SystemUUID", "/sys/class/dmi/id/product_uuid"));        
+
+            return builder.AddComponent(new UnsupportedDeviceIdComponent("SystemUUID"));
+#endif
         }
 
         /// <summary>
@@ -121,8 +160,34 @@ namespace DeviceId
         /// <returns>The <see cref="DeviceIdBuilder"/> instance.</returns>
         public static DeviceIdBuilder AddSystemDriveSerialNumber(this DeviceIdBuilder builder)
         {
+#if NETFRAMEWORK
             return builder.AddComponent(new SystemDriveSerialNumberDeviceIdComponent());
+#else
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                return builder.AddComponent(new SystemDriveSerialNumberDeviceIdComponent());
+            
+            return builder.AddComponent(new UnsupportedDeviceIdComponent("SystemDriveSerialNumber"));
+#endif
         }
+
+        /// <summary>
+        /// Adds the an identifier tied to the installation of the OS
+        /// </summary>
+        /// <param name="builder">The <see cref="DeviceIdBuilder"/> to add the component to.</param>
+        /// <returns>The <see cref="DeviceIdBuilder"/> instance.</returns>
+        public static DeviceIdBuilder AddOSInstallationID(this DeviceIdBuilder builder)
+        {
+#if NETFRAMEWORK
+            return builder.AddComponent(new RegistryValueDeviceIdComponent("OSInstallationID", @"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Cryptography", "MachineGuid"));
+#else
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                return builder.AddComponent(new RegistryValueDeviceIdComponent("OSInstallationID", @"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Cryptography", "MachineGuid"));
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                return builder.AddComponent(new FileDeviceIdComponent("OSInstallationID", new string[] {"/var/lib/dbus/machine-id", "/etc/machine-id"}));
+
+            return builder.AddComponent(new UnsupportedDeviceIdComponent("OSInstallationID"));
+#endif
+       }
 
         /// <summary>
         /// Adds a file-based token to the device identifier.
