@@ -3,6 +3,8 @@
   <PropertyGroup>
     <TargetFrameworks>netcoreapp2.0</TargetFrameworks>
     <IsPackable>false</IsPackable>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>DeviceId.Tests.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -18,6 +20,12 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\DeviceId\DeviceId.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="*.snk">
+      <Visible>false</Visible>
+    </None>
   </ItemGroup>
 
 </Project>
