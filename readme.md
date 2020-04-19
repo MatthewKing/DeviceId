@@ -31,6 +31,7 @@ The following extension methods are available out of the box to suit some common
 * `AddSystemUUID()` adds the system UUID to the device ID.
 * `AddOSInstallationID` adds the OS installation ID.
 * `AddFileToken(path)` adds a token stored at the specified path to the device ID.
+* `AddRegistryValue()` adds a value from the registry.
 * `AddComponent(component)` adds a custom component (see below) to the device ID.
 
 Custom components can be built by implementing `IDeviceIdComponent`. There is also a simple `DeviceIdComponent` class that allows you to specify an arbitrary component value to use, and a `WmiDeviceIdComponent` class that uses a specified WMI property (example: `new WmiDeviceIdComponent("MACAddress", "Win32_NetworkAdapterConfiguration", "MACAddress"`).
@@ -82,6 +83,7 @@ The following cross-platform support is available:
 | System drive serial number | **Yes** | No      |
 | System UUID                | **Yes** | **Yes** |
 | OS installation ID         | **Yes** | **Yes** |
+| Registry value             | **Yes** | No      |
 | File token                 | **Yes** | **Yes** |
 
 ## Installation

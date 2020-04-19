@@ -31,8 +31,8 @@ namespace DeviceId.Components
         /// Initializes a new instance of the <see cref="FileTokenDeviceIdComponent"/> class.
         /// </summary>
         /// <param name="name">The name of the component.</param>
-        /// <param name="key">The path of the registry key to look at.</param>
-        /// <param name="valueName">the name of the registry value.</param>
+        /// <param name="key">The full path of the registry key.</param>
+        /// <param name="valueName">The name of the registry value.</param>
         public RegistryValueDeviceIdComponent(string name, string key, string valueName)
         {
             Name = name;
