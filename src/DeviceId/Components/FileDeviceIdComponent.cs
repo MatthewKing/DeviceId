@@ -16,17 +16,17 @@ namespace DeviceId.Components
         public string Name { get; }
 
         /// <summary>
-        /// The paths of file we should look at
+        /// The paths of file we should look at.
         /// </summary>
         private readonly string[] _paths;
 
         /// <summary>
-        /// Should the contents of the file be hashed? relevant for sources such as /proc/cpuinfo
+        /// Should the contents of the file be hashed? (Relevant for sources such as /proc/cpuinfo)
         /// </summary>
         private readonly bool _shouldHashContents;
 
         /// <summary>
-        /// Value to use when a result is not obtainable
+        /// Value to use when a result is not obtainable.
         /// </summary>
         private const string NoValue = "NoValue";
 
@@ -34,7 +34,7 @@ namespace DeviceId.Components
         /// Initializes a new instance of the <see cref="FileTokenDeviceIdComponent"/> class.
         /// </summary>
         /// <param name="name">The name of the component.</param>
-        /// <param name="path">The path of the file holding the componentID.</param>
+        /// <param name="path">The path of the file holding the component ID.</param>
         /// <param name="shouldHashContents">Whether the file contents should be hashed.</param>
         public FileDeviceIdComponent(string name, string path, bool shouldHashContents = false) : this(name, new string[] { path }, shouldHashContents) { }
 
@@ -42,7 +42,7 @@ namespace DeviceId.Components
         /// Initializes a new instance of the <see cref="FileTokenDeviceIdComponent"/> class.
         /// </summary>
         /// <param name="name">The name of the component.</param>
-        /// <param name="paths">The paths of the files holding the componentID.</param>
+        /// <param name="paths">The paths of the files holding the component ID.</param>
         /// <param name="shouldHashContents">Whether the file contents should be hashed.</param>
         public FileDeviceIdComponent(string name, string[] paths, bool shouldHashContents = false)
         {
@@ -57,30 +57,37 @@ namespace DeviceId.Components
         /// <returns>The component value.</returns>
         public string GetValue()
         {
-            foreach(string path in _paths)
+            foreach (var path in _paths)
             {
                 if (!File.Exists(path))
+                {
                     continue;
+                }
 
                 try
                 {
-                    string contents;
+                    var contents = default(string);
 
-                    using(var file = File.OpenText(path))
+                    using (var file = File.OpenText(path))
                     {
                         contents = file.ReadToEnd(); // File.ReadAllBytes() fails for special files such as /sys/class/dmi/id/product_uuid
                     }
+
                     contents = contents.Trim();
 
                     if (!_shouldHashContents)
+                    {
                         return contents;
-                    
-                    var hasher = MD5.Create();
-                    byte[] hash = hasher.ComputeHash(ASCIIEncoding.ASCII.GetBytes(contents));
-                    return BitConverter.ToString(hash).Replace("-", "").ToUpper();   
-                }
-                catch(System.UnauthorizedAccessException){ }// can fail because we have no permissions to access the file
+                    }
 
+                    using var hasher = MD5.Create();
+                    var hash = hasher.ComputeHash(Encoding.ASCII.GetBytes(contents));
+                    return BitConverter.ToString(hash).Replace("-", "").ToUpper();
+                }
+                catch (UnauthorizedAccessException)
+                {
+                    // Can fail if we have no permissions to access the file.
+                }
             }
 
             return NoValue;

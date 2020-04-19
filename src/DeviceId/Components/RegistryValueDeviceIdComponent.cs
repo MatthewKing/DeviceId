@@ -1,8 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Security.Cryptography;
-using System.Text;
-using Microsoft.Win32;
+﻿using Microsoft.Win32;
 
 namespace DeviceId.Components
 {
@@ -17,17 +13,17 @@ namespace DeviceId.Components
         public string Name { get; }
 
         /// <summary>
-        /// The path of the registry key to look at
+        /// The path of the registry key to look at.
         /// </summary>
         private readonly string _key;
 
         /// <summary>
-        /// The name of the registry value
+        /// The name of the registry value.
         /// </summary>
         private readonly string _valueName;
 
         /// <summary>
-        /// Value to use when a result is not obtainable
+        /// Value to use when a result is not obtainable.
         /// </summary>
         private const string NoValue = "NoValue";
 
@@ -36,7 +32,7 @@ namespace DeviceId.Components
         /// </summary>
         /// <param name="name">The name of the component.</param>
         /// <param name="key">The path of the registry key to look at.</param>
-        /// <param name="valueName">the name of the registry value</param>
+        /// <param name="valueName">the name of the registry value.</param>
         public RegistryValueDeviceIdComponent(string name, string key, string valueName)
         {
             Name = name;
