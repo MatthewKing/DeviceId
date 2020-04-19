@@ -5,7 +5,7 @@
     <Title>DeviceId</Title>
     <Description>Provides functionality to generate a 'device ID' that can be used to uniquely identify a computer.</Description>
     <Authors>Matthew King</Authors>
-    <Copyright>Copyright 2015-2019 Matthew King.</Copyright>
+    <Copyright>Copyright Matthew King.</Copyright>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/MatthewKing/DeviceId</PackageProjectUrl>
     <RepositoryUrl>https://github.com/MatthewKing/DeviceId</RepositoryUrl>
@@ -31,7 +31,7 @@
     <PackageReference Include="Microsoft.DotNet.PlatformAbstractions" Version="3.1.3" />
     <PackageReference Include="Microsoft.Win32.Registry" Version="4.7.0" />
     <PackageReference Include="System.Management" Version="4.6.0" />
-    <PackageReference Include="System.Runtime.InteropServices.RuntimeInformation" Version="4.3.0" />   
+    <PackageReference Include="System.Runtime.InteropServices.RuntimeInformation" Version="4.3.0" />
   </ItemGroup>
 
   <ItemGroup>

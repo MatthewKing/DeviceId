@@ -1,10 +1,8 @@
-DeviceId
-========
+# DeviceId
 
 A simple library providing functionality to generate a 'device ID' that can be used to uniquely identify a computer.
 
-Quickstart
-----------
+## Quickstart
 
 ### Building a device identifier
 
@@ -31,6 +29,7 @@ The following extension methods are available out of the box to suit some common
 * `AddMotherboardSerialNumber()` adds the motherboard serial number to the device ID.
 * `AddSystemDriveSerialNumber()` adds the system drive's serial number to the device ID.
 * `AddSystemUUID()` adds the system UUID to the device ID.
+* `AddOSInstallationID` adds the OS installation ID.
 * `AddFileToken(path)` adds a token stored at the specified path to the device ID.
 * `AddComponent(component)` adds a custom component (see below) to the device ID.
 
@@ -68,8 +67,24 @@ There are a number of encoders that can be used customize the formatter. These i
 * [Base64ByteArrayEncoder](/src/DeviceId/Encoders/Base64ByteArrayEncoder.cs) - Encodes a byte array as a base 64 string.
 * [Base64UrlByteArrayEncoder](/src/DeviceId/Encoders/Base64UrlByteArrayEncoder.cs) - Encodes a byte array as a base 64 url-encoded string.
 
-Installation
-------------
+## Cross-platform support
+
+The following cross-platform support is available:
+
+| Component                  | Windows | Linux   |
+| -------------------------- | ------- | ------- |
+| User name                  | **Yes** | **Yes** |
+| Machine name               | **Yes** | **Yes** |
+| OS version                 | **Yes** | **Yes** |
+| Processor ID               | **Yes** | **Yes** |
+| MAC address                | **Yes** | **Yes** |
+| Motherboard serial number  | **Yes** | **Yes** |
+| System drive serial number | **Yes** | No      |
+| System UUID                | **Yes** | **Yes** |
+| OS installation ID         | **Yes** | **Yes** |
+| File token                 | **Yes** | **Yes** |
+
+## Installation
 
 Just grab it from [NuGet](https://www.nuget.org/packages/DeviceId/)
 
@@ -81,8 +96,7 @@ PM> Install-Package DeviceId
 $ dotnet add package DeviceId
 ```
 
-License and copyright
----------------------
+## License and copyright
 
-Copyright Matthew King 2015-2019.
+Copyright Matthew King 2015-2020.
 Distributed under the [MIT License](http://opensource.org/licenses/MIT). Refer to license.txt for more information.
