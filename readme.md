@@ -98,6 +98,10 @@ PM> Install-Package DeviceId
 $ dotnet add package DeviceId
 ```
 
+## Strong naming
+
+From version 5 onwards, the assemblies in this package are strong named for the convenience of those users who require strong naming. Please note, however, that the key files are checked in to this repository. This means that anyone can compile their own version and strong name it with the original keys. This is a common practice with open source projects, but it does mean that you shouldn't use the strong name as a guarantee of security or identity.
+
 ## License and copyright
 
 Copyright Matthew King 2015-2020.
