@@ -117,6 +117,23 @@ namespace DeviceId
         }
 
         /// <summary>
+        /// Adds the system drive's serial number to the device identifier.
+        /// </summary>
+        /// <param name="builder">The <see cref="DeviceIdBuilder"/> to add the component to.</param>
+        /// <returns>The <see cref="DeviceIdBuilder"/> instance.</returns>
+        public static DeviceIdBuilder AddSystemDriveSerialNumber(this DeviceIdBuilder builder)
+        {
+            if (OS.IsWindows)
+            {
+                return builder.AddComponent(new SystemDriveSerialNumberDeviceIdComponent());
+            }
+            else
+            {
+                return builder.AddComponent(new UnsupportedDeviceIdComponent("SystemDriveSerialNumber"));
+            }
+        }
+
+        /// <summary>
         /// Adds the system UUID to the device identifier. On Linux, this requires root privilege.
         /// </summary>
         /// <param name="builder">The <see cref="DeviceIdBuilder"/> to add the component to.</param>
@@ -134,23 +151,6 @@ namespace DeviceId
             else
             {
                 return builder.AddComponent(new UnsupportedDeviceIdComponent("SystemUUID"));
-            }
-        }
-
-        /// <summary>
-        /// Adds the system drive's serial number to the device identifier.
-        /// </summary>
-        /// <param name="builder">The <see cref="DeviceIdBuilder"/> to add the component to.</param>
-        /// <returns>The <see cref="DeviceIdBuilder"/> instance.</returns>
-        public static DeviceIdBuilder AddSystemDriveSerialNumber(this DeviceIdBuilder builder)
-        {
-            if (OS.IsWindows)
-            {
-                return builder.AddComponent(new SystemDriveSerialNumberDeviceIdComponent());
-            }
-            else
-            {
-                return builder.AddComponent(new UnsupportedDeviceIdComponent("SystemDriveSerialNumber"));
             }
         }
 
@@ -173,6 +173,19 @@ namespace DeviceId
             {
                 return builder.AddComponent(new UnsupportedDeviceIdComponent("OSInstallationID"));
             }
+        }
+
+        /// <summary>
+        /// Adds a registry value to the device identifier.
+        /// </summary>
+        /// <param name="builder">The <see cref="DeviceIdBuilder"/> to add the component to.</param>
+        /// <param name="name">The name of the component.</param>
+        /// <param name="key">The full path of the registry key.</param>
+        /// <param name="valueName">The name of the registry value.</param>
+        /// <returns>The <see cref="DeviceIdBuilder"/> instance.</returns>
+        public static DeviceIdBuilder AddRegistryValue(this DeviceIdBuilder builder, string name, string key, string valueName)
+        {
+            return builder.AddComponent(new RegistryValueDeviceIdComponent(name, key, valueName));
         }
 
         /// <summary>
