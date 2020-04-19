@@ -57,40 +57,45 @@ namespace DeviceId.Components
         /// <returns>The component value.</returns>
         public string GetValue()
         {
-            List<string> values;
+            List<string> values = null;
 
-#if Windows
-            try
+            if (OS.IsWindows)
             {
-                // First attempt to retrieve the addresses using the CIMv2 interface.
-                values = GetMacAddressesUsingCimV2();
-            }
-            catch (ManagementException ex)
-            {
-                // In case we are notified of an invalid namespace, attempt to lookup the adapters using WMI.
-                // Could avoid this catch by manually checking for the CIMv2 namespace.
-
-                if (ex.ErrorCode == ManagementStatus.InvalidNamespace)
+                try
                 {
-                    values = GetMacAddressesUsingWmi();
+                    // First attempt to retrieve the addresses using the CIMv2 interface.
+                    values = GetMacAddressesUsingCimV2();
                 }
-                else
+                catch (ManagementException ex)
                 {
-                    throw;
+                    // In case we are notified of an invalid namespace, attempt to lookup the adapters using WMI.
+                    // Could avoid this catch by manually checking for the CIMv2 namespace.
+
+                    if (ex.ErrorCode == ManagementStatus.InvalidNamespace)
+                    {
+                        values = GetMacAddressesUsingWmi();
+                    }
                 }
             }
-#else
-            try
+
+            // If we're on a non-Windows OS, or if the above two methods failed, we have the following fallback:
+            if (values == null)
             {
-                NetworkInterface[] interfaces = NetworkInterface.GetAllNetworkInterfaces();
-                values = interfaces.Where(inter => !_excludeWireless || inter.NetworkInterfaceType != NetworkInterfaceType.Wireless80211).Select(inter => inter.GetPhysicalAddress().ToString()).ToList();
+                try
+                {
+                    values = NetworkInterface.GetAllNetworkInterfaces()
+                        .Where(x => !_excludeWireless || x.NetworkInterfaceType != NetworkInterfaceType.Wireless80211)
+                        .Select(x => x.GetPhysicalAddress().ToString())
+                        .Where(x => x != "000000000000")
+                        .Select(x => FormatMacAddress(x))
+                        .ToList();
+                }
+                catch
+                {
+                    return NoValue;
+                }
             }
-            catch // can fail on weird systems, such as WSL
-            {
-                return NoValue;
-            }
-#endif
-            values = values.Where(mac => mac != "000000000000").ToList();
+
             return string.Join(",", values);
         }
 

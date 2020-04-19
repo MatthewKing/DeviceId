@@ -1,17 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace DeviceId.Components
+﻿namespace DeviceId.Components
 {
     /// <summary>
-    /// An implementation of <see cref="IDeviceIdComponent"/> that returns a constant string to indicate this type of component is not supported
+    /// An implementation of <see cref="IDeviceIdComponent"/> that returns a constant string to indicate this type of component is not supported.
     /// </summary>
-    class UnsupportedDeviceIdComponent : IDeviceIdComponent
+    internal sealed class UnsupportedDeviceIdComponent : IDeviceIdComponent
     {
         /// <summary>
-        /// String value to use when data cannot be obtained in the current system
+        /// String value to use when data cannot be obtained in the current system.
         /// </summary>
         public const string ValueUnavailable = "ValueUnavailable";
 
