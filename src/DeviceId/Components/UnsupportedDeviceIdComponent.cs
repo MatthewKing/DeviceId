@@ -6,11 +6,6 @@
     internal sealed class UnsupportedDeviceIdComponent : IDeviceIdComponent
     {
         /// <summary>
-        /// String value to use when data cannot be obtained in the current system.
-        /// </summary>
-        public const string ValueUnavailable = "ValueUnavailable";
-
-        /// <summary>
         /// Gets the name of the component.
         /// </summary>
         public string Name { get; }
@@ -30,7 +25,7 @@
         /// <returns>The component value.</returns>
         public string GetValue()
         {
-            return ValueUnavailable;
+            return null;
         }
     }
 }

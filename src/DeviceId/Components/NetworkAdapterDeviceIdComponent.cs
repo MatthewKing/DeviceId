@@ -92,11 +92,18 @@ namespace DeviceId.Components
                 }
                 catch
                 {
-                    return NoValue;
+
                 }
             }
 
-            return string.Join(",", values);
+            if (values != null)
+            {
+                values.Sort();
+            }
+
+            return (values != null && values.Count > 0)
+                ? string.Join(",", values)
+                : null;
         }
 
         /// <summary>

@@ -41,14 +41,13 @@ namespace DeviceId.Components
         /// <returns>The component value.</returns>
         public string GetValue()
         {
-            var value = Guid.NewGuid().ToString().ToUpper();
-
             if (File.Exists(_path))
             {
                 try
                 {
                     var bytes = File.ReadAllBytes(_path);
-                    value = Encoding.ASCII.GetString(bytes);
+                    var value = Encoding.ASCII.GetString(bytes);
+                    return value;
                 }
                 catch { }
             }
@@ -56,13 +55,15 @@ namespace DeviceId.Components
             {
                 try
                 {
+                    var value = Guid.NewGuid().ToString().ToUpper();
                     var bytes = Encoding.ASCII.GetBytes(value);
                     File.WriteAllBytes(_path, bytes);
+                    return value;
                 }
                 catch { }
             }
 
-            return value;
+            return null;
         }
     }
 }
