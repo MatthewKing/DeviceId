@@ -51,5 +51,18 @@ namespace DeviceId.Tests.Formatters
 
             deviceId.Should().Be("e1b849f9631ffc1829b2e31402373e3c.c454552d52d55d3ef56408742887362b");
         }
+
+        [Fact]
+        public void GetDeviceId_ComponentReturnsNull_ReturnsDeviceId()
+        {
+            var formatter = new StringDeviceIdFormatter(new HashDeviceIdComponentEncoder(() => MD5.Create(), new HexByteArrayEncoder()));
+
+            var deviceId = formatter.GetDeviceId(new IDeviceIdComponent[]
+            {
+                new DeviceIdComponent("Test1", default(string)),
+            });
+
+            deviceId.Should().Be("d41d8cd98f00b204e9800998ecf8427e");
+        }
     }
 }

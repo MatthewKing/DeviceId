@@ -23,11 +23,6 @@ namespace DeviceId.Components
         private readonly string _valueName;
 
         /// <summary>
-        /// Value to use when a result is not obtainable.
-        /// </summary>
-        private const string NoValue = "NoValue";
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="FileTokenDeviceIdComponent"/> class.
         /// </summary>
         /// <param name="name">The name of the component.</param>
@@ -46,7 +41,15 @@ namespace DeviceId.Components
         /// <returns>The component value.</returns>
         public string GetValue()
         {
-            return Registry.GetValue(_key, _valueName, NoValue).ToString();
+            try
+            {
+                var value = Registry.GetValue(_key, _valueName, null);
+                return value?.ToString();
+            }
+            catch
+            {
+                return null;
+            }
         }
     }
 }

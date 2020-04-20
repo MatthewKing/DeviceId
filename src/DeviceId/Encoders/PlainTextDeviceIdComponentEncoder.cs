@@ -17,7 +17,7 @@
         /// <returns>The component encoded as a string.</returns>
         public string Encode(IDeviceIdComponent component)
         {
-            return component.GetValue();
+            return component.GetValue() ?? string.Empty;
         }
     }
 }

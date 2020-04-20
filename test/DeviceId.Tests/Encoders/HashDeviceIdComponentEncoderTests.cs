@@ -84,5 +84,14 @@ namespace DeviceId.Tests.Encoders
 
             encoder.Encode(component).Should().Be("aJICQJ5IdDuRRxP5bZOUfA");
         }
+
+        [Fact]
+        public void Encode_ValueIsNull_TreatItAsAnEmptyString()
+        {
+            var encoder = new HashDeviceIdComponentEncoder(() => MD5.Create(), new Base64UrlByteArrayEncoder());
+            var expected = encoder.Encode(new DeviceIdComponent("Name", string.Empty));
+            var actual = encoder.Encode(new DeviceIdComponent("Name", default(string)));
+            actual.Should().Be(expected);
+        }
     }
 }

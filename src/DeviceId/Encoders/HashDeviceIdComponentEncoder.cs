@@ -37,7 +37,7 @@ namespace DeviceId.Encoders
         /// <returns>The component encoded as a string.</returns>
         public string Encode(IDeviceIdComponent component)
         {
-            var value = component.GetValue();
+            var value = component.GetValue() ?? string.Empty;
             var bytes = Encoding.UTF8.GetBytes(value);
             using var algorithm = _hashAlgorithm.Invoke();
             var hash = algorithm.ComputeHash(bytes);

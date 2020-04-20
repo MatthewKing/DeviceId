@@ -16,5 +16,14 @@ namespace DeviceId.Tests.Encoders
 
             encoder.Encode(component).Should().Be("Value");
         }
+
+        [Fact]
+        public void Encode_ValueIsNull_TreatItAsAnEmptyString()
+        {
+            var encoder = new PlainTextDeviceIdComponentEncoder();
+            var expected = encoder.Encode(new DeviceIdComponent("Name", string.Empty));
+            var actual = encoder.Encode(new DeviceIdComponent("Name", default(string)));
+            actual.Should().Be(expected);
+        }
     }
 }
