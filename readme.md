@@ -80,7 +80,7 @@ The following cross-platform support is available:
 | Processor ID               | **Yes** | **Yes** |
 | MAC address                | **Yes** | **Yes** |
 | Motherboard serial number  | **Yes** | **Yes** |
-| System drive serial number | **Yes** | No      |
+| System drive serial number | **Yes** | **Yes** |
 | System UUID                | **Yes** | **Yes** |
 | OS installation ID         | **Yes** | **Yes** |
 | Registry value             | **Yes** | No      |
