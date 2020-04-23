@@ -35,6 +35,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Update="*.snk">
       <Visible>false</Visible>
     </None>
