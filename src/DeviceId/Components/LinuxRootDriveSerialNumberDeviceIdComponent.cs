@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-
+﻿using System.Collections.Generic;
+using DeviceId.Internal;
 using Newtonsoft.Json;
 
 namespace DeviceId.Components
@@ -19,9 +15,24 @@ namespace DeviceId.Components
         public string Name { get; } = "SystemDriveSerialNumber";
 
         /// <summary>
+        /// Command executor.
+        /// </summary>
+        private readonly ICommandExecutor _commandExecutor;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="LinuxRootDriveSerialNumberDeviceIdComponent"/> class.
         /// </summary>
-        public LinuxRootDriveSerialNumberDeviceIdComponent() { }
+        public LinuxRootDriveSerialNumberDeviceIdComponent()
+            : this(CommandExecutor.Default) { }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LinuxRootDriveSerialNumberDeviceIdComponent"/> class.
+        /// </summary>
+        /// <param name="commandExecutor">Command executor.</param>
+        internal LinuxRootDriveSerialNumberDeviceIdComponent(ICommandExecutor commandExecutor)
+        {
+            _commandExecutor = commandExecutor;
+        }
 
         /// <summary>
         /// Gets the component value.
@@ -29,30 +40,33 @@ namespace DeviceId.Components
         /// <returns>The component value.</returns>
         public string GetValue()
         {
-            string json = "lsblk -f -J".Bash();
-            lsblkOutput output = JsonConvert.DeserializeObject<lsblkOutput>(json);
+            var outputJson = _commandExecutor.Bash("lsblk -f -J");
+            var output = JsonConvert.DeserializeObject<LsblkOutput>(outputJson);
 
-            lsblkDevice device = findRootParent(output);
+            var device = FindRootParent(output);
             if (device == null)
             {
                 return null;
             }
 
-            string udevInfo = string.Format("udevadm info --query=all --name=/dev/{0} | grep ID_SERIAL=", device.name).Bash();
-            string[] components = udevInfo.Split('=');
-            if (components.Length == 2)
+            var udevInfo = _commandExecutor.Bash($"udevadm info --query=all --name=/dev/{device.Name} | grep ID_SERIAL=");
+            if (udevInfo != null)
             {
-                return components[1];
+                var components = udevInfo.Split('=');
+                if (components.Length == 2)
+                {
+                    return components[1];
+                }
             }
 
             return null;
         }
 
-        private lsblkDevice findRootParent(lsblkOutput devices)
+        private LsblkDevice FindRootParent(LsblkOutput devices)
         {
-            foreach (lsblkDevice device in devices.blockdevices)
+            foreach (var device in devices.BlockDevices)
             {
-                if (deviceContainsRoot(device))
+                if (DeviceContainsRoot(device))
                 {
                     return device;
                 }
@@ -61,16 +75,17 @@ namespace DeviceId.Components
             return null;
         }
 
-        private bool deviceContainsRoot(lsblkDevice device)
+        private bool DeviceContainsRoot(LsblkDevice device)
         {
-            if (device.mountpoint == "/")
+            if (device.MountPoint == "/")
             {
                 return true;
-            } else if (device.children != null && device.children.Count > 0)
+            }
+            else if (device.Children != null && device.Children.Count > 0)
             {
-                foreach (lsblkDevice child in device.children)
+                foreach (var child in device.Children)
                 {
-                    if(deviceContainsRoot(child))
+                    if (DeviceContainsRoot(child))
                     {
                         return true;
                     }
@@ -80,51 +95,16 @@ namespace DeviceId.Components
             return false;
         }
 
-        private class lsblkOutput
+        private sealed class LsblkOutput
         {
-            public List<lsblkDevice> blockdevices { get; set; } = new List<lsblkDevice>();
+            public List<LsblkDevice> BlockDevices { get; set; } = new List<LsblkDevice>();
         }
 
-        private class lsblkDevice
+        private sealed class LsblkDevice
         {
-            public string name { get; set; } = string.Empty;
-            public string fstype { get; set; } = string.Empty;
-            public string label { get; set; } = string.Empty;
-            public string uuid { get; set; } = string.Empty;
-            public string mountpoint { get; set; } = string.Empty;
-            public List<lsblkDevice> children { get; set; } = new List<lsblkDevice>();
-        }
-    }
-
-    /// <summary>
-    /// Extension method for running Bash scripts courtesy https://loune.net/2017/06/running-shell-bash-commands-in-net-core/
-    /// </summary>
-    public static class ShellHelper
-    {
-        /// <summary>
-        /// Execute a string as a Bash command
-        /// </summary>
-        /// <param name="cmd">The Bash command to run</param>
-        /// <returns>The result of the Bash command</returns>
-        public static string Bash(this string cmd)
-        {
-            var escapedArgs = cmd.Replace("\"", "\\\"");
-
-            var process = new Process()
-            {
-                StartInfo = new ProcessStartInfo
-                {
-                    FileName = "/bin/bash",
-                    Arguments = $"-c \"{escapedArgs}\"",
-                    RedirectStandardOutput = true,
-                    UseShellExecute = false,
-                    CreateNoWindow = true,
-                }
-            };
-            process.Start();
-            string result = process.StandardOutput.ReadToEnd();
-            process.WaitForExit();
-            return result;
+            public string Name { get; set; } = string.Empty;
+            public string MountPoint { get; set; } = string.Empty;
+            public List<LsblkDevice> Children { get; set; } = new List<LsblkDevice>();
         }
     }
 }
