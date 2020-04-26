@@ -126,7 +126,8 @@ namespace DeviceId
             if (OS.IsWindows)
             {
                 return builder.AddComponent(new SystemDriveSerialNumberDeviceIdComponent());
-            } else if (OS.IsLinux)
+            }
+            else if (OS.IsLinux)
             {
                 return builder.AddComponent(new LinuxRootDriveSerialNumberDeviceIdComponent());
             }
