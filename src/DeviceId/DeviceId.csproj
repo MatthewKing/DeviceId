@@ -11,7 +11,7 @@
     <RepositoryUrl>https://github.com/MatthewKing/DeviceId</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>deviceid;unique;device;identifier</PackageTags>
-    <VersionPrefix>5.0.0</VersionPrefix>
+    <VersionPrefix>5.1.0</VersionPrefix>
   </PropertyGroup>
 
   <PropertyGroup>
