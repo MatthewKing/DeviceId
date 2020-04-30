@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using DeviceId.Internal;
-using Newtonsoft.Json;
 
 namespace DeviceId.Components
 {
@@ -41,7 +40,7 @@ namespace DeviceId.Components
         public string GetValue()
         {
             var outputJson = _commandExecutor.Bash("lsblk -f -J");
-            var output = JsonConvert.DeserializeObject<LsblkOutput>(outputJson);
+            var output = Json.Deserialize<LsblkOutput>(outputJson);
 
             var device = FindRootParent(output);
             if (device == null)
