@@ -44,9 +44,9 @@ namespace DeviceId.Components
         {
             var values = new List<string>();
 
-            using var mc = new ManagementClass(_wmiClass);
+            using var mc = new ManagementObjectSearcher($"SELECT {_wmiProperty} FROM {_wmiClass}");
 
-            foreach (var mo in mc.GetInstances())
+            foreach (var mo in mc.Get())
             {
                 try
                 {
