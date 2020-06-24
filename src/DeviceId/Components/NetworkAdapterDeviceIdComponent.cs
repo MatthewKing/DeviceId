@@ -20,11 +20,6 @@ namespace DeviceId.Components
         public string Name { get; } = "MACAddress";
 
         /// <summary>
-        /// Value to use when a result is not obtainable
-        /// </summary>
-        private const string NoValue = "NoValue";
-
-        /// <summary>
         /// A value indicating whether non-physical adapters should be excluded.
         /// </summary>
 
@@ -114,32 +109,36 @@ namespace DeviceId.Components
         {
             var values = new List<string>();
 
-            using var mc = new ManagementClass("Win32_NetworkAdapter");
-
-            foreach (var adapter in mc.GetInstances())
+            try
             {
-                try
+                using var managementObjectSearcher = new ManagementObjectSearcher("select MACAddress, PhysicalAdapter from Win32_NetworkAdapter");
+                using var managementObjectCollection = managementObjectSearcher.Get();
+                foreach (var managementObject in managementObjectCollection)
                 {
-                    var isPhysical = (bool)adapter["PhysicalAdapter"];
-                    var adapterType = adapter["AdapterType"] as string;
-
-                    // Skip non physcial adapters if instructed to do so.
-                    if (_excludeNonPhysical && !isPhysical)
+                    try
                     {
-                        continue;
+                        // Skip non physcial adapters if instructed to do so.
+                        var isPhysical = (bool)managementObject["PhysicalAdapter"];
+                        if (_excludeNonPhysical && !isPhysical)
+                        {
+                            continue;
+                        }
+
+                        var macAddress = (string)managementObject["MACAddress"];
+                        if (!string.IsNullOrEmpty(macAddress))
+                        {
+                            values.Add(macAddress);
+                        }
                     }
-
-                    // Add the MAC address to the list of values.
-                    var value = adapter["MACAddress"] as string;
-                    if (value != null)
+                    finally
                     {
-                        values.Add(value);
+                        managementObject.Dispose();
                     }
                 }
-                finally
-                {
-                    adapter.Dispose();
-                }
+            }
+            catch
+            {
+
             }
 
             return values;
@@ -153,29 +152,28 @@ namespace DeviceId.Components
         {
             var values = new List<string>();
 
-            using var mc = new ManagementClass("root/StandardCimv2", "MSFT_NetAdapter", new ObjectGetOptions { });
+            using var managementClass = new ManagementClass("root/StandardCimv2", "MSFT_NetAdapter", new ObjectGetOptions { });
 
-            foreach (var adapter in mc.GetInstances())
+            foreach (var managementInstance in managementClass.GetInstances())
             {
                 try
                 {
-                    var isPhysical = (bool)adapter["ConnectorPresent"];
-                    var ndisMedium = (uint)adapter["NdisPhysicalMedium"];
-
                     // Skip non physcial adapters if instructed to do so.
+                    var isPhysical = (bool)managementInstance["ConnectorPresent"];
                     if (_excludeNonPhysical && !isPhysical)
                     {
                         continue;
                     }
 
                     // Skip wireless adapters if instructed to do so.
+                    var ndisMedium = (uint)managementInstance["NdisPhysicalMedium"];
                     if (_excludeWireless && ndisMedium == 9) // Native802_11
                     {
                         continue;
                     }
 
                     // Add the MAC address to the list of values.
-                    var value = adapter["PermanentAddress"] as string;
+                    var value = managementInstance["PermanentAddress"] as string;
                     if (value != null)
                     {
                         // Ensure the hardware addresses are formatted as MAC addresses if possible.
@@ -186,7 +184,7 @@ namespace DeviceId.Components
                 }
                 finally
                 {
-                    adapter.Dispose();
+                    managementInstance.Dispose();
                 }
             }
 

@@ -44,22 +44,29 @@ namespace DeviceId.Components
         {
             var values = new List<string>();
 
-            using var mc = new ManagementObjectSearcher($"SELECT {_wmiProperty} FROM {_wmiClass}");
-
-            foreach (var mo in mc.Get())
+            try
             {
-                try
+                using var managementObjectSearcher = new ManagementObjectSearcher($"SELECT {_wmiProperty} FROM {_wmiClass}");
+                using var managementObjectCollection = managementObjectSearcher.Get();
+                foreach (var managementObject in managementObjectCollection)
                 {
-                    var value = mo[_wmiProperty] as string;
-                    if (value != null)
+                    try
                     {
-                        values.Add(value);
+                        var value = managementObject[_wmiProperty] as string;
+                        if (value != null)
+                        {
+                            values.Add(value);
+                        }
+                    }
+                    finally
+                    {
+                        managementObject.Dispose();
                     }
                 }
-                finally
-                {
-                    mo.Dispose();
-                }
+            }
+            catch
+            {
+
             }
 
             values.Sort();
