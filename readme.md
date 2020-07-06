@@ -72,19 +72,21 @@ There are a number of encoders that can be used customize the formatter. These i
 
 The following cross-platform support is available:
 
-| Component                  | Windows | Linux   |
-| -------------------------- | ------- | ------- |
-| User name                  | **Yes** | **Yes** |
-| Machine name               | **Yes** | **Yes** |
-| OS version                 | **Yes** | **Yes** |
-| Processor ID               | **Yes** | **Yes** |
-| MAC address                | **Yes** | **Yes** |
-| Motherboard serial number  | **Yes** | **Yes** |
-| System drive serial number | **Yes** | **Yes** |
-| System UUID                | **Yes** | **Yes** |
-| OS installation ID         | **Yes** | **Yes** |
-| Registry value             | **Yes** | No      |
-| File token                 | **Yes** | **Yes** |
+| Component                  | Windows | Linux   | OSX     |
+| -------------------------- | ------- | ------- | ------- |
+| User name                  | **Yes** | **Yes** | No      |
+| Machine name               | **Yes** | **Yes** | No      |
+| OS version                 | **Yes** | **Yes** | No      |
+| Processor ID               | **Yes** | **Yes** | **Yes***|
+| MAC address                | **Yes** | **Yes** | No      |
+| Motherboard serial number  | **Yes** | **Yes** | No      |
+| System drive serial number | **Yes** | **Yes** | **Yes** |
+| System UUID                | **Yes** | **Yes** | No      |
+| OS installation ID         | **Yes** | **Yes** | No      |
+| Registry value             | **Yes** | No      | No      |
+| File token                 | **Yes** | **Yes** | No      |
+
+\* OSX Processor ID is Apple Serial Number
 
 ## Installation
 

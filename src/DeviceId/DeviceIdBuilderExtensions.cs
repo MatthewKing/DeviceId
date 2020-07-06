@@ -33,7 +33,7 @@ namespace DeviceId
         }
 
         /// <summary>
-        /// Adds the current user name to the device identifier. 
+        /// Adds the current user name to the device identifier.
         /// </summary>
         /// <param name="builder">The <see cref="DeviceIdBuilder"/> to add the component to.</param>
         /// <returns>The <see cref="DeviceIdBuilder"/> instance.</returns>
@@ -89,6 +89,13 @@ namespace DeviceId
             {
                 return builder.AddComponent(new FileDeviceIdComponent("ProcessorId", "/proc/cpuinfo", true));
             }
+            else if (OS.IsOsx)
+            {
+                /// OSX doesn't provide CPU ID but gives Serial Number unique per Apple device.
+                return builder.AddComponent(
+                    new BashExecutorComponent("ProcessorId",
+                        "ioreg -l | grep IOPlatformSerialNumber | sed 's/.*= //' | sed 's/\"//g'"));
+            }
             else
             {
                 return builder.AddComponent(new UnsupportedDeviceIdComponent("ProcessorId"));
@@ -130,6 +137,12 @@ namespace DeviceId
             else if (OS.IsLinux)
             {
                 return builder.AddComponent(new LinuxRootDriveSerialNumberDeviceIdComponent());
+            }
+            else if (OS.IsOsx)
+            {
+                return builder.AddComponent(
+                    new BashExecutorComponent("SystemDriveSerialNumber",
+                        "system_profiler SPSerialATADataType | sed -En 's/.*Serial Number: ([\\d\\w]*)//p'"));
             }
             else
             {
