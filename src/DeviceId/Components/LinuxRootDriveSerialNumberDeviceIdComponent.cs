@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using DeviceId.CommandExecutors;
 using DeviceId.Internal;
 
 namespace DeviceId.Components
@@ -22,12 +23,12 @@ namespace DeviceId.Components
         /// Initializes a new instance of the <see cref="LinuxRootDriveSerialNumberDeviceIdComponent"/> class.
         /// </summary>
         public LinuxRootDriveSerialNumberDeviceIdComponent()
-            : this(CommandExecutor.Default) { }
+            : this(CommandExecutor.Bash) { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LinuxRootDriveSerialNumberDeviceIdComponent"/> class.
         /// </summary>
-        /// <param name="commandExecutor">Command executor.</param>
+        /// <param name="commandExecutor">The command executor to use.</param>
         internal LinuxRootDriveSerialNumberDeviceIdComponent(ICommandExecutor commandExecutor)
         {
             _commandExecutor = commandExecutor;
@@ -39,7 +40,7 @@ namespace DeviceId.Components
         /// <returns>The component value.</returns>
         public string GetValue()
         {
-            var outputJson = _commandExecutor.Bash("lsblk -f -J");
+            var outputJson = _commandExecutor.Execute("lsblk -f -J");
             var output = Json.Deserialize<LsblkOutput>(outputJson);
 
             var device = FindRootParent(output);
@@ -48,7 +49,7 @@ namespace DeviceId.Components
                 return null;
             }
 
-            var udevInfo = _commandExecutor.Bash($"udevadm info --query=all --name=/dev/{device.Name} | grep ID_SERIAL=");
+            var udevInfo = _commandExecutor.Execute($"udevadm info --query=all --name=/dev/{device.Name} | grep ID_SERIAL=");
             if (udevInfo != null)
             {
                 var components = udevInfo.Split('=');

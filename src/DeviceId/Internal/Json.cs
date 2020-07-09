@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace DeviceId.Internal
+﻿namespace DeviceId.Internal
 {
     internal static class Json
     {
@@ -15,10 +13,9 @@ namespace DeviceId.Internal
         public static T Deserialize<T>(string value)
         {
 #if NETSTANDARD
-            //return Newtonsoft.Json.JsonConvert.DeserializeObject<T>(value);
             return System.Text.Json.JsonSerializer.Deserialize<T>(value, JsonSerializerOptions);
 #else
-            throw new NotImplementedException();
+            throw new System.NotImplementedException();
 #endif
         }
     }
