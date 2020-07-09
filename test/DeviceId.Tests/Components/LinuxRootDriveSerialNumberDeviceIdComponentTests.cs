@@ -1,5 +1,5 @@
-﻿using DeviceId.Components;
-using DeviceId.Internal;
+﻿using DeviceId.CommandExecutors;
+using DeviceId.Components;
 using FluentAssertions;
 using Moq;
 using Xunit;
@@ -144,8 +144,8 @@ namespace DeviceId.Tests.Components
         private string GetComponentValue(string rootParentDeviceName, string lsblkOutput, string udevadmOutput)
         {
             var commandExecutorMock = new Mock<ICommandExecutor>();
-            commandExecutorMock.Setup(x => x.Execute("/bin/bash", "-c \"lsblk -f -J\"")).Returns(lsblkOutput);
-            commandExecutorMock.Setup(x => x.Execute("/bin/bash", $"-c \"udevadm info --query=all --name=/dev/{rootParentDeviceName} | grep ID_SERIAL=\"")).Returns(udevadmOutput);
+            commandExecutorMock.Setup(x => x.Execute("lsblk -f -J")).Returns(lsblkOutput);
+            commandExecutorMock.Setup(x => x.Execute($"udevadm info --query=all --name=/dev/{rootParentDeviceName} | grep ID_SERIAL=")).Returns(udevadmOutput);
 
             var component = new LinuxRootDriveSerialNumberDeviceIdComponent(commandExecutorMock.Object);
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using DeviceId.CommandExecutors;
 using DeviceId.Components;
 
 namespace DeviceId
@@ -91,10 +92,11 @@ namespace DeviceId
             }
             else if (OS.IsOsx)
             {
-                /// OSX doesn't provide CPU ID but gives Serial Number unique per Apple device.
-                return builder.AddComponent(
-                    new BashExecutorComponent("ProcessorId",
-                        "ioreg -l | grep IOPlatformSerialNumber | sed 's/.*= //' | sed 's/\"//g'"));
+                // OSX doesn't provide CPU ID but gives Serial Number unique per Apple device.
+                return builder.AddComponent(new CommandComponent(
+                    name: "ProcessorId",
+                    command: "ioreg -l | grep IOPlatformSerialNumber | sed 's/.*= //' | sed 's/\"//g'",
+                    commandExecutor: CommandExecutor.Bash));
             }
             else
             {
@@ -140,9 +142,10 @@ namespace DeviceId
             }
             else if (OS.IsOsx)
             {
-                return builder.AddComponent(
-                    new BashExecutorComponent("SystemDriveSerialNumber",
-                        "system_profiler SPSerialATADataType | sed -En 's/.*Serial Number: ([\\d\\w]*)//p'"));
+                return builder.AddComponent(new CommandComponent(
+                    name: "SystemDriveSerialNumber",
+                    command: "system_profiler SPSerialATADataType | sed -En 's/.*Serial Number: ([\\d\\w]*)//p'",
+                    commandExecutor: CommandExecutor.Bash));
             }
             else
             {
