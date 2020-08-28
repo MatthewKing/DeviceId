@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<Project>
+ <PropertyGroup>
+    <NoWarn>NU1701</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup>
+    <FrameworkPathOverride Condition="'$(TargetFramework)|$(OS)' == 'net35|Windows_NT'">$(MSBuildProgramFiles32)\Reference Assemblies\Microsoft\Framework\.NETFramework\v3.5\Profile\Client</FrameworkPathOverride>
+    <FrameworkPathOverride Condition="'$(TargetFramework)|$(OS)' == 'net35|Unix'">$(MONO_DIR)/../lib/mono/2.0-api</FrameworkPathOverride>
+  </PropertyGroup>
+</Project>

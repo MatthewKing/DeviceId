@@ -28,7 +28,11 @@ namespace DeviceId
         public DeviceIdBuilder()
         {
             Formatter = new HashDeviceIdFormatter(() => SHA256.Create(), new Base64UrlByteArrayEncoder());
+#if NET35
+            Components = new Set<IDeviceIdComponent>(new DeviceIdComponentEqualityComparer());
+#else
             Components = new HashSet<IDeviceIdComponent>(new DeviceIdComponentEqualityComparer());
+#endif
         }
 
         /// <summary>

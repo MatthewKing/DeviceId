@@ -35,7 +35,7 @@ namespace DeviceId.Formatters
                 throw new ArgumentNullException(nameof(components));
             }
 
-            return string.Join(".", components.OrderBy(x => x.Name).Select(x => _encoder.Encode(x)));
+            return components.OrderBy(x => x.Name).Select(x => _encoder.Encode(x)).Join(".");
         }
     }
 }
