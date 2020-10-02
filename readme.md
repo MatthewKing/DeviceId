@@ -29,7 +29,7 @@ The following extension methods are available out of the box to suit some common
 * `AddMotherboardSerialNumber()` adds the motherboard serial number to the device ID.
 * `AddSystemDriveSerialNumber()` adds the system drive's serial number to the device ID.
 * `AddSystemUUID()` adds the system UUID to the device ID.
-* `AddOSInstallationID` adds the OS installation ID.
+* `AddOSInstallationID()` adds the OS installation ID.
 * `AddFileToken(path)` adds a token stored at the specified path to the device ID.
 * `AddRegistryValue()` adds a value from the registry.
 * `AddComponent(component)` adds a custom component (see below) to the device ID.
