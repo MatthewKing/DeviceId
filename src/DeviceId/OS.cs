@@ -31,13 +31,19 @@ namespace DeviceId
             = RuntimeInformation.IsOSPlatform(OSPlatform.Linux);
 #endif
 
-        public static bool IsOsx { get; }
+        /// <summary>
+        /// Gets a value indicating whether this is OS X.
+        /// </summary>
+        public static bool IsOSX { get; }
 #if NETFRAMEWORK
             = false;
 #elif NETSTANDARD
             = RuntimeInformation.IsOSPlatform(OSPlatform.OSX);
 #endif
 
+        /// <summary>
+        /// Gets the current OS version.
+        /// </summary>
         public static string Version { get; }
 #if NETFRAMEWORK
             = Environment.OSVersion.ToString();
