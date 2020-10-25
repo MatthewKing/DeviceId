@@ -97,7 +97,7 @@ namespace DeviceId.Components
             }
 
             return (values != null && values.Count > 0)
-                ? string.Join(",", values)
+                ? string.Join(",", values.ToArray())
                 : null;
         }
 
@@ -209,7 +209,7 @@ namespace DeviceId.Components
             var parts = Enumerable.Range(0, input.Length / partSize).Select(x => input.Substring(x * partSize, partSize));
 
             // Put the parts in the AA:BB:CC format.
-            var result = string.Join(":", parts);
+            var result = string.Join(":", parts.ToArray());
 
             return result;
         }

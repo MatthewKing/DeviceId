@@ -15,7 +15,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <TargetFrameworks>net40;netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>net35;net40;netstandard2.0</TargetFrameworks>
     <LangVersion>latest</LangVersion>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -23,7 +23,11 @@
     <AssemblyOriginatorKeyFile>DeviceId.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net40' ">
+  <PropertyGroup>
+    <FrameworkPathOverride Condition="'$(TargetFramework)|$(OS)' == 'net35|Windows_NT'">$(MSBuildProgramFiles32)\Reference Assemblies\Microsoft\Framework\.NETFramework\v3.5\Profile\Client</FrameworkPathOverride>
+  </PropertyGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net35' or '$(TargetFramework)' == 'net40' ">
     <Reference Include="System.Management" />
   </ItemGroup>
 
