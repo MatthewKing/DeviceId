@@ -90,14 +90,6 @@ namespace DeviceId
             {
                 return builder.AddComponent(new FileDeviceIdComponent("ProcessorId", "/proc/cpuinfo", true));
             }
-            else if (OS.IsOsx)
-            {
-                // OSX doesn't provide CPU ID but gives Serial Number unique per Apple device.
-                return builder.AddComponent(new CommandComponent(
-                    name: "ProcessorId",
-                    command: "ioreg -l | grep IOPlatformSerialNumber | sed 's/.*= //' | sed 's/\"//g'",
-                    commandExecutor: CommandExecutor.Bash));
-            }
             else
             {
                 return builder.AddComponent(new UnsupportedDeviceIdComponent("ProcessorId"));
@@ -140,7 +132,7 @@ namespace DeviceId
             {
                 return builder.AddComponent(new LinuxRootDriveSerialNumberDeviceIdComponent());
             }
-            else if (OS.IsOsx)
+            else if (OS.IsOSX)
             {
                 return builder.AddComponent(new CommandComponent(
                     name: "SystemDriveSerialNumber",
@@ -188,6 +180,13 @@ namespace DeviceId
             else if (OS.IsLinux)
             {
                 return builder.AddComponent(new FileDeviceIdComponent("OSInstallationID", new string[] { "/var/lib/dbus/machine-id", "/etc/machine-id" }));
+            }
+            else if (OS.IsOSX)
+            {
+                return builder.AddComponent(new CommandComponent(
+                    name: "OSInstallationID",
+                    command: "ioreg -l | grep IOPlatformSerialNumber | sed 's/.*= //' | sed 's/\"//g'",
+                    commandExecutor: CommandExecutor.Bash));
             }
             else
             {
