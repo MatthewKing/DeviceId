@@ -20,7 +20,11 @@ namespace DeviceId
         /// <summary>
         /// A set containing the components that will make up the device identifier.
         /// </summary>
+#if NET35
+        public HashSet<IDeviceIdComponent> Components { get; }
+#else
         public ISet<IDeviceIdComponent> Components { get; }
+#endif
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DeviceIdBuilder"/> class.

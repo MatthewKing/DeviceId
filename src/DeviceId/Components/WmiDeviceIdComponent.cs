@@ -72,7 +72,7 @@ namespace DeviceId.Components
             values.Sort();
 
             return (values != null && values.Count > 0)
-                ? string.Join(",", values)
+                ? string.Join(",", values.ToArray())
                 : null;
         }
     }
