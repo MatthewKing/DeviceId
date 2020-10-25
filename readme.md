@@ -77,16 +77,14 @@ The following cross-platform support is available:
 | User name                  | **Yes** | **Yes** | **Yes** |
 | Machine name               | **Yes** | **Yes** | **Yes** |
 | OS version                 | **Yes** | **Yes** | **Yes** |
-| Processor ID               | **Yes** | **Yes** | **Yes***|
+| Processor ID               | **Yes** | **Yes** | No      |
 | MAC address                | **Yes** | **Yes** | **Yes** |
 | Motherboard serial number  | **Yes** | **Yes** | No      |
 | System drive serial number | **Yes** | **Yes** | **Yes** |
 | System UUID                | **Yes** | **Yes** | No      |
-| OS installation ID         | **Yes** | **Yes** | No      |
+| OS installation ID         | **Yes** | **Yes** | **Yes** |
 | Registry value             | **Yes** | No      | No      |
 | File token                 | **Yes** | **Yes** | **Yes** |
-
-\* OSX Processor ID is Apple Serial Number
 
 ## Installation
 
