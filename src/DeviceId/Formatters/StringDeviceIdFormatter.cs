@@ -49,7 +49,19 @@ namespace DeviceId.Formatters
                 throw new ArgumentNullException(nameof(components));
             }
 
-            return string.Join(_delimiter, components.OrderBy(x => x.Name).Select(x => _encoder.Encode(x)).ToArray());
+            return string.Join(_delimiter, components.OrderBy(x => x.Name).Select(x => GetValue(x)).ToArray());
+        }
+
+        private string GetValue(IDeviceIdComponent component)
+        {
+            try
+            {
+                return _encoder.Encode(component);
+            }
+            catch (DeviceIdComponentFailedToObtainValueException)
+            {
+                return "";
+            }
         }
     }
 }

@@ -61,9 +61,17 @@ namespace DeviceId.Formatters
         /// <returns>An <see cref="XElement"/> representing the specified <see cref="IDeviceIdComponent"/> instance.</returns>
         private XElement GetElement(IDeviceIdComponent component)
         {
-            return new XElement("Component",
-                new XAttribute("Name", component.Name),
-                new XAttribute("Value", _encoder.Encode(component)));
+            try
+            {
+                return new XElement("Component",
+                    new XAttribute("Name", component.Name),
+                    new XAttribute("Value", _encoder.Encode(component)));
+            }
+            catch
+            {
+                return new XElement("Component",
+                    new XAttribute("Name", component.Name));
+            }
         }
     }
 }

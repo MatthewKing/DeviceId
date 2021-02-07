@@ -85,6 +85,11 @@ namespace DeviceId.Components
                 catch (UnauthorizedAccessException)
                 {
                     // Can fail if we have no permissions to access the file.
+                    throw new DeviceIdComponentFailedToObtainValueException("Can't access file");
+                }
+                catch(Exception e)
+                {
+                    throw new DeviceIdComponentFailedToObtainValueException("Failed reading file", e);
                 }
             }
 

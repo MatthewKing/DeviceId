@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Management;
 
 namespace DeviceId.Components
 {
@@ -44,29 +43,16 @@ namespace DeviceId.Components
         {
             var values = new List<string>();
 
-            try
+            foreach (var obj in WmiHelper.GetWMIInstances(@"root\cimv2", _wmiClass))
             {
-                using var managementObjectSearcher = new ManagementObjectSearcher($"SELECT {_wmiProperty} FROM {_wmiClass}");
-                using var managementObjectCollection = managementObjectSearcher.Get();
-                foreach (var managementObject in managementObjectCollection)
+                try
                 {
-                    try
-                    {
-                        var value = managementObject[_wmiProperty] as string;
-                        if (value != null)
-                        {
-                            values.Add(value);
-                        }
-                    }
-                    finally
-                    {
-                        managementObject.Dispose();
-                    }
+                    values.Add(((IDictionary<string, object>)obj)[_wmiProperty].ToString());
                 }
-            }
-            catch
-            {
+                catch
+                {
 
+                }
             }
 
             values.Sort();

@@ -1,4 +1,5 @@
-﻿using Microsoft.Win32;
+﻿using System;
+using Microsoft.Win32;
 
 namespace DeviceId.Components
 {
@@ -46,9 +47,9 @@ namespace DeviceId.Components
                 var value = Registry.GetValue(_key, _valueName, null);
                 return value?.ToString();
             }
-            catch
+            catch(Exception e)
             {
-                return null;
+                throw new DeviceIdComponentFailedToObtainValueException(String.Format("Failed to read registry value ({0}\\{1})", _key, _valueName), e);
             }
         }
     }
