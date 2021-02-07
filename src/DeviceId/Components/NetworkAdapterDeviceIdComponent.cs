@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using System.Management;
 using System.Net.NetworkInformation;
 
 namespace DeviceId.Components
@@ -61,14 +61,17 @@ namespace DeviceId.Components
                     // First attempt to retrieve the addresses using the CIMv2 interface.
                     values = GetMacAddressesUsingCimV2();
                 }
-                catch (ManagementException ex)
+                catch
                 {
-                    // In case we are notified of an invalid namespace, attempt to lookup the adapters using WMI.
+                    // In case we are notified of an exception (usually, invalid namespace), attempt to lookup the adapters using WMI.
                     // Could avoid this catch by manually checking for the CIMv2 namespace.
-
-                    if (ex.ErrorCode == ManagementStatus.InvalidNamespace)
+                    try
                     {
                         values = GetMacAddressesUsingWmi();
+                    }
+                    catch
+                    {
+                        // Can also fail (for example, some Windows 7 machines)
                     }
                 }
             }
@@ -81,20 +84,18 @@ namespace DeviceId.Components
                     values = NetworkInterface.GetAllNetworkInterfaces()
                         .Where(x => !_excludeWireless || x.NetworkInterfaceType != NetworkInterfaceType.Wireless80211)
                         .Select(x => x.GetPhysicalAddress().ToString())
-                        .Where(x => x != "000000000000")
+                        .Where(x => x != "" && x != "000000000000")
                         .Select(x => FormatMacAddress(x))
                         .ToList();
                 }
                 catch
                 {
-
+                    throw new DeviceIdComponentFailedToObtainValueException("Failed collecting network adapters");
                 }
             }
 
             if (values != null)
-            {
                 values.Sort();
-            }
 
             return (values != null && values.Count > 0)
                 ? string.Join(",", values.ToArray())
@@ -109,36 +110,29 @@ namespace DeviceId.Components
         {
             var values = new List<string>();
 
-            try
-            {
-                using var managementObjectSearcher = new ManagementObjectSearcher("select MACAddress, PhysicalAdapter from Win32_NetworkAdapter");
-                using var managementObjectCollection = managementObjectSearcher.Get();
-                foreach (var managementObject in managementObjectCollection)
-                {
-                    try
-                    {
-                        // Skip non physcial adapters if instructed to do so.
-                        var isPhysical = (bool)managementObject["PhysicalAdapter"];
-                        if (_excludeNonPhysical && !isPhysical)
-                        {
-                            continue;
-                        }
+            var adapters = WmiHelper.GetWMIInstances(@"root\cimv2", "Win32_NetworkAdapter", new string[] { "MACAddress", "PhysicalAdapter" });
 
-                        var macAddress = (string)managementObject["MACAddress"];
-                        if (!string.IsNullOrEmpty(macAddress))
-                        {
-                            values.Add(macAddress);
-                        }
-                    }
-                    finally
+            foreach (var adapter in adapters)
+            {
+                try
+                { 
+                    var isPhysical = Boolean.Parse(adapter["PhysicalAdapter"] as string);
+
+                    if (_excludeNonPhysical && !isPhysical)
                     {
-                        managementObject.Dispose();
+                        continue;
+                    }
+
+                    var macAddress = adapter["MACAddress"] as string;
+                    if (!string.IsNullOrEmpty(macAddress))
+                    {
+                        values.Add(macAddress);
                     }
                 }
-            }
-            catch
-            {
-
+                catch
+                {
+                    
+                }
             }
 
             return values;
@@ -152,28 +146,29 @@ namespace DeviceId.Components
         {
             var values = new List<string>();
 
-            using var managementClass = new ManagementClass("root/StandardCimv2", "MSFT_NetAdapter", new ObjectGetOptions { });
+            var adapters = WmiHelper.GetWMIInstances(@"root\StandardCimv2", "MSFT_NetAdapter", new string[] { "ConnectorPresent", "NdisPhysicalMedium", "PermanentAddress" });
 
-            foreach (var managementInstance in managementClass.GetInstances())
+            foreach (var adapter in adapters)
             {
                 try
                 {
+                    var isPhysical = Boolean.Parse(adapter["ConnectorPresent"] as string);
+                    var ndisMedium = UInt32.Parse(adapter["NdisPhysicalMedium"] as string);
+
                     // Skip non physcial adapters if instructed to do so.
-                    var isPhysical = (bool)managementInstance["ConnectorPresent"];
                     if (_excludeNonPhysical && !isPhysical)
                     {
                         continue;
                     }
 
                     // Skip wireless adapters if instructed to do so.
-                    var ndisMedium = (uint)managementInstance["NdisPhysicalMedium"];
                     if (_excludeWireless && ndisMedium == 9) // Native802_11
                     {
                         continue;
                     }
 
                     // Add the MAC address to the list of values.
-                    var value = managementInstance["PermanentAddress"] as string;
+                    var value = adapter["PermanentAddress"] as string;
                     if (value != null)
                     {
                         // Ensure the hardware addresses are formatted as MAC addresses if possible.
@@ -182,9 +177,9 @@ namespace DeviceId.Components
                         values.Add(value);
                     }
                 }
-                finally
+                catch
                 {
-                    managementInstance.Dispose();
+                    
                 }
             }
 

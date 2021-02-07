@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Management;
+using System.Collections.Generic;
 
 namespace DeviceId.Components
 {
@@ -24,24 +24,19 @@ namespace DeviceId.Components
         /// <returns>The component value.</returns>
         public string GetValue()
         {
-            var systemLogicalDiskDeviceId = Environment.GetFolderPath(Environment.SpecialFolder.System).Substring(0, 2);
-
-            var queryString = $"SELECT * FROM Win32_LogicalDisk where DeviceId = '{systemLogicalDiskDeviceId}'";
-            using var searcher = new ManagementObjectSearcher(queryString);
-
-            foreach (ManagementObject disk in searcher.Get())
+            try
             {
-                foreach (ManagementObject partition in disk.GetRelated("Win32_DiskPartition"))
-                {
-                    foreach (ManagementObject drive in partition.GetRelated("Win32_DiskDrive"))
-                    {
-                        var serialNumber = drive["SerialNumber"] as string;
-                        return serialNumber;
-                    }
-                }
-            }
+                var systemLogicalDiskDeviceId = Environment.GetFolderPath(Environment.SpecialFolder.System).Substring(0, 2);
 
-            return null;
+                var logicalDiskToPartition = Array.Find(WmiHelper.GetWMIInstances(@"root\cimv2", "Win32_LogicalDiskToPartition"), logicalDriveToPartition => (logicalDriveToPartition["Dependent"] as IDictionary<string, object>)["DeviceID"] as string == systemLogicalDiskDeviceId);
+                var partition = Array.Find(WmiHelper.GetWMIInstances(@"root\cimv2", "Win32_DiskDriveToDiskPartition"), partition => (partition["Dependent"] as IDictionary<string, object>)["DeviceID"] as string == (logicalDiskToPartition["Antecedent"] as IDictionary<string, object>)["DeviceID"] as string);
+                var diskdrive = Array.Find(WmiHelper.GetWMIInstances(@"root\cimv2", "Win32_DiskDrive "), diskDriveToPartition => diskDriveToPartition["DeviceID"] as string == (partition["Antecedent"] as IDictionary<string, object>)["DeviceID"] as string);
+                return diskdrive["SerialNumber"] as string;
+            }
+            catch(Exception e)
+            {
+                throw new DeviceIdComponentFailedToObtainValueException("Failed to GetValue() in SystemDriveSerialNumberDeviceIdComponent", e);
+            }
         }
     }
 }

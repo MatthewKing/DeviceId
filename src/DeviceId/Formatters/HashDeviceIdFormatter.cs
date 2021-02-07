@@ -44,11 +44,23 @@ namespace DeviceId.Formatters
                 throw new ArgumentNullException(nameof(components));
             }
 
-            var value = string.Join(",", components.OrderBy(x => x.Name).Select(x => x.GetValue()).ToArray());
+            var value = string.Join(",", components.OrderBy(x => x.Name).Select(x => GetValue(x)).ToArray());
             var bytes = Encoding.UTF8.GetBytes(value);
             using var algorithm = _hashAlgorithm.Invoke();
             var hash = algorithm.ComputeHash(bytes);
             return _byteArrayEncoder.Encode(hash);
+        }
+
+        private string GetValue(IDeviceIdComponent component)
+        {
+            try
+            {
+                return component.GetValue();
+            }
+            catch(DeviceIdComponentFailedToObtainValueException)
+            {
+                return "";
+            }
         }
     }
 }

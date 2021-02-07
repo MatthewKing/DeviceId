@@ -49,7 +49,10 @@ namespace DeviceId.Components
                     var value = Encoding.ASCII.GetString(bytes);
                     return value;
                 }
-                catch { }
+                catch(Exception e)
+                {
+                    throw new DeviceIdComponentFailedToObtainValueException("Failed to read file contents", e);
+                }
             }
             else
             {
