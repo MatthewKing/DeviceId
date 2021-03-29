@@ -90,6 +90,10 @@ namespace DeviceId
             {
                 return builder.AddComponent(new FileDeviceIdComponent("ProcessorId", "/proc/cpuinfo", true));
             }
+            else if (OS.IsOSX)
+            {
+                return builder.AddComponent(new MacosProcessorIdDeviceIdComponent(true));
+            }
             else
             {
                 return builder.AddComponent(new UnsupportedDeviceIdComponent("ProcessorId"));
@@ -110,6 +114,13 @@ namespace DeviceId
             else if (OS.IsLinux)
             {
                 return builder.AddComponent(new FileDeviceIdComponent("MotherboardSerialNumber", "/sys/class/dmi/id/board_serial"));
+            }
+            else if (OS.IsOSX)
+            {
+                return builder.AddComponent(new CommandComponent(
+                    name: "MotherboardSerialNumber",
+                    command: "ioreg -d2 -c IOPlatformExpertDevice | awk -F\" '/board-id/{print $(NF-1)}'",
+                    commandExecutor: CommandExecutor.Bash));
             }
             else
             {
@@ -159,6 +170,13 @@ namespace DeviceId
             else if (OS.IsLinux)
             {
                 return builder.AddComponent(new FileDeviceIdComponent("SystemUUID", "/sys/class/dmi/id/product_uuid"));
+            }
+            else if (OS.IsOSX)
+            {
+                return builder.AddComponent(new CommandComponent(
+                    name: "SystemUUID",
+                    command: "ioreg -d2 -c IOPlatformExpertDevice | awk -F\" '/IOPlatformUUID/{print $(NF-1)}'",
+                    commandExecutor: CommandExecutor.Bash));
             }
             else
             {
