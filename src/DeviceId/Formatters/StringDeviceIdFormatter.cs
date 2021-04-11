@@ -20,14 +20,14 @@ namespace DeviceId.Formatters
         private readonly string _delimiter;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="XmlDeviceIdFormatter"/> class.
+        /// Initializes a new instance of the <see cref="StringDeviceIdFormatter"/> class.
         /// </summary>
         /// <param name="encoder">The <see cref="IDeviceIdComponentEncoder"/> instance to use to encode individual components.</param>
         public StringDeviceIdFormatter(IDeviceIdComponentEncoder encoder)
             : this(encoder, ".") { }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="XmlDeviceIdFormatter"/> class.
+        /// Initializes a new instance of the <see cref="StringDeviceIdFormatter"/> class.
         /// </summary>
         /// <param name="encoder">The <see cref="IDeviceIdComponentEncoder"/> instance to use to encode individual components.</param>
         /// <param name="delimiter">The delimiter to use when concatenating the encoded component values.</param>
