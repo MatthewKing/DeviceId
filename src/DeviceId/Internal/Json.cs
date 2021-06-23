@@ -2,7 +2,7 @@
 {
     internal static class Json
     {
-#if NETSTANDARD
+#if (NETSTANDARD || NETCOREAPP)
         private static System.Text.Json.JsonSerializerOptions JsonSerializerOptions { get; } = new System.Text.Json.JsonSerializerOptions()
         {
             IgnoreNullValues = true,
@@ -12,7 +12,7 @@
 
         public static T Deserialize<T>(string value)
         {
-#if NETSTANDARD
+#if (NETSTANDARD || NETCOREAPP)
             return System.Text.Json.JsonSerializer.Deserialize<T>(value, JsonSerializerOptions);
 #else
             throw new System.NotImplementedException();
