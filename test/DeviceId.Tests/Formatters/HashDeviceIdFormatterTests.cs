@@ -15,7 +15,7 @@ namespace DeviceId.Tests.Formatters
         {
             Action act = () => new HashDeviceIdFormatter(null, new HexByteArrayEncoder());
 
-            act.ShouldThrow<ArgumentNullException>().WithMessage("Value cannot be null.\r\nParameter name: hashAlgorithm");
+            act.ShouldThrow<ArgumentNullException>();
         }
 
         [Fact]
@@ -23,7 +23,7 @@ namespace DeviceId.Tests.Formatters
         {
             Action act = () => new HashDeviceIdFormatter(() => MD5.Create(), null);
 
-            act.ShouldThrow<ArgumentNullException>().WithMessage("Value cannot be null.\r\nParameter name: byteArrayEncoder");
+            act.ShouldThrow<ArgumentNullException>();
         }
 
         [Fact]
@@ -33,7 +33,7 @@ namespace DeviceId.Tests.Formatters
 
             Action act = () => formatter.GetDeviceId(null);
 
-            act.ShouldThrow<ArgumentNullException>().WithMessage("Value cannot be null.\r\nParameter name: components");
+            act.ShouldThrow<ArgumentNullException>();
         }
 
         [Fact]

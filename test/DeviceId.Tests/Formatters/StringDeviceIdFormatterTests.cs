@@ -15,7 +15,7 @@ namespace DeviceId.Tests.Formatters
         {
             Action act = () => new StringDeviceIdFormatter(null);
 
-            act.ShouldThrow<ArgumentNullException>().WithMessage("Value cannot be null.\r\nParameter name: encoder");
+            act.ShouldThrow<ArgumentNullException>();
         }
 
         [Fact]
@@ -25,7 +25,7 @@ namespace DeviceId.Tests.Formatters
 
             Action act = () => formatter.GetDeviceId(null);
 
-            act.ShouldThrow<ArgumentNullException>().WithMessage("Value cannot be null.\r\nParameter name: components");
+            act.ShouldThrow<ArgumentNullException>();
         }
 
         [Fact]

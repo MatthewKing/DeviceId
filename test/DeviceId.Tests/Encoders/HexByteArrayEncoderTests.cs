@@ -14,7 +14,7 @@ namespace DeviceId.Tests.Encoders
 
             Action act = () => encoder.Encode(null);
 
-            act.ShouldThrow<ArgumentNullException>().WithMessage("Value cannot be null.\r\nParameter name: bytes");
+            act.ShouldThrow<ArgumentNullException>();
         }
 
         [Fact]

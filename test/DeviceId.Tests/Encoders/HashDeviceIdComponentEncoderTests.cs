@@ -14,7 +14,7 @@ namespace DeviceId.Tests.Encoders
         {
             Action act = () => new HashDeviceIdComponentEncoder(null, new HexByteArrayEncoder());
 
-            act.ShouldThrow<ArgumentNullException>().WithMessage("Value cannot be null.\r\nParameter name: hashAlgorithm");
+            act.ShouldThrow<ArgumentNullException>();
         }
 
         [Fact]
@@ -22,7 +22,7 @@ namespace DeviceId.Tests.Encoders
         {
             Action act = () => new HashDeviceIdComponentEncoder(() => MD5.Create(), null);
 
-            act.ShouldThrow<ArgumentNullException>().WithMessage("Value cannot be null.\r\nParameter name: byteArrayEncoder");
+            act.ShouldThrow<ArgumentNullException>();
         }
 
         [Fact]
