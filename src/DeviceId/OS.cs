@@ -17,7 +17,7 @@ namespace DeviceId
         public static bool IsWindows { get; }
 #if NETFRAMEWORK
             = true;
-#elif (NETSTANDARD || NETCOREAPP)
+#elif (NETSTANDARD || NET5_0_OR_GREATER)
             = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
 #endif
 
@@ -27,7 +27,7 @@ namespace DeviceId
         public static bool IsLinux { get; }
 #if NETFRAMEWORK
             = false;
-#elif (NETSTANDARD || NETCOREAPP)
+#elif (NETSTANDARD || NET5_0_OR_GREATER)
             = RuntimeInformation.IsOSPlatform(OSPlatform.Linux);
 #endif
 
@@ -37,7 +37,7 @@ namespace DeviceId
         public static bool IsOSX { get; }
 #if NETFRAMEWORK
             = false;
-#elif (NETSTANDARD || NETCOREAPP)
+#elif (NETSTANDARD || NET5_0_OR_GREATER)
             = RuntimeInformation.IsOSPlatform(OSPlatform.OSX);
 #endif
 
@@ -45,7 +45,7 @@ namespace DeviceId
         /// Gets the current OS version.
         /// </summary>
         public static string Version { get; }
-#if (NETFRAMEWORK || NETCOREAPP)
+#if (NETFRAMEWORK || NET5_0_OR_GREATER)
             = Environment.OSVersion.ToString();
 #elif NETSTANDARD
             = IsWindows

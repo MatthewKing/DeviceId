@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 #if NETFRAMEWORK
 using System.Management;
-#elif (NETSTANDARD || NETCOREAPP)
+#elif (NETSTANDARD || NET5_0_OR_GREATER)
 using Microsoft.Management.Infrastructure;
 #endif
 
@@ -40,7 +40,7 @@ namespace DeviceId.Internal
             {
 
             }
-#elif (NETSTANDARD || NETCOREAPP)
+#elif (NETSTANDARD || NET5_0_OR_GREATER)
             try
             {
                 using var session = CimSession.Create(null);
@@ -92,7 +92,7 @@ namespace DeviceId.Internal
                     }
                 }
             }
-#elif (NETSTANDARD || NETCOREAPP)
+#elif (NETSTANDARD || NET5_0_OR_GREATER)
             using var session = CimSession.Create(null);
 
             foreach (var logicalDiskAssociator in session.QueryInstances(@"root\cimv2", "WQL", $"ASSOCIATORS OF {{Win32_LogicalDisk.DeviceID=\"{systemLogicalDiskDeviceId}\"}}"))
@@ -155,7 +155,7 @@ namespace DeviceId.Internal
             {
 
             }
-#elif (NETSTANDARD || NETCOREAPP)
+#elif (NETSTANDARD || NET5_0_OR_GREATER)
 
             using var session = CimSession.Create(null);
             foreach (var instance in session.QueryInstances(@"root\cimv2", "WQL", "select MACAddress, PhysicalAdapter from Win32_NetworkAdapter"))
@@ -223,7 +223,7 @@ namespace DeviceId.Internal
                     managementInstance.Dispose();
                 }
             }
-#elif (NETSTANDARD || NETCOREAPP)
+#elif (NETSTANDARD || NET5_0_OR_GREATER)
             using var session = CimSession.Create(null);
 
             foreach (var instance in session.EnumerateInstances("root/StandardCimv2", "MSFT_NetAdapter"))
