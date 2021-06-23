@@ -1,5 +1,4 @@
-﻿using System;
-using System.Management;
+﻿using DeviceId.Internal;
 
 namespace DeviceId.Components
 {
@@ -24,24 +23,7 @@ namespace DeviceId.Components
         /// <returns>The component value.</returns>
         public string GetValue()
         {
-            var systemLogicalDiskDeviceId = Environment.GetFolderPath(Environment.SpecialFolder.System).Substring(0, 2);
-
-            var queryString = $"SELECT * FROM Win32_LogicalDisk where DeviceId = '{systemLogicalDiskDeviceId}'";
-            using var searcher = new ManagementObjectSearcher(queryString);
-
-            foreach (ManagementObject disk in searcher.Get())
-            {
-                foreach (ManagementObject partition in disk.GetRelated("Win32_DiskPartition"))
-                {
-                    foreach (ManagementObject drive in partition.GetRelated("Win32_DiskDrive"))
-                    {
-                        var serialNumber = drive["SerialNumber"] as string;
-                        return serialNumber;
-                    }
-                }
-            }
-
-            return null;
+            return Wmi.GetSystemDriveSerialNumber();
         }
     }
 }

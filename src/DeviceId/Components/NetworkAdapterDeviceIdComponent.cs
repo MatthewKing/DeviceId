@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Management;
 using System.Net.NetworkInformation;
+using DeviceId.Internal;
 
 namespace DeviceId.Components
 {
@@ -58,17 +58,17 @@ namespace DeviceId.Components
             {
                 try
                 {
-                    // First attempt to retrieve the addresses using the CIMv2 interface.
-                    values = GetMacAddressesUsingCimV2();
+                    values = Wmi.GetMacAddressesUsingMSFTNetAdapter(_excludeNonPhysical, _excludeWireless);
                 }
-                catch (ManagementException ex)
+                catch
                 {
-                    // In case we are notified of an invalid namespace, attempt to lookup the adapters using WMI.
-                    // Could avoid this catch by manually checking for the CIMv2 namespace.
-
-                    if (ex.ErrorCode == ManagementStatus.InvalidNamespace)
+                    try
                     {
-                        values = GetMacAddressesUsingWmi();
+                        values = Wmi.GetMacAddressesUsingWin32NetworkAdapter(_excludeNonPhysical);
+                    }
+                    catch
+                    {
+
                     }
                 }
             }
@@ -82,7 +82,7 @@ namespace DeviceId.Components
                         .Where(x => !_excludeWireless || x.NetworkInterfaceType != NetworkInterfaceType.Wireless80211)
                         .Select(x => x.GetPhysicalAddress().ToString())
                         .Where(x => x != "000000000000")
-                        .Select(x => FormatMacAddress(x))
+                        .Select(x => MacAddressFormatter.FormatMacAddress(x))
                         .ToList();
                 }
                 catch
@@ -99,119 +99,6 @@ namespace DeviceId.Components
             return (values != null && values.Count > 0)
                 ? string.Join(",", values.ToArray())
                 : null;
-        }
-
-        /// <summary>
-        /// Retrieves the MAC addresses using the (old) Win32_NetworkAdapter WMI class.
-        /// </summary>
-        /// <returns>A list of MAC addresses.</returns>
-        internal List<string> GetMacAddressesUsingWmi()
-        {
-            var values = new List<string>();
-
-            try
-            {
-                using var managementObjectSearcher = new ManagementObjectSearcher("select MACAddress, PhysicalAdapter from Win32_NetworkAdapter");
-                using var managementObjectCollection = managementObjectSearcher.Get();
-                foreach (var managementObject in managementObjectCollection)
-                {
-                    try
-                    {
-                        // Skip non physcial adapters if instructed to do so.
-                        var isPhysical = (bool)managementObject["PhysicalAdapter"];
-                        if (_excludeNonPhysical && !isPhysical)
-                        {
-                            continue;
-                        }
-
-                        var macAddress = (string)managementObject["MACAddress"];
-                        if (!string.IsNullOrEmpty(macAddress))
-                        {
-                            values.Add(macAddress);
-                        }
-                    }
-                    finally
-                    {
-                        managementObject.Dispose();
-                    }
-                }
-            }
-            catch
-            {
-
-            }
-
-            return values;
-        }
-
-        /// <summary>
-        /// Retrieves the MAC addresses using the CIMv2 based MSFT_NetAdapter interface (Windows 8 and up).
-        /// </summary>
-        /// <returns>A list of MAC addresses.</returns>
-        internal List<string> GetMacAddressesUsingCimV2()
-        {
-            var values = new List<string>();
-
-            using var managementClass = new ManagementClass("root/StandardCimv2", "MSFT_NetAdapter", new ObjectGetOptions { });
-
-            foreach (var managementInstance in managementClass.GetInstances())
-            {
-                try
-                {
-                    // Skip non physcial adapters if instructed to do so.
-                    var isPhysical = (bool)managementInstance["ConnectorPresent"];
-                    if (_excludeNonPhysical && !isPhysical)
-                    {
-                        continue;
-                    }
-
-                    // Skip wireless adapters if instructed to do so.
-                    var ndisMedium = (uint)managementInstance["NdisPhysicalMedium"];
-                    if (_excludeWireless && ndisMedium == 9) // Native802_11
-                    {
-                        continue;
-                    }
-
-                    // Add the MAC address to the list of values.
-                    var value = managementInstance["PermanentAddress"] as string;
-                    if (value != null)
-                    {
-                        // Ensure the hardware addresses are formatted as MAC addresses if possible.
-                        // This is a discrepancy between the MSFT_NetAdapter and Win32_NetworkAdapter interfaces.
-                        value = FormatMacAddress(value);
-                        values.Add(value);
-                    }
-                }
-                finally
-                {
-                    managementInstance.Dispose();
-                }
-            }
-
-            return values;
-        }
-
-        /// <summary>
-        /// Formats the specified MAC address.
-        /// </summary>
-        /// <param name="input">The MAC address to format.</param>
-        /// <returns>The formatted MAC address.</returns>
-        internal static string FormatMacAddress(string input)
-        {
-            // Check if this can be a hex formatted EUI-48 or EUI-64 identifier.
-            if (input.Length != 12 && input.Length != 16)
-            {
-                return input;
-            }
-
-            // Chop up input in 2 character chunks.
-            var partSize = 2;
-            var parts = Enumerable.Range(0, input.Length / partSize).Select(x => input.Substring(x * partSize, partSize));
-
-            // Put the parts in the AA:BB:CC format.
-            var result = string.Join(":", parts.ToArray());
-
-            return result;
         }
     }
 }
