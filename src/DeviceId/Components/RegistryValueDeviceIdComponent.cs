@@ -41,12 +41,19 @@ namespace DeviceId.Components
         /// <returns>The component value.</returns>
         public string GetValue()
         {
-            try
+            if (OS.IsWindows)
             {
-                var value = Registry.GetValue(_key, _valueName, null);
-                return value?.ToString();
+                try
+                {
+                    var value = Registry.GetValue(_key, _valueName, null);
+                    return value?.ToString();
+                }
+                catch
+                {
+                    return null;
+                }
             }
-            catch
+            else
             {
                 return null;
             }

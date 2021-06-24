@@ -1,6 +1,7 @@
 ﻿using System;
-using System.Runtime.InteropServices;
+
 #if NETSTANDARD
+using System.Runtime.InteropServices;
 using RuntimeEnvironment = Microsoft.DotNet.PlatformAbstractions.RuntimeEnvironment;
 #endif
 
@@ -11,14 +12,18 @@ namespace DeviceId
     /// </summary>
     internal static class OS
     {
+        // ToDo: Add SupportedOSPlatformGuardAttribute to these methods so that the CA1416 warning goes away.
+
         /// <summary>
         /// Gets a value indicating whether this is a Windows OS.
         /// </summary>
         public static bool IsWindows { get; }
 #if NETFRAMEWORK
             = true;
-#elif (NETSTANDARD || NET5_0_OR_GREATER)
+#elif NETSTANDARD
             = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
+#elif NET5_0_OR_GREATER
+            = OperatingSystem.IsWindows();
 #endif
 
         /// <summary>
@@ -27,8 +32,10 @@ namespace DeviceId
         public static bool IsLinux { get; }
 #if NETFRAMEWORK
             = false;
-#elif (NETSTANDARD || NET5_0_OR_GREATER)
+#elif NETSTANDARD
             = RuntimeInformation.IsOSPlatform(OSPlatform.Linux);
+#elif NET5_0_OR_GREATER
+            = OperatingSystem.IsLinux();
 #endif
 
         /// <summary>
@@ -37,8 +44,10 @@ namespace DeviceId
         public static bool IsOSX { get; }
 #if NETFRAMEWORK
             = false;
-#elif (NETSTANDARD || NET5_0_OR_GREATER)
+#elif NETSTANDARD
             = RuntimeInformation.IsOSPlatform(OSPlatform.OSX);
+#elif NET5_0_OR_GREATER
+            = OperatingSystem.IsMacOS();
 #endif
 
         /// <summary>
