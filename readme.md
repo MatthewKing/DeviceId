@@ -72,19 +72,19 @@ There are a number of encoders that can be used customize the formatter. These i
 
 The following cross-platform support is available:
 
-| Component                  | Windows | Linux   | OSX     |
-| -------------------------- | ------- | ------- | ------- |
-| User name                  | **Yes** | **Yes** | **Yes** |
-| Machine name               | **Yes** | **Yes** | **Yes** |
-| OS version                 | **Yes** | **Yes** | **Yes** |
-| Processor ID               | **Yes** | **Yes** | No      |
-| MAC address                | **Yes** | **Yes** | **Yes** |
-| Motherboard serial number  | **Yes** | **Yes** | No      |
-| System drive serial number | **Yes** | **Yes** | **Yes** |
-| System UUID                | **Yes** | **Yes** | No      |
-| OS installation ID         | **Yes** | **Yes** | **Yes** |
-| Registry value             | **Yes** | No      | No      |
-| File token                 | **Yes** | **Yes** | **Yes** |
+| Component                  | Windows                | Linux                  | OSX                    |
+| -------------------------- | ---------------------- | ---------------------- | ---------------------- |
+| User name                  | :heavy_check_mark: Yes | :heavy_check_mark: Yes | :heavy_check_mark: Yes |
+| Machine name               | :heavy_check_mark: Yes | :heavy_check_mark: Yes | :heavy_check_mark: Yes |
+| OS version                 | :heavy_check_mark: Yes | :heavy_check_mark: Yes | :heavy_check_mark: Yes |
+| Processor ID               | :heavy_check_mark: Yes | :heavy_check_mark: Yes | :x: No                 |
+| MAC address                | :heavy_check_mark: Yes | :heavy_check_mark: Yes | :heavy_check_mark: Yes |
+| Motherboard serial number  | :heavy_check_mark: Yes | :heavy_check_mark: Yes | :x: No                 |
+| System drive serial number | :heavy_check_mark: Yes | :heavy_check_mark: Yes | :heavy_check_mark: Yes |
+| System UUID                | :heavy_check_mark: Yes | :heavy_check_mark: Yes | :x: No                 |
+| OS installation ID         | :heavy_check_mark: Yes | :heavy_check_mark: Yes | :heavy_check_mark: Yes |
+| Registry value             | :heavy_check_mark: Yes | :x: No                 | :x: No                 |
+| File token                 | :heavy_check_mark: Yes | :heavy_check_mark: Yes | :heavy_check_mark: Yes |
 
 ## Installation
 
