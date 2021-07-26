@@ -6,7 +6,7 @@ using DeviceId.Internal;
 namespace DeviceId.Components
 {
     /// <summary>
-    /// An implementation of <see cref="IDeviceIdComponent"/> that retrieves data from installed network adapaters.
+    /// An implementation of <see cref="IDeviceIdComponent"/> that retrieves data from installed network adapters.
     /// </summary>
     /// <remarks>
     /// Based on Win32_NetworkAdapter WMI class or using the CIMv2 based MSFT_NetAdapter WMI class (Windows 8 and up only).

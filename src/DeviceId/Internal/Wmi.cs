@@ -24,8 +24,7 @@ namespace DeviceId.Internal
                 {
                     try
                     {
-                        var value = managementObject[propertyName] as string;
-                        if (value != null)
+                        if (managementObject[propertyName] is string value)
                         {
                             values.Add(value);
                         }
@@ -132,7 +131,7 @@ namespace DeviceId.Internal
                 {
                     try
                     {
-                        // Skip non physcial adapters if instructed to do so.
+                        // Skip non-physical adapters if instructed to do so.
                         var isPhysical = (bool)managementObject["PhysicalAdapter"];
                         if (excludeNonPhysical && !isPhysical)
                         {
@@ -194,23 +193,26 @@ namespace DeviceId.Internal
             {
                 try
                 {
-                    // Skip non physcial adapters if instructed to do so.
-                    var isPhysical = (bool)managementInstance["ConnectorPresent"];
-                    if (excludeNonPhysical && !isPhysical)
+                    // Skip non-physical adapters if instructed to do so.
+                    if (managementInstance["ConnectorPresent"] is bool isPhysical)
                     {
-                        continue;
+                        if (excludeNonPhysical && !isPhysical)
+                        {
+                            continue;
+                        }
                     }
 
                     // Skip wireless adapters if instructed to do so.
-                    var ndisMedium = (uint)managementInstance["NdisPhysicalMedium"];
-                    if (excludeWireless && ndisMedium == 9) // Native802_11
+                    if (managementInstance["NdisPhysicalMedium"] is uint ndisMedium)
                     {
-                        continue;
+                        if (excludeWireless && ndisMedium == 9) // Native802_11
+                        {
+                            continue;
+                        }
                     }
 
                     // Add the MAC address to the list of values.
-                    var value = managementInstance["PermanentAddress"] as string;
-                    if (value != null)
+                    if (managementInstance["PermanentAddress"] is string value)
                     {
                         // Ensure the hardware addresses are formatted as MAC addresses if possible.
                         // This is a discrepancy between the MSFT_NetAdapter and Win32_NetworkAdapter interfaces.
@@ -228,7 +230,7 @@ namespace DeviceId.Internal
 
             foreach (var instance in session.EnumerateInstances("root/StandardCimv2", "MSFT_NetAdapter"))
             {
-                // Skip non physcial adapters if instructed to do so.
+                // Skip non-physical adapters if instructed to do so.
                 if (instance.CimInstanceProperties["ConnectorPresent"].Value is bool connectorPresent)
                 {
                     if (excludeNonPhysical && !connectorPresent)
