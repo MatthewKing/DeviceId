@@ -1,6 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <PackageId>DeviceId.Windows.Wmi</PackageId>
+    <Title>DeviceId (Windows / WMI)</Title>
+    <Description>Provides extra Windows-specific components (using WMI) for the DeviceId package.</Description>
+  </PropertyGroup>
+
+  <PropertyGroup>
     <TargetFrameworks>net35;net40;netstandard2.0;net5.0</TargetFrameworks>
     <LangVersion>latest</LangVersion>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
