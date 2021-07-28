@@ -25,11 +25,11 @@ namespace DeviceId.Formatters
         }
 
         /// <summary>
-        /// Returns the device identifier string created by combining the specified <see cref="IDeviceIdComponent"/> instances.
+        /// Returns the device identifier string created by combining the specified components.
         /// </summary>
-        /// <param name="components">A sequence containing the <see cref="IDeviceIdComponent"/> instances to combine into the device identifier string.</param>
+        /// <param name="components">A dictionary containing the components.</param>
         /// <returns>The device identifier string.</returns>
-        public string GetDeviceId(IEnumerable<IDeviceIdComponent> components)
+        public string GetDeviceId(IDictionary<string, IDeviceIdComponent> components)
         {
             if (components == null)
             {
@@ -41,29 +41,30 @@ namespace DeviceId.Formatters
         }
 
         /// <summary>
-        /// Returns an <see cref="XElement"/> representing the specified collection of <see cref="IDeviceIdComponent"/> instances.
+        /// Returns an XML element representing the specified components.
         /// </summary>
-        /// <param name="components">The sequence of <see cref="IDeviceIdComponent"/> instances to represent.</param>
-        /// <returns>An <see cref="XElement"/> representing the specified collection of <see cref="IDeviceIdComponent"/> instances</returns>
-        private XElement GetElement(IEnumerable<IDeviceIdComponent> components)
+        /// <param name="components">A dictionary containing the components.</param>
+        /// <returns>An XML element representing the specified component values.</returns>
+        private XElement GetElement(IDictionary<string, IDeviceIdComponent> components)
         {
             var elements = components
-                .OrderBy(x => x.Name)
-                .Select(x => GetElement(x));
+                .OrderBy(x => x.Key)
+                .Select(x => GetElement(x.Key, x.Value));
 
             return new XElement("DeviceId", elements);
         }
 
         /// <summary>
-        /// Returns an <see cref="XElement"/> representing the specified <see cref="IDeviceIdComponent"/> instance.
+        /// Returns an XML element representing the specified component.
         /// </summary>
-        /// <param name="component">The <see cref="IDeviceIdComponent"/> to represent.</param>
-        /// <returns>An <see cref="XElement"/> representing the specified <see cref="IDeviceIdComponent"/> instance.</returns>
-        private XElement GetElement(IDeviceIdComponent component)
+        /// <param name="name">The component name.</param>
+        /// <param name="value">The component.</param>
+        /// <returns>An XML element representing the specified component.</returns>
+        private XElement GetElement(string name, IDeviceIdComponent value)
         {
             return new XElement("Component",
-                new XAttribute("Name", component.Name),
-                new XAttribute("Value", _encoder.Encode(component)));
+                new XAttribute("Name", name),
+                new XAttribute("Value", _encoder.Encode(value)));
         }
     }
 }

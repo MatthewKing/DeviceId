@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 using RuntimeEnvironment = Microsoft.DotNet.PlatformAbstractions.RuntimeEnvironment;
 #endif
 
-namespace DeviceId
+namespace DeviceId.Internal
 {
     /// <summary>
     /// Provides helper methods relating to the OS.
     /// </summary>
-    internal static class OS
+    internal static class Os
     {
         // ToDo: Add SupportedOSPlatformGuardAttribute to these methods so that the CA1416 warning goes away.
 
@@ -41,7 +41,7 @@ namespace DeviceId
         /// <summary>
         /// Gets a value indicating whether this is OS X.
         /// </summary>
-        public static bool IsOSX { get; }
+        public static bool IsMac { get; }
 #if NETFRAMEWORK
             = false;
 #elif NETSTANDARD

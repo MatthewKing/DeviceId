@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netcoreapp2.0;net5.0</TargetFrameworks>
+    <TargetFramework>net5.0</TargetFramework>
     <IsPackable>false</IsPackable>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>DeviceId.Tests.snk</AssemblyOriginatorKeyFile>
@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\DeviceId\DeviceId.csproj" />
+    <ProjectReference Include="..\..\src\DeviceId.Linux\DeviceId.Linux.csproj" />
   </ItemGroup>
 
   <ItemGroup>

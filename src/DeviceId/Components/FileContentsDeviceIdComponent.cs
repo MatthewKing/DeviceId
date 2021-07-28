@@ -10,43 +10,35 @@ namespace DeviceId.Components
     /// <summary>
     /// An implementation of <see cref="IDeviceIdComponent"/> that retrieves its value from a file.
     /// </summary>
-    public class FileDeviceIdComponent : IDeviceIdComponent
+    public class FileContentsDeviceIdComponent : IDeviceIdComponent
     {
         /// <summary>
-        /// Gets the name of the component.
-        /// </summary>
-        public string Name { get; }
-
-        /// <summary>
-        /// The paths of file we should look at.
+        /// The paths to read.
         /// </summary>
         private readonly string[] _paths;
 
         /// <summary>
-        /// Should the contents of the file be hashed? (Relevant for sources such as /proc/cpuinfo)
+        /// Should the contents of the file be hashed?
         /// </summary>
-        private readonly bool _shouldHashContents;
+        private readonly bool _hashContents;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FileTokenDeviceIdComponent"/> class.
         /// </summary>
-        /// <param name="name">The name of the component.</param>
         /// <param name="path">The path of the file holding the component ID.</param>
-        /// <param name="shouldHashContents">Whether the file contents should be hashed.</param>
-        public FileDeviceIdComponent(string name, string path, bool shouldHashContents = false)
-            : this(name, new string[] { path }, shouldHashContents) { }
+        /// <param name="hashContents">A value determining whether the file contents should be hashed.</param>
+        public FileContentsDeviceIdComponent(string path, bool hashContents = false)
+            : this(new[] { path }, hashContents) { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FileTokenDeviceIdComponent"/> class.
         /// </summary>
-        /// <param name="name">The name of the component.</param>
-        /// <param name="paths">The paths of the files holding the component ID.</param>
-        /// <param name="shouldHashContents">Whether the file contents should be hashed.</param>
-        public FileDeviceIdComponent(string name, IEnumerable<string> paths, bool shouldHashContents = false)
+        /// <param name="paths">The paths to read. The first path that can be successfully read will be used.</param>
+        /// <param name="hashContents">A value determining whether the file contents should be hashed.</param>
+        public FileContentsDeviceIdComponent(IEnumerable<string> paths, bool hashContents = false)
         {
-            Name = name;
             _paths = paths.ToArray();
-            _shouldHashContents = shouldHashContents;
+            _hashContents = hashContents;
         }
 
         /// <summary>
@@ -64,7 +56,7 @@ namespace DeviceId.Components
 
                 try
                 {
-                    var contents = default(string);
+                    string contents;
 
                     using (var file = File.OpenText(path))
                     {
@@ -73,7 +65,7 @@ namespace DeviceId.Components
 
                     contents = contents.Trim();
 
-                    if (!_shouldHashContents)
+                    if (!_hashContents)
                     {
                         return contents;
                     }
@@ -82,7 +74,7 @@ namespace DeviceId.Components
                     var hash = hasher.ComputeHash(Encoding.ASCII.GetBytes(contents));
                     return BitConverter.ToString(hash).Replace("-", "").ToUpper();
                 }
-                catch (UnauthorizedAccessException)
+                catch
                 {
                     // Can fail if we have no permissions to access the file.
                 }
@@ -92,3 +84,4 @@ namespace DeviceId.Components
         }
     }
 }
+

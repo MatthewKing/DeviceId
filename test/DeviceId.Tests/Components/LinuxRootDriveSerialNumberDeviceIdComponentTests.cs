@@ -1,5 +1,5 @@
-﻿using DeviceId.CommandExecutors;
-using DeviceId.Components;
+﻿using DeviceId.Internal.CommandExecutors;
+using DeviceId.Linux.Components;
 using FluentAssertions;
 using Moq;
 using Xunit;
@@ -9,7 +9,7 @@ namespace DeviceId.Tests.Components
     public class LinuxRootDriveSerialNumberDeviceIdComponentTests
     {
         [Fact]
-        public void GoogleCloudUbuntu1804VM()
+        public void GoogleCloudUbuntu1804Vm()
         {
             const string deviceName = "sda";
 
@@ -39,7 +39,7 @@ namespace DeviceId.Tests.Components
         }
 
         [Fact]
-        public void VirtualBoxVM()
+        public void VirtualBoxVm()
         {
             const string deviceName = "sda";
 
@@ -117,7 +117,7 @@ namespace DeviceId.Tests.Components
         }
 
         [Fact]
-        public void DigitalOceanVMWithoutSerialID()
+        public void DigitalOceanVmWithoutSerialId()
         {
             const string deviceName = "sda";
 

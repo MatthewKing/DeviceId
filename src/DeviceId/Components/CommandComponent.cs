@@ -1,4 +1,4 @@
-﻿using DeviceId.CommandExecutors;
+﻿using DeviceId.Internal.CommandExecutors;
 
 namespace DeviceId.Components
 {
@@ -7,11 +7,6 @@ namespace DeviceId.Components
     /// </summary>
     public class CommandComponent : IDeviceIdComponent
     {
-        /// <summary>
-        /// Gets the name of the component.
-        /// </summary>
-        public string Name { get; }
-
         /// <summary>
         /// The command executed by the component.
         /// </summary>
@@ -25,12 +20,10 @@ namespace DeviceId.Components
         /// <summary>
         /// Initializes a new instance of the <see cref="CommandComponent"/> class.
         /// </summary>
-        /// <param name="name">The name of the component.</param>
         /// <param name="command">The command executed by the component.</param>
         /// <param name="commandExecutor">The command executor.</param>
-        internal CommandComponent(string name, string command, ICommandExecutor commandExecutor)
+        internal CommandComponent(string command, ICommandExecutor commandExecutor)
         {
-            Name = name;
             _command = command;
             _commandExecutor = commandExecutor;
         }

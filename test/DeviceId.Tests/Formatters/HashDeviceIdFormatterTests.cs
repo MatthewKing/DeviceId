@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Security.Cryptography;
 using DeviceId.Components;
 using DeviceId.Encoders;
@@ -41,7 +42,7 @@ namespace DeviceId.Tests.Formatters
         {
             var formatter = new HashDeviceIdFormatter(() => MD5.Create(), new HexByteArrayEncoder());
 
-            var deviceId = formatter.GetDeviceId(new IDeviceIdComponent[] { });
+            var deviceId = formatter.GetDeviceId(new Dictionary<string, IDeviceIdComponent>(StringComparer.OrdinalIgnoreCase));
 
             deviceId.Should().Be("d41d8cd98f00b204e9800998ecf8427e");
         }
@@ -51,10 +52,10 @@ namespace DeviceId.Tests.Formatters
         {
             var formatter = new HashDeviceIdFormatter(() => MD5.Create(), new HexByteArrayEncoder());
 
-            var deviceId = formatter.GetDeviceId(new IDeviceIdComponent[]
+            var deviceId = formatter.GetDeviceId(new Dictionary<string, IDeviceIdComponent>(StringComparer.OrdinalIgnoreCase)
             {
-                new DeviceIdComponent("Test1", "Test1"),
-                new DeviceIdComponent("Test2", "Test2"),
+                ["Test1"] = new DeviceIdComponent("Test1"),
+                ["Test2"] = new DeviceIdComponent("Test2"),
             });
 
             deviceId.Should().Be("b02f4481c190173f05192bc08a1b14bc");
@@ -65,9 +66,9 @@ namespace DeviceId.Tests.Formatters
         {
             var formatter = new HashDeviceIdFormatter(() => MD5.Create(), new HexByteArrayEncoder());
 
-            var deviceId = formatter.GetDeviceId(new IDeviceIdComponent[]
+            var deviceId = formatter.GetDeviceId(new Dictionary<string, IDeviceIdComponent>(StringComparer.OrdinalIgnoreCase)
             {
-                new DeviceIdComponent("Test1", default(string)),
+                ["Test1"] = new DeviceIdComponent(default(string)),
             });
 
             deviceId.Should().Be("d41d8cd98f00b204e9800998ecf8427e");

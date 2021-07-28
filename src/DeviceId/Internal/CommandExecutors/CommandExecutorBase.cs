@@ -1,11 +1,11 @@
 ﻿using System.Diagnostics;
 
-namespace DeviceId.CommandExecutors
+namespace DeviceId.Internal.CommandExecutors
 {
     /// <summary>
     /// A base implementation of <see cref="ICommandExecutor"/>.
     /// </summary>
-    public abstract class CommandExecutorBase : ICommandExecutor
+    internal abstract class CommandExecutorBase : ICommandExecutor
     {
         /// <summary>
         /// Executes the specified command.
@@ -31,9 +31,9 @@ namespace DeviceId.CommandExecutors
 
             using var process = Process.Start(psi);
 
-            process.WaitForExit();
+            process?.WaitForExit();
 
-            var output = process.StandardOutput.ReadToEnd();
+            var output = process?.StandardOutput?.ReadToEnd();
 
             return output;
         }

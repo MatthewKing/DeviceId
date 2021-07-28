@@ -15,11 +15,6 @@ namespace DeviceId.Components
     public class FileTokenDeviceIdComponent : IDeviceIdComponent
     {
         /// <summary>
-        /// Gets the name of the component.
-        /// </summary>
-        public string Name { get; }
-
-        /// <summary>
         /// The path where the token will be stored.
         /// </summary>
         private readonly string _path;
@@ -27,11 +22,9 @@ namespace DeviceId.Components
         /// <summary>
         /// Initializes a new instance of the <see cref="FileTokenDeviceIdComponent"/> class.
         /// </summary>
-        /// <param name="name">The name of the component.</param>
         /// <param name="path">The path where the component will be stored.</param>
-        public FileTokenDeviceIdComponent(string name, string path)
+        public FileTokenDeviceIdComponent(string path)
         {
-            Name = name;
             _path = path;
         }
 

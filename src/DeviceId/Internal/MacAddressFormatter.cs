@@ -5,7 +5,7 @@ namespace DeviceId.Internal
     /// <summary>
     /// Provides functionality to format MAC addresses.
     /// </summary>
-    internal static class MacAddressFormatter
+    public static class MacAddressFormatter
     {
         /// <summary>
         /// Formats the specified MAC address.

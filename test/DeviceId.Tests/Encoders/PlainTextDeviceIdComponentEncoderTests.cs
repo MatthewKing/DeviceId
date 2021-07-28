@@ -12,7 +12,7 @@ namespace DeviceId.Tests.Encoders
         {
             var encoder = new PlainTextDeviceIdComponentEncoder();
 
-            var component = new DeviceIdComponent("Name", "Value");
+            var component = new DeviceIdComponent("Value");
 
             encoder.Encode(component).Should().Be("Value");
         }
@@ -21,8 +21,8 @@ namespace DeviceId.Tests.Encoders
         public void Encode_ValueIsNull_TreatItAsAnEmptyString()
         {
             var encoder = new PlainTextDeviceIdComponentEncoder();
-            var expected = encoder.Encode(new DeviceIdComponent("Name", string.Empty));
-            var actual = encoder.Encode(new DeviceIdComponent("Name", default(string)));
+            var expected = encoder.Encode(new DeviceIdComponent(string.Empty));
+            var actual = encoder.Encode(new DeviceIdComponent(default(string)));
             actual.Should().Be(expected);
         }
     }

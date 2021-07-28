@@ -1,0 +1,14 @@
+<Project>
+
+  <PropertyGroup>
+    <Authors>Matthew King</Authors>
+    <Copyright>Copyright Matthew King.</Copyright>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/MatthewKing/DeviceId</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/MatthewKing/DeviceId</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>deviceid;unique;device;identifier</PackageTags>
+    <VersionPrefix>6.0.0</VersionPrefix>
+  </PropertyGroup>
+
+</Project>

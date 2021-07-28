@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Security.Cryptography;
 using DeviceId.Encoders;
 using DeviceId.Formatters;
-using DeviceId.Internal;
 
 namespace DeviceId
 {
@@ -18,13 +17,9 @@ namespace DeviceId
         public IDeviceIdFormatter Formatter { get; set; }
 
         /// <summary>
-        /// A set containing the components that will make up the device identifier.
+        /// A dictionary containing the components that will make up the device identifier.
         /// </summary>
-#if NET35
-        public HashSet<IDeviceIdComponent> Components { get; }
-#else
-        public ISet<IDeviceIdComponent> Components { get; }
-#endif
+        public IDictionary<string, IDeviceIdComponent> Components { get; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DeviceIdBuilder"/> class.
@@ -32,7 +27,20 @@ namespace DeviceId
         public DeviceIdBuilder()
         {
             Formatter = new HashDeviceIdFormatter(() => SHA256.Create(), new Base64UrlByteArrayEncoder());
-            Components = new HashSet<IDeviceIdComponent>(new DeviceIdComponentEqualityComparer());
+            Components = new Dictionary<string, IDeviceIdComponent>(StringComparer.OrdinalIgnoreCase);
+        }
+
+        /// <summary>
+        /// Adds a component to the device identifier.
+        /// If a component with the specified name already exists, it will be replaced with this newly added component.
+        /// </summary>
+        /// <param name="name">The component name.</param>
+        /// <param name="component">The component to add.</param>
+        /// <returns>The builder instance.</returns>
+        public DeviceIdBuilder AddComponent(string name, IDeviceIdComponent component)
+        {
+            Components[name] = component;
+            return this;
         }
 
         /// <summary>

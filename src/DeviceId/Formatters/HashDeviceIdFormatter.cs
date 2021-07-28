@@ -33,18 +33,18 @@ namespace DeviceId.Formatters
         }
 
         /// <summary>
-        /// Returns the device identifier string created by combining the specified <see cref="IDeviceIdComponent"/> instances.
+        /// Returns the device identifier string created by combining the specified components.
         /// </summary>
-        /// <param name="components">A sequence containing the <see cref="IDeviceIdComponent"/> instances to combine into the device identifier string.</param>
+        /// <param name="components">A dictionary containing the components.</param>
         /// <returns>The device identifier string.</returns>
-        public string GetDeviceId(IEnumerable<IDeviceIdComponent> components)
+        public string GetDeviceId(IDictionary<string, IDeviceIdComponent> components)
         {
             if (components == null)
             {
                 throw new ArgumentNullException(nameof(components));
             }
 
-            var value = string.Join(",", components.OrderBy(x => x.Name).Select(x => x.GetValue()).ToArray());
+            var value = string.Join(",", components.OrderBy(x => x.Key).Select(x => x.Value.GetValue()).ToArray());
             var bytes = Encoding.UTF8.GetBytes(value);
             using var algorithm = _hashAlgorithm.Invoke();
             var hash = algorithm.ComputeHash(bytes);

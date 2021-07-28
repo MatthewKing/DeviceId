@@ -30,7 +30,7 @@ namespace DeviceId.Tests.Encoders
         {
             var encoder = new HashDeviceIdComponentEncoder(() => SHA256.Create(), new HexByteArrayEncoder());
 
-            var component = new DeviceIdComponent("Name", "Value");
+            var component = new DeviceIdComponent("Value");
 
             encoder.Encode(component).Should().Be("8e37953d23daca5ff01b8282c33f4e0a2152f1d1885f94c06418617e3ee1d24e");
         }
@@ -40,7 +40,7 @@ namespace DeviceId.Tests.Encoders
         {
             var encoder = new HashDeviceIdComponentEncoder(() => SHA256.Create(), new Base64ByteArrayEncoder());
 
-            var component = new DeviceIdComponent("Name", "Value");
+            var component = new DeviceIdComponent("Value");
 
             encoder.Encode(component).Should().Be("jjeVPSPayl/wG4KCwz9OCiFS8dGIX5TAZBhhfj7h0k4=");
         }
@@ -50,7 +50,7 @@ namespace DeviceId.Tests.Encoders
         {
             var encoder = new HashDeviceIdComponentEncoder(() => SHA256.Create(), new Base64UrlByteArrayEncoder());
 
-            var component = new DeviceIdComponent("Name", "Value");
+            var component = new DeviceIdComponent("Value");
 
             encoder.Encode(component).Should().Be("jjeVPSPayl_wG4KCwz9OCiFS8dGIX5TAZBhhfj7h0k4");
         }
@@ -60,7 +60,7 @@ namespace DeviceId.Tests.Encoders
         {
             var encoder = new HashDeviceIdComponentEncoder(() => MD5.Create(), new HexByteArrayEncoder());
 
-            var component = new DeviceIdComponent("Name", "Value");
+            var component = new DeviceIdComponent("Value");
 
             encoder.Encode(component).Should().Be("689202409e48743b914713f96d93947c");
         }
@@ -70,7 +70,7 @@ namespace DeviceId.Tests.Encoders
         {
             var encoder = new HashDeviceIdComponentEncoder(() => MD5.Create(), new Base64ByteArrayEncoder());
 
-            var component = new DeviceIdComponent("Name", "Value");
+            var component = new DeviceIdComponent("Value");
 
             encoder.Encode(component).Should().Be("aJICQJ5IdDuRRxP5bZOUfA==");
         }
@@ -80,7 +80,7 @@ namespace DeviceId.Tests.Encoders
         {
             var encoder = new HashDeviceIdComponentEncoder(() => MD5.Create(), new Base64UrlByteArrayEncoder());
 
-            var component = new DeviceIdComponent("Name", "Value");
+            var component = new DeviceIdComponent("Value");
 
             encoder.Encode(component).Should().Be("aJICQJ5IdDuRRxP5bZOUfA");
         }
@@ -89,8 +89,8 @@ namespace DeviceId.Tests.Encoders
         public void Encode_ValueIsNull_TreatItAsAnEmptyString()
         {
             var encoder = new HashDeviceIdComponentEncoder(() => MD5.Create(), new Base64UrlByteArrayEncoder());
-            var expected = encoder.Encode(new DeviceIdComponent("Name", string.Empty));
-            var actual = encoder.Encode(new DeviceIdComponent("Name", default(string)));
+            var expected = encoder.Encode(new DeviceIdComponent(string.Empty));
+            var actual = encoder.Encode(new DeviceIdComponent(default(string)));
             actual.Should().Be(expected);
         }
     }

@@ -1,17 +1,13 @@
-﻿using DeviceId.Internal;
+﻿using System.Collections.Generic;
+using System.Management;
 
-namespace DeviceId.Components
+namespace DeviceId.Windows.Wmi.Components
 {
     /// <summary>
     /// An implementation of <see cref="IDeviceIdComponent"/> that retrieves data from a WMI class.
     /// </summary>
     public class WmiDeviceIdComponent : IDeviceIdComponent
     {
-        /// <summary>
-        /// Gets the name of the component.
-        /// </summary>
-        public string Name { get; }
-
         /// <summary>
         /// The class name.
         /// </summary>
@@ -25,12 +21,10 @@ namespace DeviceId.Components
         /// <summary>
         /// Initializes a new instance of the <see cref="WmiDeviceIdComponent"/> class.
         /// </summary>
-        /// <param name="name">The name of the component.</param>
         /// <param name="className">The class name.</param>
         /// <param name="propertyName">The property name.</param>
-        public WmiDeviceIdComponent(string name, string className, string propertyName)
+        public WmiDeviceIdComponent(string className, string propertyName)
         {
-            Name = name;
             _className = className;
             _propertyName = propertyName;
         }
@@ -41,8 +35,35 @@ namespace DeviceId.Components
         /// <returns>The component value.</returns>
         public string GetValue()
         {
-            var values = Wmi.GetValues(_className, _propertyName);
-            return (values != null && values.Count > 0)
+            var values = new List<string>();
+
+            try
+            {
+                using var managementObjectSearcher = new ManagementObjectSearcher($"SELECT {_propertyName} FROM {_className}");
+                using var managementObjectCollection = managementObjectSearcher.Get();
+                foreach (var managementObject in managementObjectCollection)
+                {
+                    try
+                    {
+                        if (managementObject[_propertyName] is string value)
+                        {
+                            values.Add(value);
+                        }
+                    }
+                    finally
+                    {
+                        managementObject.Dispose();
+                    }
+                }
+            }
+            catch
+            {
+
+            }
+
+            values.Sort();
+
+            return values.Count > 0
                 ? string.Join(",", values.ToArray())
                 : null;
         }

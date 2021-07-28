@@ -9,11 +9,6 @@ namespace DeviceId.Components
     public class DeviceIdComponent : IDeviceIdComponent
     {
         /// <summary>
-        /// Gets the name of the component.
-        /// </summary>
-        public string Name { get; }
-
-        /// <summary>
         /// A function that returns the component value.
         /// </summary>
         private readonly Func<string> _valueFactory;
@@ -21,19 +16,16 @@ namespace DeviceId.Components
         /// <summary>
         /// Initializes a new instance of the <see cref="DeviceIdComponent"/> class.
         /// </summary>
-        /// <param name="name">The name of the component.</param>
         /// <param name="value">The component value.</param>
-        public DeviceIdComponent(string name, string value)
-            : this(name, () => value) { }
+        public DeviceIdComponent(string value)
+            : this(() => value) { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DeviceIdComponent"/> class.
         /// </summary>
-        /// <param name="name">The name of the component.</param>
         /// <param name="valueFactory">A function that returns the component value.</param>
-        public DeviceIdComponent(string name, Func<string> valueFactory)
+        public DeviceIdComponent(Func<string> valueFactory)
         {
-            Name = name;
             _valueFactory = valueFactory;
         }
 

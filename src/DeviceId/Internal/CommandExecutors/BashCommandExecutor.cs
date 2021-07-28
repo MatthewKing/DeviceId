@@ -1,9 +1,9 @@
-﻿namespace DeviceId.CommandExecutors
+﻿namespace DeviceId.Internal.CommandExecutors
 {
     /// <summary>
     /// An implementation of <see cref="ICommandExecutor"/> that uses /bin/bash to execute commands.
     /// </summary>
-    public class BashCommandExecutor : CommandExecutorBase
+    internal class BashCommandExecutor : CommandExecutorBase
     {
         /// <summary>
         /// Executes the specified command.

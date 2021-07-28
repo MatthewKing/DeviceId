@@ -6,11 +6,6 @@
     public interface IDeviceIdComponent
     {
         /// <summary>
-        /// Gets the name of the component.
-        /// </summary>
-        string Name { get; }
-
-        /// <summary>
         /// Gets the component value.
         /// </summary>
         /// <returns>The component value.</returns>
