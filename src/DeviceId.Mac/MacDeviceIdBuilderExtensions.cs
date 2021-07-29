@@ -1,7 +1,7 @@
 ﻿using DeviceId.Components;
 using DeviceId.Internal.CommandExecutors;
 
-namespace DeviceId.Mac
+namespace DeviceId
 {
     /// <summary>
     /// Extension methods for <see cref="MacDeviceIdBuilder"/>.

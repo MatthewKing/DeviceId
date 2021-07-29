@@ -1,6 +1,6 @@
 ﻿using DeviceId.Windows.Wmi.Components;
 
-namespace DeviceId.Windows.Wmi
+namespace DeviceId
 {
     /// <summary>
     /// Extension methods for <see cref="WindowsDeviceIdBuilder"/>.

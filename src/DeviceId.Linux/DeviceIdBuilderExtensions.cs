@@ -1,7 +1,7 @@
 ﻿using System;
 using DeviceId.Internal;
 
-namespace DeviceId.Linux
+namespace DeviceId
 {
     /// <summary>
     /// Extension methods for <see cref="DeviceIdBuilder"/>.

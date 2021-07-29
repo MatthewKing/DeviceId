@@ -1,7 +1,7 @@
 ﻿using System;
 using DeviceId.Internal;
 
-namespace DeviceId.Linux
+namespace DeviceId
 {
     /// <summary>
     /// Provides a fluent interface for adding Linux-specific components to a device identifier.

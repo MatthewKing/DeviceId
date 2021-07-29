@@ -1,7 +1,7 @@
 ﻿using System;
 using DeviceId.Internal;
 
-namespace DeviceId.Mac
+namespace DeviceId
 {
     /// <summary>
     /// Provides a fluent interface for adding Mac-specific components to a device identifier.

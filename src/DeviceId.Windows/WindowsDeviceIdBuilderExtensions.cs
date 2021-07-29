@@ -3,7 +3,7 @@
 using Microsoft.Win32;
 #endif
 
-namespace DeviceId.Windows
+namespace DeviceId
 {
     /// <summary>
     /// Extension methods for <see cref="WindowsDeviceIdBuilder"/>.

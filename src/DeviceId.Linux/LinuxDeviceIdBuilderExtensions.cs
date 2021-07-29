@@ -1,7 +1,7 @@
 ﻿using DeviceId.Components;
 using DeviceId.Linux.Components;
 
-namespace DeviceId.Linux
+namespace DeviceId
 {
     /// <summary>
     /// Extension methods for <see cref="LinuxDeviceIdBuilder"/>.

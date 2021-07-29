@@ -1,7 +1,7 @@
 ﻿using System;
 using DeviceId.Internal;
 
-namespace DeviceId.Windows
+namespace DeviceId
 {
     /// <summary>
     /// Provides a fluent interface for adding Windows-specific components to a device identifier.
