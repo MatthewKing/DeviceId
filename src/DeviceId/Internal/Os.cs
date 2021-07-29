@@ -10,7 +10,7 @@ namespace DeviceId.Internal
     /// <summary>
     /// Provides helper methods relating to the OS.
     /// </summary>
-    internal static class Os
+    internal static class OS
     {
         // ToDo: Add SupportedOSPlatformGuardAttribute to these methods so that the CA1416 warning goes away.
 
@@ -39,9 +39,9 @@ namespace DeviceId.Internal
 #endif
 
         /// <summary>
-        /// Gets a value indicating whether this is OS X.
+        /// Gets a value indicating whether this is Mac OS.
         /// </summary>
-        public static bool IsMac { get; }
+        public static bool IsMacOS { get; }
 #if NETFRAMEWORK
             = false;
 #elif NETSTANDARD

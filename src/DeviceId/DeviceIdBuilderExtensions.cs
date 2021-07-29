@@ -48,7 +48,7 @@ namespace DeviceId
         /// <returns>The <see cref="DeviceIdBuilder"/> instance.</returns>
         public static DeviceIdBuilder AddOsVersion(this DeviceIdBuilder builder)
         {
-            return builder.AddComponent("OSVersion", new DeviceIdComponent(Os.Version));
+            return builder.AddComponent("OSVersion", new DeviceIdComponent(OS.Version));
         }
 
         /// <summary>

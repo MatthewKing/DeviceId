@@ -31,7 +31,7 @@ namespace DeviceId.Linux
         /// <returns>The builder instance.</returns>
         public LinuxDeviceIdBuilder AddComponent(string name, IDeviceIdComponent component)
         {
-            if (Os.IsLinux)
+            if (OS.IsLinux)
             {
                 _baseBuilder.AddComponent(name, component);
             }

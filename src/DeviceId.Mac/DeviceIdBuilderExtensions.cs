@@ -16,7 +16,7 @@ namespace DeviceId.Mac
         /// <returns>The device ID builder.</returns>
         public static DeviceIdBuilder OnMac(this DeviceIdBuilder builder, Action<MacDeviceIdBuilder> macBuilderConfiguration)
         {
-            if (Os.IsMac && macBuilderConfiguration is not null)
+            if (OS.IsMacOS && macBuilderConfiguration is not null)
             {
                 var macBuilder = new MacDeviceIdBuilder(builder);
                 macBuilderConfiguration.Invoke(macBuilder);

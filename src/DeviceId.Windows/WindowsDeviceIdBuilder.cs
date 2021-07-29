@@ -31,7 +31,7 @@ namespace DeviceId.Windows
         /// <returns>The builder instance.</returns>
         public WindowsDeviceIdBuilder AddComponent(string name, IDeviceIdComponent component)
         {
-            if (Os.IsWindows)
+            if (OS.IsWindows)
             {
                 _baseBuilder.AddComponent(name, component);
             }

@@ -16,7 +16,7 @@ namespace DeviceId.Linux
         /// <returns>The device ID builder.</returns>
         public static DeviceIdBuilder OnLinux(this DeviceIdBuilder builder, Action<LinuxDeviceIdBuilder> linuxBuilderConfiguration)
         {
-            if (Os.IsLinux && linuxBuilderConfiguration is not null)
+            if (OS.IsLinux && linuxBuilderConfiguration is not null)
             {
                 var linuxBuilder = new LinuxDeviceIdBuilder(builder);
                 linuxBuilderConfiguration.Invoke(linuxBuilder);

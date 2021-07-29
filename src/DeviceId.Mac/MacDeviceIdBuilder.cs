@@ -31,7 +31,7 @@ namespace DeviceId.Mac
         /// <returns>The builder instance.</returns>
         public MacDeviceIdBuilder AddComponent(string name, IDeviceIdComponent component)
         {
-            if (Os.IsMac)
+            if (OS.IsMacOS)
             {
                 _baseBuilder.AddComponent(name, component);
             }
