@@ -26,7 +26,7 @@ namespace DeviceId
         /// </summary>
         public DeviceIdBuilder()
         {
-            Formatter = new HashDeviceIdFormatter(() => SHA256.Create(), new Base32ByteArrayEncoder());
+            Formatter = DeviceIdFormatters.DefaultV6;
             Components = new Dictionary<string, IDeviceIdComponent>(StringComparer.OrdinalIgnoreCase);
         }
 
