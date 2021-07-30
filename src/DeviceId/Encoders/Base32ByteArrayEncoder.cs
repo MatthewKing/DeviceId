@@ -48,7 +48,7 @@ namespace DeviceId.Encoders
                     if (offset < last)
                     {
                         buffer <<= 8;
-                        buffer |= (bytes[offset++] & 0xff);
+                        buffer |= bytes[offset++] & 0xff;
                         bitsLeft += 8;
                     }
                     else

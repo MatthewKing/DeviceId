@@ -21,7 +21,7 @@ namespace DeviceId.Internal
             }
 
             // Chop up input in 2 character chunks.
-            var partSize = 2;
+            const int partSize = 2;
             var parts = Enumerable.Range(0, input.Length / partSize).Select(x => input.Substring(x * partSize, partSize));
 
             // Put the parts in the AA:BB:CC format.

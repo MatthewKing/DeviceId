@@ -33,7 +33,7 @@ namespace DeviceId.Internal.CommandExecutors
 
             process?.WaitForExit();
 
-            var output = process?.StandardOutput?.ReadToEnd();
+            var output = process?.StandardOutput.ReadToEnd();
 
             return output;
         }

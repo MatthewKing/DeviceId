@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json;
 using DeviceId.Internal.CommandExecutors;
 
@@ -52,49 +53,38 @@ namespace DeviceId.Linux.Components
             }
 
             var udevInfo = _commandExecutor.Execute($"udevadm info --query=all --name=/dev/{device.Name} | grep ID_SERIAL=");
-            if (udevInfo != null)
+            if (udevInfo == null)
             {
-                var components = udevInfo.Split('=');
-                if (components.Length == 2)
-                {
-                    return components[1];
-                }
+                return null;
             }
 
-            return null;
+            var components = udevInfo.Split('=');
+            if (components.Length < 2)
+            {
+                return null;
+            }
+
+            return components[1];
         }
 
-        private LsblkDevice FindRootParent(LsblkOutput devices)
+        private static LsblkDevice FindRootParent(LsblkOutput devices)
         {
-            foreach (var device in devices.BlockDevices)
-            {
-                if (DeviceContainsRoot(device))
-                {
-                    return device;
-                }
-            }
-
-            return null;
+            return devices.BlockDevices.FirstOrDefault(x => DeviceContainsRoot(x));
         }
 
-        private bool DeviceContainsRoot(LsblkDevice device)
+        private static bool DeviceContainsRoot(LsblkDevice device)
         {
             if (device.MountPoint == "/")
             {
                 return true;
             }
-            else if (device.Children != null && device.Children.Count > 0)
+
+            if (device.Children == null || device.Children.Count == 0)
             {
-                foreach (var child in device.Children)
-                {
-                    if (DeviceContainsRoot(child))
-                    {
-                        return true;
-                    }
-                }
+                return false;
             }
 
-            return false;
+            return device.Children.Any(x => DeviceContainsRoot(x));
         }
 
         internal sealed class LsblkOutput

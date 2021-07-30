@@ -141,7 +141,7 @@ namespace DeviceId.Tests.Components
             componentValue.Should().BeNull();
         }
 
-        private string GetComponentValue(string rootParentDeviceName, string lsblkOutput, string udevadmOutput)
+        private static string GetComponentValue(string rootParentDeviceName, string lsblkOutput, string udevadmOutput)
         {
             var commandExecutorMock = new Mock<ICommandExecutor>();
             commandExecutorMock.Setup(x => x.Execute("lsblk -f -J")).Returns(lsblkOutput);
