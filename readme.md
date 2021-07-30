@@ -2,18 +2,78 @@
 
 A simple library providing functionality to generate a 'device ID' that can be used to uniquely identify a computer.
 
+NOTE: These docs are for version 6, which is currently in an ALPHA and is available as a pre-release NuGet package. Version 5 has a few subtle differences and I'd recommend looking at the readme history if you're using that version.
+
 ## Quickstart
+
+### What packages are needed?
+
+If you're using version 5 or below, everything is available in the [DeviceId](https://www.nuget.org/packages/DeviceId) package.
+
+As of version 6, the packages have been split up so that users can pick-and-choose what they need, without having to pull down unnecessary references that they won't use:
+
+* The main [DeviceId](https://www.nuget.org/packages/DeviceId) package contains the core functionality and a number of cross-platform components.
+* The [DeviceId.Windows](https://www.nuget.org/packages/DeviceId.Windows) package adds a few Windows-specific components.
+* The [DeviceId.Windows.Wmi](https://www.nuget.org/packages/DeviceId.Windows.Wmi) package adds even more Windows-specific components, using WMI.
+* The [DeviceId.Windows.Mmi](https://www.nuget.org/packages/DeviceId.Windows.Mmi) package adds the same components as above, but using MMI instead of WMI for those instances where WMI isn't appropriate (such as where no .NET Framework is present on the machine).
+* The [DeviceId.Linux](https://www.nuget.org/packages/DeviceId.Linux) package adds a few Linux-specific components.
+* The [DeviceId.Mac](https://www.nuget.org/packages/DeviceId.Linux) package adds a few Mac-specific components.
+
+You can pick-and-choose which packages to use based on your use case.
+
+For a standard Windows app, the recommended packages are: `DeviceId`, `DeviceId.Windows`, and `DeviceId.Windows.Wmi`.
+
+```
+PM> Install-Package DeviceId
+PM> Install-Package DeviceId.Windows
+PM> Install-Package DeviceId.Windows.Wmi
+```
+
+Alternatively, you can just start with `DeviceId.Windows.Wmi`, as it itself references `DeviceId.Windows` and `DeviceId`.
 
 ### Building a device identifier
 
 Use the `DeviceIdBuilder` class to build up a device ID.
 
+Here's a simple cross-platform one, using only the `DeviceId` package, which is valid for both version 5 and version 6 of the library:
+
 ```csharp
 string deviceId = new DeviceIdBuilder()
     .AddMachineName()
-    .AddProcessorId()
-    .AddMotherboardSerialNumber()
-    .AddSystemDriveSerialNumber()
+    .AddOSVersion()
+    .AddFileToken(@"C:\example-device-token.txt")
+    .ToString();
+```
+
+Here's a more complex device ID, making use of some of the advanced components from the `DeviceId.Windows.Wmi` (or `DeviceId.Windows.Mmi`) package:
+
+```csharp
+string deviceId = new DeviceIdBuilder()
+    .AddMachineName()
+    .AddOSVersion()
+    .OnWindows(windows => windows
+        .AddProcessorId()
+        .AddMotherboardSerialNumber()
+        .AddSystemSerialDriveNumber())
+    .ToString();
+```
+
+Here's a complex cross-platform device ID, using `DeviceId.Windows.Wmi`, `DeviceId.Linux`, and `DeviceId.Mac`:
+
+```csharp
+string deviceId = new DeviceIdBuilder()
+    .AddMachineName()
+    .AddOSVersion()
+    .OnWindows(windows => windows
+        .AddProcessorId()
+        .AddMotherboardSerialNumber()
+        .AddSystemSerialDriveNumber())
+    .OnLinux(linux => linux
+        .AddMotherboardSerialNumber()
+        .AddSystemDriveSerialNumber())
+    .OnMac(mac => mac
+        .AddSystemDriveSerialNumber()
+        .AddPlatformSerialNumber())
     .ToString();
 ```
 
@@ -21,40 +81,86 @@ string deviceId = new DeviceIdBuilder()
 
 The following extension methods are available out of the box to suit some common use cases:
 
-* `AddUserName()` adds the current user's username to the device ID.
-* `AddMachineName()` adds the machine name to the device ID.
-* `AddOSVersion()` adds the current OS version (as returned by `Environment.OSVersion`) to the device ID.
-* `AddMacAddress()` adds the MAC address to the device ID.
-* `AddProcessorId()` adds the processor ID to the device ID.
-* `AddMotherboardSerialNumber()` adds the motherboard serial number to the device ID.
-* `AddSystemDriveSerialNumber()` adds the system drive's serial number to the device ID.
-* `AddSystemUUID()` adds the system UUID to the device ID.
-* `AddOSInstallationID()` adds the OS installation ID.
-* `AddFileToken(path)` adds a token stored at the specified path to the device ID.
-* `AddRegistryValue()` adds a value from the registry.
-* `AddComponent(component)` adds a custom component (see below) to the device ID.
+From `DeviceId`:
 
-Custom components can be built by implementing `IDeviceIdComponent`. There is also a simple `DeviceIdComponent` class that allows you to specify an arbitrary component value to use, and a `WmiDeviceIdComponent` class that uses a specified WMI property (example: `new WmiDeviceIdComponent("MACAddress", "Win32_NetworkAdapterConfiguration", "MACAddress"`).
+* `AddUserName` adds the current user's username to the device identifer.
+* `AddMachineName` adds the machine name to the device identifier.
+* `AddOSVersion` adds the current OS version to the device identifier.
+* `AddMacAddress` adds the MAC address to the device identifier.
+* `AddFileToken` adds a unique token stored in a file to the device identifier. The file is created if it doesn't already exist. Fails silently if no permissions available to access the file.
+
+From `DeviceId.Windows`:
+
+* `AddRegistryValue` adds a specified registry value to the device identifier.
+* `AddMachineGuid` adds the machine GUID from `HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Cryptography` to the device identifier.
+
+From `DeviceId.Windows.Wmi` and `DeviceId.Windows.Mmi`:
+
+* `AddMacAddressFromWmi` / `AddMacAddressFromMmi` adds the MAC address to the device identifier. These use the improved query functionality from WMI/MMI to provide additional functionality over the basic `AddMacAddress` method (such as being able to exclude non-physical device).
+* `AddProcessorId` adds the processor ID to the device identifier.
+* `AddSystemSerialDriveNumber` adds the system drive's serial number to the device identifier.
+* `AddMotherboardSerialNumber` adds the motherboard serial number to the device identifier.
+* `AddSystemUuid` adds the system UUID to the device identifier.
+
+From `DeviceId.Linux`:
+
+* `AddSystemSerialDriveNumber` adds the system drive's serial number to the device identifier.
+* `AddMotherboardSerialNumber` adds the motherboard serial number to the device identifier.
+* `AddMachineId` adds the machine ID (from `/var/lib/dbus/machine-id` or `/etc/machine-id`) to the device identifier.
+* `AddProductUuid` adds the product UUID (from `/sys/class/dmi/id/product_uuid`) to the device identifier.
+* `AddCpuInfo` adds  CPU info (from `/proc/cpuinfo`) to the device identifier.
+
+From `DeviceId.Mac`:
+
+* `AddSystemSerialDriveNumber` adds the system drive's serial number to the device identifier.
+* `AddPlatformSerialNumber` adds IOPlatformSerialNumber to the device identifier.
 
 #### Dealing with MAC Address randomization and virtual network adapters
 
 Non physical network adapters like VPN connections tend not to have fixed MAC addresses. For wireless (802.11 based) adapters hardware (MAC) address randomization is frequently applied to avoid tracking with many modern operating systems support this out of the box. This makes wireless network adapters bad candidates for device identification.
 
-Use `AddMacAddress(true, true)` to exclude both virtual and wireless network adapters.
-
-### Controlling how the device identifier is formatted
-
-Use the `UseFormatter` method to set the formatter.
+Using the cross-platform `AddMacAddress`, you can exclude wireless network adapters like so:
 
 ```csharp
 string deviceId = new DeviceIdBuilder()
-    .AddProcessorId()
-    .AddMotherboardSerialNumber()
-    .UseFormatter(new HashDeviceIdFormatter(() => SHA256.Create(), new Base64UrlByteArrayEncoder()))
+    .AddMacAddress(excludeWireless: true)
     .ToString();
 ```
 
-You can use one of the out-of-the-box implementations of `IDeviceIdFormatter` in the `DeviceId.Formatters` namespace, or you can create your own.
+If you're on Windows, you can also exclude non-physical adapters using the `DeviceId.Windows.Wmi` or `DeviceId.Windows.Mmi` packages like so:
+
+```csharp
+string deviceId = new DeviceIdBuilder()
+    .AddMacAddress(excludeWireless: true)
+    .OnWindows(windows => windows
+        .AddMacAddressFromWmi(excludeWireless: true, excludeNonPhysical: true)
+    .ToString()
+```
+
+### Controlling how the device identifier is formatted
+
+Use the `UseFormatter` method to set the formatter:
+
+```csharp
+string deviceId = new DeviceIdBuilder()
+    .AddMachineName()
+    .AddOSVersion()
+    .UseFormatter(new HashDeviceIdFormatter(() => SHA256.Create(), new Base32ByteArrayEncoder()))
+    .ToString();
+```
+
+The "default" formatters are available in [DeviceIdFormatters](/src/DeviceId/DeviceIdFormatters.cs) for quick reference.
+The default formatter changed between version 5 and version 6 of the library. If you're using version 6 but want to revert to the version 5 formatter, you can do so:
+
+```csharp
+string deviceId = new DeviceIdBuilder()
+    .AddMachineName()
+    .AddOSVersion()
+    .UseFormatter(DeviceIdFormatters.DefaultV5)
+    .ToString();
+```
+
+For more advanced usage scenarios, you can use one of the out-of-the-box implementations of `IDeviceIdFormatter` in the `DeviceId.Formatters` namespace, or you can create your own.
 
 * [StringDeviceIdFormatter](/src/DeviceId/Formatters/HashDeviceIdFormatter.cs) - Formats the device ID as a string containing each component ID, using any desired component encoding.
 * [HashDeviceIdFormatter](/src/DeviceId/Formatters/HashDeviceIdFormatter.cs) - Formats the device ID as a hash string, using any desired hash algorithm and byte array encoding.
@@ -65,38 +171,9 @@ There are a number of encoders that can be used customize the formatter. These i
 * [PlainTextDeviceIdComponentEncoder](/src/DeviceId/Encoders/PlainTextDeviceIdComponentEncoder.cs) - Encodes a device ID component as plain text.
 * [HashDeviceIdComponentEncoder](/src/DeviceId/Encoders/HashDeviceIdComponentEncoder.cs) - Encodes a device ID component as a hash string, using any desired hash algorithm.
 * [HexByteArrayEncoder](/src/DeviceId/Encoders/HexByteArrayEncoder.cs) - Encodes a byte array as a hex string.
+* [Base32UrlByteArrayEncoder](/src/DeviceId/Encoders/Base32ByteArrayEncoder.cs) - Encodes a byte array as a base 64 url-encoded string.
 * [Base64ByteArrayEncoder](/src/DeviceId/Encoders/Base64ByteArrayEncoder.cs) - Encodes a byte array as a base 64 string.
 * [Base64UrlByteArrayEncoder](/src/DeviceId/Encoders/Base64UrlByteArrayEncoder.cs) - Encodes a byte array as a base 64 url-encoded string.
-
-## Cross-platform support
-
-The following cross-platform support is available:
-
-| Component                  | Windows                | Linux                  | OSX                    |
-| -------------------------- | ---------------------- | ---------------------- | ---------------------- |
-| User name                  | :heavy_check_mark: Yes | :heavy_check_mark: Yes | :heavy_check_mark: Yes |
-| Machine name               | :heavy_check_mark: Yes | :heavy_check_mark: Yes | :heavy_check_mark: Yes |
-| OS version                 | :heavy_check_mark: Yes | :heavy_check_mark: Yes | :heavy_check_mark: Yes |
-| Processor ID               | :heavy_check_mark: Yes | :heavy_check_mark: Yes | :x: No                 |
-| MAC address                | :heavy_check_mark: Yes | :heavy_check_mark: Yes | :heavy_check_mark: Yes |
-| Motherboard serial number  | :heavy_check_mark: Yes | :heavy_check_mark: Yes | :x: No                 |
-| System drive serial number | :heavy_check_mark: Yes | :heavy_check_mark: Yes | :heavy_check_mark: Yes |
-| System UUID                | :heavy_check_mark: Yes | :heavy_check_mark: Yes | :x: No                 |
-| OS installation ID         | :heavy_check_mark: Yes | :heavy_check_mark: Yes | :heavy_check_mark: Yes |
-| Registry value             | :heavy_check_mark: Yes | :x: No                 | :x: No                 |
-| File token                 | :heavy_check_mark: Yes | :heavy_check_mark: Yes | :heavy_check_mark: Yes |
-
-## Installation
-
-Just grab it from [NuGet](https://www.nuget.org/packages/DeviceId/)
-
-```
-PM> Install-Package DeviceId
-```
-
-```
-$ dotnet add package DeviceId
-```
 
 ## Strong naming
 
@@ -104,5 +181,5 @@ From version 5 onwards, the assemblies in this package are strong named for the 
 
 ## License and copyright
 
-Copyright Matthew King 2015-2020.
+Copyright Matthew King 2015-2021.
 Distributed under the [MIT License](http://opensource.org/licenses/MIT). Refer to license.txt for more information.
