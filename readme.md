@@ -17,7 +17,7 @@ As of version 6, the packages have been split up so that users can pick-and-choo
 * The [DeviceId.Windows.Wmi](https://www.nuget.org/packages/DeviceId.Windows.Wmi) package adds even more Windows-specific components, using WMI.
 * The [DeviceId.Windows.Mmi](https://www.nuget.org/packages/DeviceId.Windows.Mmi) package adds the same components as above, but using MMI instead of WMI for those instances where WMI isn't appropriate (such as where no .NET Framework is present on the machine).
 * The [DeviceId.Linux](https://www.nuget.org/packages/DeviceId.Linux) package adds a few Linux-specific components.
-* The [DeviceId.Mac](https://www.nuget.org/packages/DeviceId.Linux) package adds a few Mac-specific components.
+* The [DeviceId.Mac](https://www.nuget.org/packages/DeviceId.Mac) package adds a few Mac-specific components.
 
 You can pick-and-choose which packages to use based on your use case.
 
