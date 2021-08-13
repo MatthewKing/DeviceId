@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Security.Cryptography;
-using DeviceId.Encoders;
-using DeviceId.Formatters;
 
 namespace DeviceId
 {
