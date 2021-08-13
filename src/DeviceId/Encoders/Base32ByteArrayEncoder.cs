@@ -8,14 +8,45 @@ namespace DeviceId.Encoders
     /// </summary>
     public class Base32ByteArrayEncoder : IByteArrayEncoder
     {
-        private const string Alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
-        private const int Shift = 5;
-        private const int Mask = 31;
+        /// <summary>
+        /// Gets the RFC-4648 Base32 alphabet.
+        /// </summary>
+        /// <remarks>
+        /// See https://datatracker.ietf.org/doc/html/rfc4648#section-6
+        /// </remarks>
+        public static string Rfc4648Alphabet { get; } = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
+
+        /// <summary>
+        /// Gets the Crockford Base32 alphabet.
+        /// </summary>
+        /// <remarks>
+        /// See https://www.crockford.com/base32.html
+        /// </remarks>
+        public static string CrockfordAlphabet { get; } = "0123456789ABCDEFGHJKMNPQRSTVWXYZ";
+
+        /// <summary>
+        /// Gets the alphabet in use.
+        /// </summary>
+        private readonly string _alphabet;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Base32ByteArrayEncoder"/> class.
         /// </summary>
-        public Base32ByteArrayEncoder() { }
+        /// <param name="alphabet">The alphabet to use.</param>
+        public Base32ByteArrayEncoder(string alphabet)
+        {
+            if (alphabet is null)
+            {
+                throw new ArgumentNullException(nameof(alphabet));
+            }
+
+            if (alphabet.Length != 32)
+            {
+                throw new ArgumentException("The alphabet must have a length of 32.", nameof(alphabet));
+            }
+
+            _alphabet = alphabet;
+        }
 
         /// <summary>
         /// Encodes the specified byte array as a string.
@@ -34,7 +65,10 @@ namespace DeviceId.Encoders
                 return string.Empty;
             }
 
-            var outputLength = (bytes.Length * 8 + Shift - 1) / Shift;
+            const int shift = 5;
+            const int mask = 31;
+
+            var outputLength = (bytes.Length * 8 + shift - 1) / shift;
             var sb = new StringBuilder(outputLength);
 
             var offset = 0;
@@ -43,7 +77,7 @@ namespace DeviceId.Encoders
             var bitsLeft = 8;
             while (bitsLeft > 0 || offset < last)
             {
-                if (bitsLeft < Shift)
+                if (bitsLeft < shift)
                 {
                     if (offset < last)
                     {
@@ -53,15 +87,15 @@ namespace DeviceId.Encoders
                     }
                     else
                     {
-                        var pad = Shift - bitsLeft;
+                        var pad = shift - bitsLeft;
                         buffer <<= pad;
                         bitsLeft += pad;
                     }
                 }
 
-                var index = Mask & (buffer >> (bitsLeft - Shift));
-                bitsLeft -= Shift;
-                sb.Append(Alphabet[index]);
+                var index = mask & (buffer >> (bitsLeft - shift));
+                bitsLeft -= shift;
+                sb.Append(_alphabet[index]);
             }
 
             return sb.ToString();
