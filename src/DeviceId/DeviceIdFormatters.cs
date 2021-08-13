@@ -17,6 +17,6 @@ namespace DeviceId
         /// <summary>
         /// Returns the default formatter used in version 4 of the DeviceId library.
         /// </summary>
-        public static IDeviceIdFormatter DefaultV6 { get; } = new HashDeviceIdFormatter(() => SHA256.Create(), new Base32ByteArrayEncoder());
+        public static IDeviceIdFormatter DefaultV6 { get; } = new HashDeviceIdFormatter(() => SHA256.Create(), new Base32ByteArrayEncoder(Base32ByteArrayEncoder.CrockfordAlphabet));
     }
 }
