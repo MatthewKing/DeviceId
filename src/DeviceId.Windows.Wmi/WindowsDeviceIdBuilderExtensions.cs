@@ -1,4 +1,6 @@
-﻿using DeviceId.Windows.Wmi.Components;
+﻿using System;
+using System.ComponentModel;
+using DeviceId.Windows.Wmi.Components;
 
 namespace DeviceId
 {
@@ -54,7 +56,19 @@ namespace DeviceId
         /// </summary>
         /// <param name="builder">The <see cref="WindowsDeviceIdBuilder"/> to add the component to.</param>
         /// <returns>The <see cref="WindowsDeviceIdBuilder"/> instance.</returns>
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        [Obsolete("This method name was a typo. Use AddSystemDriveSerialNumber instead.")]
         public static WindowsDeviceIdBuilder AddSystemSerialDriveNumber(this WindowsDeviceIdBuilder builder)
+        {
+            return builder.AddComponent("SystemDriveSerialNumber", new WmiSystemDriveSerialNumberDeviceIdComponent());
+        }
+
+        /// <summary>
+        /// Adds the system serial drive number to the device identifier.
+        /// </summary>
+        /// <param name="builder">The <see cref="WindowsDeviceIdBuilder"/> to add the component to.</param>
+        /// <returns>The <see cref="WindowsDeviceIdBuilder"/> instance.</returns>
+        public static WindowsDeviceIdBuilder AddSystemDriveSerialNumber(this WindowsDeviceIdBuilder builder)
         {
             return builder.AddComponent("SystemDriveSerialNumber", new WmiSystemDriveSerialNumberDeviceIdComponent());
         }
