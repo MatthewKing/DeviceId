@@ -23,7 +23,7 @@ namespace DeviceId.Windows.Mmi.Components
 
             using var session = CimSession.Create(null);
 
-            foreach (var logicalDiskAssociator in session.QueryInstances(@"root\cimv2", "WQL", $"ASSOCIATORS OF {{Win32_LogicalDisk.DeviceID=\"{systemLogicalDiskDeviceId}\"}}"))
+            foreach (var logicalDiskAssociator in session.QueryInstances(@"root\cimv2", "WQL", $"ASSOCIATORS OF {{Win32_LogicalDisk.DeviceID=\"{systemLogicalDiskDeviceId}\"}} WHERE ResultClass = Win32_DiskPartition"))
             {
                 if (logicalDiskAssociator.CimClass.CimSystemProperties.ClassName == "Win32_DiskPartition")
                 {
