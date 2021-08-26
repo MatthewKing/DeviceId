@@ -4,6 +4,7 @@
     <PackageId>DeviceId.Linux</PackageId>
     <Title>DeviceId (Linux)</Title>
     <Description>Provides Linux-specific components for the DeviceId package.</Description>
+    <VersionPrefix>6.0.0</VersionPrefix>
   </PropertyGroup>
 
   <PropertyGroup>

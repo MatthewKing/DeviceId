@@ -4,6 +4,7 @@
     <PackageId>DeviceId</PackageId>
     <Title>DeviceId</Title>
     <Description>Provides functionality to generate a 'device ID' that can be used to uniquely identify a computer.</Description>
+    <VersionPrefix>6.0.0</VersionPrefix>
     <PackageReleaseNotes>Please note that as of v6.0.0, some functionality that was previously in the main DeviceId package has been moved to the platform-specific packages: DeviceId.Windows, DeviceId.Windows.Wmi, DeviceId.Windows.Mmi, DeviceId.Linux, DeviceId.Mac</PackageReleaseNotes>
   </PropertyGroup>
 
