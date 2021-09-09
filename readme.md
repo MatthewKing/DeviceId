@@ -54,7 +54,7 @@ string deviceId = new DeviceIdBuilder()
     .OnWindows(windows => windows
         .AddProcessorId()
         .AddMotherboardSerialNumber()
-        .AddSystemSerialDriveNumber())
+        .AddSystemDriveSerialNumber())
     .ToString();
 ```
 
@@ -67,7 +67,7 @@ string deviceId = new DeviceIdBuilder()
     .OnWindows(windows => windows
         .AddProcessorId()
         .AddMotherboardSerialNumber()
-        .AddSystemSerialDriveNumber())
+        .AddSystemDriveSerialNumber())
     .OnLinux(linux => linux
         .AddMotherboardSerialNumber()
         .AddSystemDriveSerialNumber())
@@ -98,13 +98,13 @@ From `DeviceId.Windows.Wmi` and `DeviceId.Windows.Mmi`:
 
 * `AddMacAddressFromWmi` / `AddMacAddressFromMmi` adds the MAC address to the device identifier. These use the improved query functionality from WMI/MMI to provide additional functionality over the basic `AddMacAddress` method (such as being able to exclude non-physical device).
 * `AddProcessorId` adds the processor ID to the device identifier.
-* `AddSystemSerialDriveNumber` adds the system drive's serial number to the device identifier.
+* `AddSystemDriveSerialNumber` adds the system drive's serial number to the device identifier.
 * `AddMotherboardSerialNumber` adds the motherboard serial number to the device identifier.
 * `AddSystemUuid` adds the system UUID to the device identifier.
 
 From `DeviceId.Linux`:
 
-* `AddSystemSerialDriveNumber` adds the system drive's serial number to the device identifier.
+* `AddSystemDriveSerialNumber` adds the system drive's serial number to the device identifier.
 * `AddMotherboardSerialNumber` adds the motherboard serial number to the device identifier.
 * `AddMachineId` adds the machine ID (from `/var/lib/dbus/machine-id` or `/etc/machine-id`) to the device identifier.
 * `AddProductUuid` adds the product UUID (from `/sys/class/dmi/id/product_uuid`) to the device identifier.
@@ -112,7 +112,7 @@ From `DeviceId.Linux`:
 
 From `DeviceId.Mac`:
 
-* `AddSystemSerialDriveNumber` adds the system drive's serial number to the device identifier.
+* `AddSystemDriveSerialNumber` adds the system drive's serial number to the device identifier.
 * `AddPlatformSerialNumber` adds IOPlatformSerialNumber to the device identifier.
 
 #### Dealing with MAC Address randomization and virtual network adapters
