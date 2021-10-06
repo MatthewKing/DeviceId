@@ -40,7 +40,7 @@ Here's a simple cross-platform one, using only the `DeviceId` package, which is 
 ```csharp
 string deviceId = new DeviceIdBuilder()
     .AddMachineName()
-    .AddOSVersion()
+    .AddOsVersion()
     .AddFileToken(@"C:\example-device-token.txt")
     .ToString();
 ```
@@ -50,7 +50,7 @@ Here's a more complex device ID, making use of some of the advanced components f
 ```csharp
 string deviceId = new DeviceIdBuilder()
     .AddMachineName()
-    .AddOSVersion()
+    .AddOsVersion()
     .OnWindows(windows => windows
         .AddProcessorId()
         .AddMotherboardSerialNumber()
@@ -63,7 +63,7 @@ Here's a complex cross-platform device ID, using `DeviceId.Windows.Wmi`, `Device
 ```csharp
 string deviceId = new DeviceIdBuilder()
     .AddMachineName()
-    .AddOSVersion()
+    .AddOsVersion()
     .OnWindows(windows => windows
         .AddProcessorId()
         .AddMotherboardSerialNumber()
@@ -85,7 +85,7 @@ From `DeviceId`:
 
 * `AddUserName` adds the current user's username to the device identifer.
 * `AddMachineName` adds the machine name to the device identifier.
-* `AddOSVersion` adds the current OS version to the device identifier.
+* `AddOsVersion` adds the current OS version to the device identifier.
 * `AddMacAddress` adds the MAC address to the device identifier.
 * `AddFileToken` adds a unique token stored in a file to the device identifier. The file is created if it doesn't already exist. Fails silently if no permissions available to access the file.
 
@@ -144,7 +144,7 @@ Use the `UseFormatter` method to set the formatter:
 ```csharp
 string deviceId = new DeviceIdBuilder()
     .AddMachineName()
-    .AddOSVersion()
+    .AddOsVersion()
     .UseFormatter(new HashDeviceIdFormatter(() => SHA256.Create(), new Base32ByteArrayEncoder()))
     .ToString();
 ```
@@ -155,7 +155,7 @@ The default formatter changed between version 5 and version 6 of the library. If
 ```csharp
 string deviceId = new DeviceIdBuilder()
     .AddMachineName()
-    .AddOSVersion()
+    .AddOsVersion()
     .UseFormatter(DeviceIdFormatters.DefaultV5)
     .ToString();
 ```
