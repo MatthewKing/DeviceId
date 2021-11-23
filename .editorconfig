@@ -5,15 +5,29 @@ indent_style = space
 insert_final_newline = true
 trim_trailing_whitespace = true
 
+[*.csproj]
+indent_size = 2
+
 [*.cs]
 indent_size = 4
+csharp_style_namespace_declarations = file_scoped
+dotnet_naming_rule.instance_fields_should_be_camel_case.severity = suggestion
+dotnet_naming_rule.instance_fields_should_be_camel_case.style = instance_field_style
+dotnet_naming_rule.instance_fields_should_be_camel_case.symbols = instance_fields
+dotnet_naming_style.instance_field_style.capitalization = camel_case
+dotnet_naming_style.instance_field_style.required_prefix = _
+dotnet_naming_symbols.instance_fields.applicable_kinds = field
 dotnet_sort_system_directives_first = true
-dotnet_style_qualification_for_field = false
-dotnet_style_qualification_for_property	= false
-dotnet_style_qualification_for_method = false
-dotnet_style_qualification_for_event = false
+dotnet_style_object_initializer = false
 dotnet_style_predefined_type_for_locals_parameters_members = true
 dotnet_style_predefined_type_for_member_access = false
-dotnet_style_require_accessibility_modifiers = for_non_interface_members
-dotnet_style_readonly_field = true
 dotnet_style_prefer_inferred_anonymous_type_member_names = false
+dotnet_style_qualification_for_event = false
+dotnet_style_qualification_for_field = false
+dotnet_style_qualification_for_method = false
+dotnet_style_qualification_for_property	= false
+dotnet_style_readonly_field = true
+dotnet_style_require_accessibility_modifiers = for_non_interface_members
+dotnet_diagnostic.IDE0005.severity = warning # Remove unnecessary import
+dotnet_diagnostic.IDE0017.severity = none # Use object initializers
+dotnet_diagnostic.IDE0161.severity = warning # File-scoped namespaces
