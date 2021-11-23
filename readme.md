@@ -2,13 +2,9 @@
 
 A simple library providing functionality to generate a 'device ID' that can be used to uniquely identify a computer.
 
-NOTE: These docs are for version 6, which is currently in an ALPHA and is available as a pre-release NuGet package. Version 5 has a few subtle differences and I'd recommend looking at the readme history if you're using that version.
-
 ## Quickstart
 
 ### What packages are needed?
-
-If you're using version 5 or below, everything is available in the [DeviceId](https://www.nuget.org/packages/DeviceId) package.
 
 As of version 6, the packages have been split up so that users can pick-and-choose what they need, without having to pull down unnecessary references that they won't use:
 
@@ -30,6 +26,8 @@ PM> Install-Package DeviceId.Windows.Wmi
 ```
 
 Alternatively, you can just start with `DeviceId.Windows.Wmi`, as it itself references `DeviceId.Windows` and `DeviceId`.
+
+If you're using version 5 or below, everything is available in the [DeviceId](https://www.nuget.org/packages/DeviceId) package.
 
 ### Building a device identifier
 
