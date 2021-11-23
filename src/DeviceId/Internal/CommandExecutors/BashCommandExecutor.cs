@@ -1,18 +1,17 @@
-﻿namespace DeviceId.Internal.CommandExecutors
+﻿namespace DeviceId.Internal.CommandExecutors;
+
+/// <summary>
+/// An implementation of <see cref="ICommandExecutor"/> that uses /bin/bash to execute commands.
+/// </summary>
+internal class BashCommandExecutor : CommandExecutorBase
 {
     /// <summary>
-    /// An implementation of <see cref="ICommandExecutor"/> that uses /bin/bash to execute commands.
+    /// Executes the specified command.
     /// </summary>
-    internal class BashCommandExecutor : CommandExecutorBase
+    /// <param name="command">The command to execute.</param>
+    /// <returns>The command output.</returns>
+    public override string Execute(string command)
     {
-        /// <summary>
-        /// Executes the specified command.
-        /// </summary>
-        /// <param name="command">The command to execute.</param>
-        /// <returns>The command output.</returns>
-        public override string Execute(string command)
-        {
-            return RunWithShell("/bin/bash", $"-c \"{command.Replace("\"", "\\\"")}\"").Trim('\r').Trim('\n').TrimEnd().TrimStart();
-        }
+        return RunWithShell("/bin/bash", $"-c \"{command.Replace("\"", "\\\"")}\"").Trim('\r').Trim('\n').TrimEnd().TrimStart();
     }
 }

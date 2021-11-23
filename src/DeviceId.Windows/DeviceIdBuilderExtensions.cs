@@ -1,28 +1,27 @@
 ﻿using System;
 using DeviceId.Internal;
 
-namespace DeviceId
+namespace DeviceId;
+
+/// <summary>
+/// Extension methods for <see cref="DeviceIdBuilder"/>.
+/// </summary>
+public static class DeviceIdBuilderExtensions
 {
     /// <summary>
-    /// Extension methods for <see cref="DeviceIdBuilder"/>.
+    /// Adds Windows-specific components to the device ID.
     /// </summary>
-    public static class DeviceIdBuilderExtensions
+    /// <param name="builder">The device ID builder to add the components to.</param>
+    /// <param name="windowsBuilderConfiguration">An action that adds the Windows-specific components.</param>
+    /// <returns>The device ID builder.</returns>
+    public static DeviceIdBuilder OnWindows(this DeviceIdBuilder builder, Action<WindowsDeviceIdBuilder> windowsBuilderConfiguration)
     {
-        /// <summary>
-        /// Adds Windows-specific components to the device ID.
-        /// </summary>
-        /// <param name="builder">The device ID builder to add the components to.</param>
-        /// <param name="windowsBuilderConfiguration">An action that adds the Windows-specific components.</param>
-        /// <returns>The device ID builder.</returns>
-        public static DeviceIdBuilder OnWindows(this DeviceIdBuilder builder, Action<WindowsDeviceIdBuilder> windowsBuilderConfiguration)
+        if (OS.IsWindows && windowsBuilderConfiguration is not null)
         {
-            if (OS.IsWindows && windowsBuilderConfiguration is not null)
-            {
-                var windowsBuilder = new WindowsDeviceIdBuilder(builder);
-                windowsBuilderConfiguration.Invoke(windowsBuilder);
-            }
-
-            return builder;
+            var windowsBuilder = new WindowsDeviceIdBuilder(builder);
+            windowsBuilderConfiguration.Invoke(windowsBuilder);
         }
+
+        return builder;
     }
 }

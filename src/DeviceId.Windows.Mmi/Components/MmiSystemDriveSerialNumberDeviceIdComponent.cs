@@ -1,49 +1,48 @@
 ﻿using System;
 using Microsoft.Management.Infrastructure;
 
-namespace DeviceId.Windows.Mmi.Components
+namespace DeviceId.Windows.Mmi.Components;
+
+/// <summary>
+/// An implementation of <see cref="IDeviceIdComponent"/> that uses the system drive's serial number.
+/// </summary>
+public class MmiSystemDriveSerialNumberDeviceIdComponent : IDeviceIdComponent
 {
     /// <summary>
-    /// An implementation of <see cref="IDeviceIdComponent"/> that uses the system drive's serial number.
+    /// Initializes a new instance of the <see cref="MmiSystemDriveSerialNumberDeviceIdComponent"/> class.
     /// </summary>
-    public class MmiSystemDriveSerialNumberDeviceIdComponent : IDeviceIdComponent
+    public MmiSystemDriveSerialNumberDeviceIdComponent() { }
+
+    /// <summary>
+    /// Gets the component value.
+    /// </summary>
+    /// <returns>The component value.</returns>
+    public string GetValue()
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="MmiSystemDriveSerialNumberDeviceIdComponent"/> class.
-        /// </summary>
-        public MmiSystemDriveSerialNumberDeviceIdComponent() { }
+        var systemLogicalDiskDeviceId = Environment.GetFolderPath(Environment.SpecialFolder.System).Substring(0, 2);
 
-        /// <summary>
-        /// Gets the component value.
-        /// </summary>
-        /// <returns>The component value.</returns>
-        public string GetValue()
+        using var session = CimSession.Create(null);
+
+        foreach (var logicalDiskAssociator in session.QueryInstances(@"root\cimv2", "WQL", $"ASSOCIATORS OF {{Win32_LogicalDisk.DeviceID=\"{systemLogicalDiskDeviceId}\"}} WHERE ResultClass = Win32_DiskPartition"))
         {
-            var systemLogicalDiskDeviceId = Environment.GetFolderPath(Environment.SpecialFolder.System).Substring(0, 2);
-
-            using var session = CimSession.Create(null);
-
-            foreach (var logicalDiskAssociator in session.QueryInstances(@"root\cimv2", "WQL", $"ASSOCIATORS OF {{Win32_LogicalDisk.DeviceID=\"{systemLogicalDiskDeviceId}\"}} WHERE ResultClass = Win32_DiskPartition"))
+            if (logicalDiskAssociator.CimClass.CimSystemProperties.ClassName == "Win32_DiskPartition")
             {
-                if (logicalDiskAssociator.CimClass.CimSystemProperties.ClassName == "Win32_DiskPartition")
+                if (logicalDiskAssociator.CimInstanceProperties["DeviceId"].Value is string diskPartitionDeviceId)
                 {
-                    if (logicalDiskAssociator.CimInstanceProperties["DeviceId"].Value is string diskPartitionDeviceId)
+                    foreach (var diskPartitionAssociator in session.QueryInstances(@"root\cimv2", "WQL", $"ASSOCIATORS OF {{Win32_DiskPartition.DeviceID=\"{diskPartitionDeviceId}\"}}"))
                     {
-                        foreach (var diskPartitionAssociator in session.QueryInstances(@"root\cimv2", "WQL", $"ASSOCIATORS OF {{Win32_DiskPartition.DeviceID=\"{diskPartitionDeviceId}\"}}"))
+                        if (diskPartitionAssociator.CimClass.CimSystemProperties.ClassName == "Win32_DiskDrive")
                         {
-                            if (diskPartitionAssociator.CimClass.CimSystemProperties.ClassName == "Win32_DiskDrive")
+                            if (diskPartitionAssociator.CimInstanceProperties["SerialNumber"].Value is string diskDriveSerialNumber)
                             {
-                                if (diskPartitionAssociator.CimInstanceProperties["SerialNumber"].Value is string diskDriveSerialNumber)
-                                {
-                                    return diskDriveSerialNumber;
-                                }
+                                return diskDriveSerialNumber;
                             }
                         }
                     }
                 }
             }
-
-            return null;
         }
+
+        return null;
     }
 }

@@ -3,27 +3,27 @@ using DeviceId.Encoders;
 using FluentAssertions;
 using Xunit;
 
-namespace DeviceId.Tests.Encoders
+namespace DeviceId.Tests.Encoders;
+
+public class HexByteArrayEncoderTests
 {
-    public class HexByteArrayEncoderTests
+    [Fact]
+    public void Encode_BytesIsNull_ThrowsArgumentNullException()
     {
-        [Fact]
-        public void Encode_BytesIsNull_ThrowsArgumentNullException()
+        var encoder = new HexByteArrayEncoder();
+
+        Action act = () => encoder.Encode(null);
+
+        act.ShouldThrow<ArgumentNullException>();
+    }
+
+    [Fact]
+    public void Encode_ReturnsByteArrayAsHexString()
+    {
+        var encoder = new HexByteArrayEncoder();
+
+        var bytes = new byte[]
         {
-            var encoder = new HexByteArrayEncoder();
-
-            Action act = () => encoder.Encode(null);
-
-            act.ShouldThrow<ArgumentNullException>();
-        }
-
-        [Fact]
-        public void Encode_ReturnsByteArrayAsHexString()
-        {
-            var encoder = new HexByteArrayEncoder();
-
-            var bytes = new byte[]
-            {
                 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F,
                 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1A, 0x1B, 0x1C, 0x1D, 0x1E, 0x1F,
                 0x20, 0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27, 0x28, 0x29, 0x2A, 0x2B, 0x2C, 0x2D, 0x2E, 0x2F,
@@ -40,9 +40,8 @@ namespace DeviceId.Tests.Encoders
                 0xD0, 0xD1, 0xD2, 0xD3, 0xD4, 0xD5, 0xD6, 0xD7, 0xD8, 0xD9, 0xDA, 0xDB, 0xDC, 0xDD, 0xDE, 0xDF,
                 0xE0, 0xE1, 0xE2, 0xE3, 0xE4, 0xE5, 0xE6, 0xE7, 0xE8, 0xE9, 0xEA, 0xEB, 0xEC, 0xED, 0xEE, 0xEF,
                 0xF0, 0xF1, 0xF2, 0xF3, 0xF4, 0xF5, 0xF6, 0xF7, 0xF8, 0xF9, 0xFA, 0xFB, 0xFC, 0xFD, 0xFE, 0xFF,
-            };
+        };
 
-            encoder.Encode(bytes).Should().Be("000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfeff");
-        }
+        encoder.Encode(bytes).Should().Be("000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfeff");
     }
 }

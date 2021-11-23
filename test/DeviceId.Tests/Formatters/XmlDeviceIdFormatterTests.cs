@@ -7,63 +7,62 @@ using DeviceId.Formatters;
 using FluentAssertions;
 using Xunit;
 
-namespace DeviceId.Tests.Formatters
+namespace DeviceId.Tests.Formatters;
+
+public class XmlDeviceIdFormatterTests
 {
-    public class XmlDeviceIdFormatterTests
+    [Fact]
+    public void Constructor_EncoderIsNull_ThrowsArgumentNullException()
     {
-        [Fact]
-        public void Constructor_EncoderIsNull_ThrowsArgumentNullException()
+        Action act = () => new XmlDeviceIdFormatter(null);
+
+        act.ShouldThrow<ArgumentNullException>();
+    }
+
+    [Fact]
+    public void GetDeviceId_ComponentsIsNull_ThrowsArgumentNullException()
+    {
+        var formatter = new XmlDeviceIdFormatter(new HashDeviceIdComponentEncoder(() => MD5.Create(), new HexByteArrayEncoder()));
+
+        Action act = () => formatter.GetDeviceId(null);
+
+        act.ShouldThrow<ArgumentNullException>();
+    }
+
+    [Fact]
+    public void GetDeviceId_ComponentsIsEmpty_ReturnsEmptyXmlDocument()
+    {
+        var formatter = new XmlDeviceIdFormatter(new HashDeviceIdComponentEncoder(() => MD5.Create(), new HexByteArrayEncoder()));
+
+        var deviceId = formatter.GetDeviceId(new Dictionary<string, IDeviceIdComponent>(StringComparer.OrdinalIgnoreCase));
+
+        deviceId.Should().Be("<DeviceId />");
+    }
+
+    [Fact]
+    public void GetDeviceId_ComponentsAreValid_ReturnsDeviceId()
+    {
+        var formatter = new XmlDeviceIdFormatter(new HashDeviceIdComponentEncoder(() => MD5.Create(), new HexByteArrayEncoder()));
+
+        var deviceId = formatter.GetDeviceId(new Dictionary<string, IDeviceIdComponent>(StringComparer.OrdinalIgnoreCase)
         {
-            Action act = () => new XmlDeviceIdFormatter(null);
+            ["Test1"] = new DeviceIdComponent("Test1"),
+            ["Test2"] = new DeviceIdComponent("Test2"),
+        });
 
-            act.ShouldThrow<ArgumentNullException>();
-        }
+        deviceId.Should().Be("<DeviceId><Component Name=\"Test1\" Value=\"e1b849f9631ffc1829b2e31402373e3c\" /><Component Name=\"Test2\" Value=\"c454552d52d55d3ef56408742887362b\" /></DeviceId>");
+    }
 
-        [Fact]
-        public void GetDeviceId_ComponentsIsNull_ThrowsArgumentNullException()
+    [Fact]
+    public void GetDeviceId_ComponentReturnsNull_ReturnsDeviceId()
+    {
+        var formatter = new XmlDeviceIdFormatter(new HashDeviceIdComponentEncoder(() => MD5.Create(), new HexByteArrayEncoder()));
+
+        var deviceId = formatter.GetDeviceId(new Dictionary<string, IDeviceIdComponent>(StringComparer.OrdinalIgnoreCase)
         {
-            var formatter = new XmlDeviceIdFormatter(new HashDeviceIdComponentEncoder(() => MD5.Create(), new HexByteArrayEncoder()));
+            ["Test1"] = new DeviceIdComponent(default(string)),
+        });
 
-            Action act = () => formatter.GetDeviceId(null);
-
-            act.ShouldThrow<ArgumentNullException>();
-        }
-
-        [Fact]
-        public void GetDeviceId_ComponentsIsEmpty_ReturnsEmptyXmlDocument()
-        {
-            var formatter = new XmlDeviceIdFormatter(new HashDeviceIdComponentEncoder(() => MD5.Create(), new HexByteArrayEncoder()));
-
-            var deviceId = formatter.GetDeviceId(new Dictionary<string, IDeviceIdComponent>(StringComparer.OrdinalIgnoreCase));
-
-            deviceId.Should().Be("<DeviceId />");
-        }
-
-        [Fact]
-        public void GetDeviceId_ComponentsAreValid_ReturnsDeviceId()
-        {
-            var formatter = new XmlDeviceIdFormatter(new HashDeviceIdComponentEncoder(() => MD5.Create(), new HexByteArrayEncoder()));
-
-            var deviceId = formatter.GetDeviceId(new Dictionary<string, IDeviceIdComponent>(StringComparer.OrdinalIgnoreCase)
-            {
-                ["Test1"] = new DeviceIdComponent("Test1"),
-                ["Test2"] = new DeviceIdComponent("Test2"),
-            });
-
-            deviceId.Should().Be("<DeviceId><Component Name=\"Test1\" Value=\"e1b849f9631ffc1829b2e31402373e3c\" /><Component Name=\"Test2\" Value=\"c454552d52d55d3ef56408742887362b\" /></DeviceId>");
-        }
-
-        [Fact]
-        public void GetDeviceId_ComponentReturnsNull_ReturnsDeviceId()
-        {
-            var formatter = new XmlDeviceIdFormatter(new HashDeviceIdComponentEncoder(() => MD5.Create(), new HexByteArrayEncoder()));
-
-            var deviceId = formatter.GetDeviceId(new Dictionary<string, IDeviceIdComponent>(StringComparer.OrdinalIgnoreCase)
-            {
-                ["Test1"] = new DeviceIdComponent(default(string)),
-            });
-
-            deviceId.Should().Be("<DeviceId><Component Name=\"Test1\" Value=\"d41d8cd98f00b204e9800998ecf8427e\" /></DeviceId>");
-        }
+        deviceId.Should().Be("<DeviceId><Component Name=\"Test1\" Value=\"d41d8cd98f00b204e9800998ecf8427e\" /></DeviceId>");
     }
 }

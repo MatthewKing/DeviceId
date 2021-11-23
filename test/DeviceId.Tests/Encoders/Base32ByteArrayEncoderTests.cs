@@ -3,53 +3,53 @@ using DeviceId.Encoders;
 using FluentAssertions;
 using Xunit;
 
-namespace DeviceId.Tests.Encoders
+namespace DeviceId.Tests.Encoders;
+
+public class Base32ByteArrayEncoderTests
 {
-    public class Base32ByteArrayEncoderTests
+    [Fact]
+    public void Constructor_AlphabetIsNull_ThrowsArgumentNullException()
     {
-        [Fact]
-        public void Constructor_AlphabetIsNull_ThrowsArgumentNullException()
+        Action act = () => new Base32ByteArrayEncoder(null);
+
+        act.ShouldThrow<ArgumentNullException>();
+    }
+
+    [Fact]
+    public void Constructor_AlphabetIsTheWrongLength_ThrowsArgumentException()
+    {
+        Action tooShort = () => new Base32ByteArrayEncoder("");
+        tooShort.ShouldThrow<ArgumentException>();
+
+        Action tooLong = () => new Base32ByteArrayEncoder("ABCDEFGHIJKLMNOPQRSTUVWXYZ23456789");
+        tooShort.ShouldThrow<ArgumentException>();
+    }
+
+    [Fact]
+    public void Encode_BytesIsNull_ThrowsArgumentNullException()
+    {
+        var encoder = new Base32ByteArrayEncoder(Base32ByteArrayEncoder.Rfc4648Alphabet);
+
+        Action act = () => encoder.Encode(null);
+
+        act.ShouldThrow<ArgumentNullException>();
+    }
+
+    [Fact]
+    public void Encode_BytesIsEmpty_ReturnsEmptyString()
+    {
+        var encoder = new Base32ByteArrayEncoder(Base32ByteArrayEncoder.Rfc4648Alphabet);
+
+        encoder.Encode(Array.Empty<byte>()).Should().Be(string.Empty);
+    }
+
+    [Fact]
+    public void Encode_Rfc4648Alphabet_ReturnsByteArrayAsBase64String()
+    {
+        var encoder = new Base32ByteArrayEncoder(Base32ByteArrayEncoder.Rfc4648Alphabet);
+
+        var bytes = new byte[]
         {
-            Action act = () => new Base32ByteArrayEncoder(null);
-
-            act.ShouldThrow<ArgumentNullException>();
-        }
-
-        [Fact]
-        public void Constructor_AlphabetIsTheWrongLength_ThrowsArgumentException()
-        {
-            Action tooShort = () => new Base32ByteArrayEncoder("");
-            tooShort.ShouldThrow<ArgumentException>();
-
-            Action tooLong = () => new Base32ByteArrayEncoder("ABCDEFGHIJKLMNOPQRSTUVWXYZ23456789");
-            tooShort.ShouldThrow<ArgumentException>();
-        }
-
-        [Fact]
-        public void Encode_BytesIsNull_ThrowsArgumentNullException()
-        {
-            var encoder = new Base32ByteArrayEncoder(Base32ByteArrayEncoder.Rfc4648Alphabet);
-
-            Action act = () => encoder.Encode(null);
-
-            act.ShouldThrow<ArgumentNullException>();
-        }
-
-        [Fact]
-        public void Encode_BytesIsEmpty_ReturnsEmptyString()
-        {
-            var encoder = new Base32ByteArrayEncoder(Base32ByteArrayEncoder.Rfc4648Alphabet);
-
-            encoder.Encode(Array.Empty<byte>()).Should().Be(string.Empty);
-        }
-
-        [Fact]
-        public void Encode_Rfc4648Alphabet_ReturnsByteArrayAsBase64String()
-        {
-            var encoder = new Base32ByteArrayEncoder(Base32ByteArrayEncoder.Rfc4648Alphabet);
-
-            var bytes = new byte[]
-            {
                 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F,
                 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1A, 0x1B, 0x1C, 0x1D, 0x1E, 0x1F,
                 0x20, 0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27, 0x28, 0x29, 0x2A, 0x2B, 0x2C, 0x2D, 0x2E, 0x2F,
@@ -66,18 +66,18 @@ namespace DeviceId.Tests.Encoders
                 0xD0, 0xD1, 0xD2, 0xD3, 0xD4, 0xD5, 0xD6, 0xD7, 0xD8, 0xD9, 0xDA, 0xDB, 0xDC, 0xDD, 0xDE, 0xDF,
                 0xE0, 0xE1, 0xE2, 0xE3, 0xE4, 0xE5, 0xE6, 0xE7, 0xE8, 0xE9, 0xEA, 0xEB, 0xEC, 0xED, 0xEE, 0xEF,
                 0xF0, 0xF1, 0xF2, 0xF3, 0xF4, 0xF5, 0xF6, 0xF7, 0xF8, 0xF9, 0xFA, 0xFB, 0xFC, 0xFD, 0xFE, 0xFF,
-            };
+        };
 
-            encoder.Encode(bytes).Should().Be("AAAQEAYEAUDAOCAJBIFQYDIOB4IBCEQTCQKRMFYYDENBWHA5DYPSAIJCEMSCKJRHFAUSUKZMFUXC6MBRGIZTINJWG44DSOR3HQ6T4P2AIFBEGRCFIZDUQSKKJNGE2TSPKBIVEU2UKVLFOWCZLJNVYXK6L5QGCYTDMRSWMZ3INFVGW3DNNZXXA4LSON2HK5TXPB4XU634PV7H7AEBQKBYJBMGQ6EITCULRSGY5D4QSGJJHFEVS2LZRGM2TOOJ3HU7UCQ2FI5EUWTKPKFJVKV2ZLNOV6YLDMVTWS23NN5YXG5LXPF5X274BQOCYPCMLRWHZDE4VS6MZXHM7UGR2LJ5JVOW27MNTWW33TO55X7A4HROHZHF43T6R2PK5PWO33XP6DY7F47U6X3PP6HZ7L57Z7P674");
-        }
+        encoder.Encode(bytes).Should().Be("AAAQEAYEAUDAOCAJBIFQYDIOB4IBCEQTCQKRMFYYDENBWHA5DYPSAIJCEMSCKJRHFAUSUKZMFUXC6MBRGIZTINJWG44DSOR3HQ6T4P2AIFBEGRCFIZDUQSKKJNGE2TSPKBIVEU2UKVLFOWCZLJNVYXK6L5QGCYTDMRSWMZ3INFVGW3DNNZXXA4LSON2HK5TXPB4XU634PV7H7AEBQKBYJBMGQ6EITCULRSGY5D4QSGJJHFEVS2LZRGM2TOOJ3HU7UCQ2FI5EUWTKPKFJVKV2ZLNOV6YLDMVTWS23NN5YXG5LXPF5X274BQOCYPCMLRWHZDE4VS6MZXHM7UGR2LJ5JVOW27MNTWW33TO55X7A4HROHZHF43T6R2PK5PWO33XP6DY7F47U6X3PP6HZ7L57Z7P674");
+    }
 
-        [Fact]
-        public void Encode_CrockfordAlphabet_ReturnsByteArrayAsBase64String()
+    [Fact]
+    public void Encode_CrockfordAlphabet_ReturnsByteArrayAsBase64String()
+    {
+        var encoder = new Base32ByteArrayEncoder(Base32ByteArrayEncoder.CrockfordAlphabet);
+
+        var bytes = new byte[]
         {
-            var encoder = new Base32ByteArrayEncoder(Base32ByteArrayEncoder.CrockfordAlphabet);
-
-            var bytes = new byte[]
-            {
                 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F,
                 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1A, 0x1B, 0x1C, 0x1D, 0x1E, 0x1F,
                 0x20, 0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27, 0x28, 0x29, 0x2A, 0x2B, 0x2C, 0x2D, 0x2E, 0x2F,
@@ -94,9 +94,8 @@ namespace DeviceId.Tests.Encoders
                 0xD0, 0xD1, 0xD2, 0xD3, 0xD4, 0xD5, 0xD6, 0xD7, 0xD8, 0xD9, 0xDA, 0xDB, 0xDC, 0xDD, 0xDE, 0xDF,
                 0xE0, 0xE1, 0xE2, 0xE3, 0xE4, 0xE5, 0xE6, 0xE7, 0xE8, 0xE9, 0xEA, 0xEB, 0xEC, 0xED, 0xEE, 0xEF,
                 0xF0, 0xF1, 0xF2, 0xF3, 0xF4, 0xF5, 0xF6, 0xF7, 0xF8, 0xF9, 0xFA, 0xFB, 0xFC, 0xFD, 0xFE, 0xFF,
-            };
+        };
 
-            encoder.Encode(bytes).Should().Be("000G40R40M30E209185GR38E1W8124GK2GAHC5RR34D1P70X3RFJ08924CJ2A9H750MJMASC5MQ2YC1H68SK8D9P6WW3JEHV7GYKWFT085146H258S3MGJAA9D64TKJFA18N4MTMANB5EP2SB9DNRQAYBXG62RK3CHJPCSV8D5N6PV3DDSQQ0WBJEDT7AXKQF1WQMYVWFNZ7Z041GA1R91C6GY48K2MBHJ6RX3WGJ699754NJTBSH6CTKEE9V7MZM2GT58X4MPKAFA59NANTSBDENYRB3CNKPJTVDDXRQ6XBQF5XQTZW1GE2RF2CBHP7S34WNJYCSQ7CZM6HTB9X9NEPTZCDKPPVVKEXXQZ0W7HE7S75WVKYHTFAXFPEVVQFY3RZ5WZMYQVFFY7SZBXZSZFYZW");
-        }
+        encoder.Encode(bytes).Should().Be("000G40R40M30E209185GR38E1W8124GK2GAHC5RR34D1P70X3RFJ08924CJ2A9H750MJMASC5MQ2YC1H68SK8D9P6WW3JEHV7GYKWFT085146H258S3MGJAA9D64TKJFA18N4MTMANB5EP2SB9DNRQAYBXG62RK3CHJPCSV8D5N6PV3DDSQQ0WBJEDT7AXKQF1WQMYVWFNZ7Z041GA1R91C6GY48K2MBHJ6RX3WGJ699754NJTBSH6CTKEE9V7MZM2GT58X4MPKAFA59NANTSBDENYRB3CNKPJTVDDXRQ6XBQF5XQTZW1GE2RF2CBHP7S34WNJYCSQ7CZM6HTB9X9NEPTZCDKPPVVKEXXQZ0W7HE7S75WVKYHTFAXFPEVVQFY3RZ5WZMYQVFFY7SZBXZSZFYZW");
     }
 }

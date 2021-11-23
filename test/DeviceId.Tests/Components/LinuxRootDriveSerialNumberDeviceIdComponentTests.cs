@@ -4,16 +4,16 @@ using FluentAssertions;
 using Moq;
 using Xunit;
 
-namespace DeviceId.Tests.Components
-{
-    public class LinuxRootDriveSerialNumberDeviceIdComponentTests
-    {
-        [Fact]
-        public void GoogleCloudUbuntu1804Vm()
-        {
-            const string deviceName = "sda";
+namespace DeviceId.Tests.Components;
 
-            const string lsblkOutput = @"
+public class LinuxRootDriveSerialNumberDeviceIdComponentTests
+{
+    [Fact]
+    public void GoogleCloudUbuntu1804Vm()
+    {
+        const string deviceName = "sda";
+
+        const string lsblkOutput = @"
             {
                 ""blockdevices"": [
                     {""name"": ""loop0"", ""fstype"": ""squashfs"", ""label"": null, ""uuid"": null, ""mountpoint"": ""/snap/core18/1705""},
@@ -31,19 +31,19 @@ namespace DeviceId.Tests.Components
                 ]
             }";
 
-            const string udevadmOutput = "E: ID_SERIAL=0Google_PersistentDisk_webserver";
+        const string udevadmOutput = "E: ID_SERIAL=0Google_PersistentDisk_webserver";
 
-            var componentValue = GetComponentValue(deviceName, lsblkOutput, udevadmOutput);
+        var componentValue = GetComponentValue(deviceName, lsblkOutput, udevadmOutput);
 
-            componentValue.Should().Be("0Google_PersistentDisk_webserver");
-        }
+        componentValue.Should().Be("0Google_PersistentDisk_webserver");
+    }
 
-        [Fact]
-        public void VirtualBoxVm()
-        {
-            const string deviceName = "sda";
+    [Fact]
+    public void VirtualBoxVm()
+    {
+        const string deviceName = "sda";
 
-            const string lsblkOutput = @"
+        const string lsblkOutput = @"
             {
                ""blockdevices"": [
                   {""name"": ""loop0"", ""fstype"": ""squashfs"", ""label"": null, ""uuid"": null, ""mountpoint"": ""/snap/gnome-logs/45""},
@@ -67,19 +67,19 @@ namespace DeviceId.Tests.Components
                ]
             }";
 
-            const string udevadmOutput = "E: ID_SERIAL=VBOX_HARDDISK_VB5e245c00-220de489";
+        const string udevadmOutput = "E: ID_SERIAL=VBOX_HARDDISK_VB5e245c00-220de489";
 
-            var componentValue = GetComponentValue(deviceName, lsblkOutput, udevadmOutput);
+        var componentValue = GetComponentValue(deviceName, lsblkOutput, udevadmOutput);
 
-            componentValue.Should().Be("VBOX_HARDDISK_VB5e245c00-220de489");
-        }
+        componentValue.Should().Be("VBOX_HARDDISK_VB5e245c00-220de489");
+    }
 
-        [Fact]
-        public void BareMetalServer()
-        {
-            const string deviceName = "sda";
+    [Fact]
+    public void BareMetalServer()
+    {
+        const string deviceName = "sda";
 
-            const string lsblkOutput = @"
+        const string lsblkOutput = @"
             {
                ""blockdevices"": [
                   {""name"": ""sda"", ""fstype"": null, ""label"": null, ""uuid"": null, ""mountpoint"": null,
@@ -109,19 +109,19 @@ namespace DeviceId.Tests.Components
                ]
             }";
 
-            const string udevadmOutput = "E: ID_SERIAL=WDC_WD4000FYYZ-01UL1B1_WD-WCC131942520";
+        const string udevadmOutput = "E: ID_SERIAL=WDC_WD4000FYYZ-01UL1B1_WD-WCC131942520";
 
-            var componentValue = GetComponentValue(deviceName, lsblkOutput, udevadmOutput);
+        var componentValue = GetComponentValue(deviceName, lsblkOutput, udevadmOutput);
 
-            componentValue.Should().Be("WDC_WD4000FYYZ-01UL1B1_WD-WCC131942520");
-        }
+        componentValue.Should().Be("WDC_WD4000FYYZ-01UL1B1_WD-WCC131942520");
+    }
 
-        [Fact]
-        public void DigitalOceanVmWithoutSerialId()
-        {
-            const string deviceName = "sda";
+    [Fact]
+    public void DigitalOceanVmWithoutSerialId()
+    {
+        const string deviceName = "sda";
 
-            const string lsblkOutput = @"
+        const string lsblkOutput = @"
             {
                ""blockdevices"": [
                   {""name"": ""vda"", ""fstype"": null, ""label"": null, ""uuid"": null, ""mountpoint"": null,
@@ -134,24 +134,23 @@ namespace DeviceId.Tests.Components
                ]
             }";
 
-            const string udevadmOutput = "";
+        const string udevadmOutput = "";
 
-            var componentValue = GetComponentValue(deviceName, lsblkOutput, udevadmOutput);
+        var componentValue = GetComponentValue(deviceName, lsblkOutput, udevadmOutput);
 
-            componentValue.Should().BeNull();
-        }
+        componentValue.Should().BeNull();
+    }
 
-        private static string GetComponentValue(string rootParentDeviceName, string lsblkOutput, string udevadmOutput)
-        {
-            var commandExecutorMock = new Mock<ICommandExecutor>();
-            commandExecutorMock.Setup(x => x.Execute("lsblk -f -J")).Returns(lsblkOutput);
-            commandExecutorMock.Setup(x => x.Execute($"udevadm info --query=all --name=/dev/{rootParentDeviceName} | grep ID_SERIAL=")).Returns(udevadmOutput);
+    private static string GetComponentValue(string rootParentDeviceName, string lsblkOutput, string udevadmOutput)
+    {
+        var commandExecutorMock = new Mock<ICommandExecutor>();
+        commandExecutorMock.Setup(x => x.Execute("lsblk -f -J")).Returns(lsblkOutput);
+        commandExecutorMock.Setup(x => x.Execute($"udevadm info --query=all --name=/dev/{rootParentDeviceName} | grep ID_SERIAL=")).Returns(udevadmOutput);
 
-            var component = new LinuxRootDriveSerialNumberDeviceIdComponent(commandExecutorMock.Object);
+        var component = new LinuxRootDriveSerialNumberDeviceIdComponent(commandExecutorMock.Object);
 
-            var value = component.GetValue();
+        var value = component.GetValue();
 
-            return value;
-        }
+        return value;
     }
 }

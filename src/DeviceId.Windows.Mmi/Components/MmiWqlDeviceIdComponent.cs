@@ -1,72 +1,71 @@
 ﻿using System.Collections.Generic;
 using Microsoft.Management.Infrastructure;
 
-namespace DeviceId.Windows.Mmi.Components
+namespace DeviceId.Windows.Mmi.Components;
+
+/// <summary>
+/// An implementation of <see cref="IDeviceIdComponent"/> that retrieves data from a WQL query
+/// </summary>
+public class MmiWqlDeviceIdComponent : IDeviceIdComponent
 {
     /// <summary>
-    /// An implementation of <see cref="IDeviceIdComponent"/> that retrieves data from a WQL query
+    /// The class name.
     /// </summary>
-    public class MmiWqlDeviceIdComponent : IDeviceIdComponent
+    private readonly string _className;
+
+    /// <summary>
+    /// The property name.
+    /// </summary>
+    private readonly string _propertyName;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="MmiWqlDeviceIdComponent"/> class.
+    /// </summary>
+    /// <param name="className">The class name.</param>
+    /// <param name="propertyName">The property name.</param>
+    public MmiWqlDeviceIdComponent(string className, string propertyName)
     {
-        /// <summary>
-        /// The class name.
-        /// </summary>
-        private readonly string _className;
+        _className = className;
+        _propertyName = propertyName;
+    }
 
-        /// <summary>
-        /// The property name.
-        /// </summary>
-        private readonly string _propertyName;
+    /// <summary>
+    /// Gets the component value.
+    /// </summary>
+    /// <returns>The component value.</returns>
+    public string GetValue()
+    {
+        var values = new List<string>();
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="MmiWqlDeviceIdComponent"/> class.
-        /// </summary>
-        /// <param name="className">The class name.</param>
-        /// <param name="propertyName">The property name.</param>
-        public MmiWqlDeviceIdComponent(string className, string propertyName)
+        try
         {
-            _className = className;
-            _propertyName = propertyName;
-        }
+            using var session = CimSession.Create(null);
 
-        /// <summary>
-        /// Gets the component value.
-        /// </summary>
-        /// <returns>The component value.</returns>
-        public string GetValue()
-        {
-            var values = new List<string>();
-
-            try
+            var instances = session.QueryInstances(@"root\cimv2", "WQL", $"SELECT {_propertyName} FROM {_className}");
+            foreach (var instance in instances)
             {
-                using var session = CimSession.Create(null);
-
-                var instances = session.QueryInstances(@"root\cimv2", "WQL", $"SELECT {_propertyName} FROM {_className}");
-                foreach (var instance in instances)
+                try
                 {
-                    try
+                    if (instance.CimInstanceProperties[_propertyName].Value is string value)
                     {
-                        if (instance.CimInstanceProperties[_propertyName].Value is string value)
-                        {
-                            values.Add(value);
-                        }
-                    }
-                    finally
-                    {
-                        instance.Dispose();
+                        values.Add(value);
                     }
                 }
+                finally
+                {
+                    instance.Dispose();
+                }
             }
-            catch
-            {
-
-            }
-
-            values.Sort();
-
-            return values.Count > 0
-                ? string.Join(",", values.ToArray())
-                : null;
         }
+        catch
+        {
+
+        }
+
+        values.Sort();
+
+        return values.Count > 0
+            ? string.Join(",", values.ToArray())
+            : null;
     }
 }

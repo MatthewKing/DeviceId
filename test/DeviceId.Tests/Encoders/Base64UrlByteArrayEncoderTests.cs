@@ -3,27 +3,27 @@ using DeviceId.Encoders;
 using FluentAssertions;
 using Xunit;
 
-namespace DeviceId.Tests.Encoders
+namespace DeviceId.Tests.Encoders;
+
+public class Base64UrlByteArrayEncoderTests
 {
-    public class Base64UrlByteArrayEncoderTests
+    [Fact]
+    public void Encode_BytesIsNull_ThrowsArgumentNullException()
     {
-        [Fact]
-        public void Encode_BytesIsNull_ThrowsArgumentNullException()
+        var encoder = new Base64UrlByteArrayEncoder();
+
+        Action act = () => encoder.Encode(null);
+
+        act.ShouldThrow<ArgumentNullException>();
+    }
+
+    [Fact]
+    public void Encode_ReturnsByteArrayAsBase64UrlString()
+    {
+        var encoder = new Base64UrlByteArrayEncoder();
+
+        var bytes = new byte[]
         {
-            var encoder = new Base64UrlByteArrayEncoder();
-
-            Action act = () => encoder.Encode(null);
-
-            act.ShouldThrow<ArgumentNullException>();
-        }
-
-        [Fact]
-        public void Encode_ReturnsByteArrayAsBase64UrlString()
-        {
-            var encoder = new Base64UrlByteArrayEncoder();
-
-            var bytes = new byte[]
-            {
                 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F,
                 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1A, 0x1B, 0x1C, 0x1D, 0x1E, 0x1F,
                 0x20, 0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27, 0x28, 0x29, 0x2A, 0x2B, 0x2C, 0x2D, 0x2E, 0x2F,
@@ -40,9 +40,8 @@ namespace DeviceId.Tests.Encoders
                 0xD0, 0xD1, 0xD2, 0xD3, 0xD4, 0xD5, 0xD6, 0xD7, 0xD8, 0xD9, 0xDA, 0xDB, 0xDC, 0xDD, 0xDE, 0xDF,
                 0xE0, 0xE1, 0xE2, 0xE3, 0xE4, 0xE5, 0xE6, 0xE7, 0xE8, 0xE9, 0xEA, 0xEB, 0xEC, 0xED, 0xEE, 0xEF,
                 0xF0, 0xF1, 0xF2, 0xF3, 0xF4, 0xF5, 0xF6, 0xF7, 0xF8, 0xF9, 0xFA, 0xFB, 0xFC, 0xFD, 0xFE, 0xFF,
-            };
+        };
 
-            encoder.Encode(bytes).Should().Be("AAECAwQFBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh8gISIjJCUmJygpKissLS4vMDEyMzQ1Njc4OTo7PD0-P0BBQkNERUZHSElKS0xNTk9QUVJTVFVWV1hZWltcXV5fYGFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6e3x9fn-AgYKDhIWGh4iJiouMjY6PkJGSk5SVlpeYmZqbnJ2en6ChoqOkpaanqKmqq6ytrq-wsbKztLW2t7i5uru8vb6_wMHCw8TFxsfIycrLzM3Oz9DR0tPU1dbX2Nna29zd3t_g4eLj5OXm5-jp6uvs7e7v8PHy8_T19vf4-fr7_P3-_w");
-        }
+        encoder.Encode(bytes).Should().Be("AAECAwQFBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh8gISIjJCUmJygpKissLS4vMDEyMzQ1Njc4OTo7PD0-P0BBQkNERUZHSElKS0xNTk9QUVJTVFVWV1hZWltcXV5fYGFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6e3x9fn-AgYKDhIWGh4iJiouMjY6PkJGSk5SVlpeYmZqbnJ2en6ChoqOkpaanqKmqq6ytrq-wsbKztLW2t7i5uru8vb6_wMHCw8TFxsfIycrLzM3Oz9DR0tPU1dbX2Nna29zd3t_g4eLj5OXm5-jp6uvs7e7v8PHy8_T19vf4-fr7_P3-_w");
     }
 }
