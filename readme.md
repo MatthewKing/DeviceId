@@ -83,7 +83,7 @@ From `DeviceId`:
 
 * `AddUserName` adds the current user's username to the device identifer.
 * `AddMachineName` adds the machine name to the device identifier.
-* `AddOsVersion` adds the current OS version to the device identifier.
+* `AddOsVersion` adds the current OS version to the device identifier. Note: This uses `Environment.OSVersion`, so if you're targeting older .NET Framework versions, you'll get different values compared to when you target more modern versions of .NET (.NET Core, .NET 5, .NET 6, and anything later than that).
 * `AddMacAddress` adds the MAC address to the device identifier.
 * `AddFileToken` adds a unique token stored in a file to the device identifier. The file is created if it doesn't already exist. Fails silently if no permissions available to access the file.
 
