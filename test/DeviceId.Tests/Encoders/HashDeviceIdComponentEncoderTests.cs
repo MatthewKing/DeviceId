@@ -14,7 +14,7 @@ public class HashDeviceIdComponentEncoderTests
     {
         Action act = () => new HashDeviceIdComponentEncoder(null, new HexByteArrayEncoder());
 
-        act.ShouldThrow<ArgumentNullException>();
+        act.Should().Throw<ArgumentNullException>();
     }
 
     [Fact]
@@ -22,7 +22,7 @@ public class HashDeviceIdComponentEncoderTests
     {
         Action act = () => new HashDeviceIdComponentEncoder(() => MD5.Create(), null);
 
-        act.ShouldThrow<ArgumentNullException>();
+        act.Should().Throw<ArgumentNullException>();
     }
 
     [Fact]

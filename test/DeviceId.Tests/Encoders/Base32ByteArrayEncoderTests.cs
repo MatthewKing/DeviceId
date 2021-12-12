@@ -12,17 +12,17 @@ public class Base32ByteArrayEncoderTests
     {
         Action act = () => new Base32ByteArrayEncoder(null);
 
-        act.ShouldThrow<ArgumentNullException>();
+        act.Should().Throw<ArgumentNullException>();
     }
 
     [Fact]
     public void Constructor_AlphabetIsTheWrongLength_ThrowsArgumentException()
     {
         Action tooShort = () => new Base32ByteArrayEncoder("");
-        tooShort.ShouldThrow<ArgumentException>();
+        tooShort.Should().Throw<ArgumentException>();
 
         Action tooLong = () => new Base32ByteArrayEncoder("ABCDEFGHIJKLMNOPQRSTUVWXYZ23456789");
-        tooShort.ShouldThrow<ArgumentException>();
+        tooShort.Should().Throw<ArgumentException>();
     }
 
     [Fact]
@@ -32,7 +32,7 @@ public class Base32ByteArrayEncoderTests
 
         Action act = () => encoder.Encode(null);
 
-        act.ShouldThrow<ArgumentNullException>();
+        act.Should().Throw<ArgumentNullException>();
     }
 
     [Fact]

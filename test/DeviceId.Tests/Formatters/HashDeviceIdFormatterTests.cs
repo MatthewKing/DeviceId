@@ -16,7 +16,7 @@ public class HashDeviceIdFormatterTests
     {
         Action act = () => new HashDeviceIdFormatter(null, new HexByteArrayEncoder());
 
-        act.ShouldThrow<ArgumentNullException>();
+        act.Should().Throw<ArgumentNullException>();
     }
 
     [Fact]
@@ -24,7 +24,7 @@ public class HashDeviceIdFormatterTests
     {
         Action act = () => new HashDeviceIdFormatter(() => MD5.Create(), null);
 
-        act.ShouldThrow<ArgumentNullException>();
+        act.Should().Throw<ArgumentNullException>();
     }
 
     [Fact]
@@ -34,7 +34,7 @@ public class HashDeviceIdFormatterTests
 
         Action act = () => formatter.GetDeviceId(null);
 
-        act.ShouldThrow<ArgumentNullException>();
+        act.Should().Throw<ArgumentNullException>();
     }
 
     [Fact]

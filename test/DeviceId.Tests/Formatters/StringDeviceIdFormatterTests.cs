@@ -16,7 +16,7 @@ public class StringDeviceIdFormatterTests
     {
         Action act = () => new StringDeviceIdFormatter(null);
 
-        act.ShouldThrow<ArgumentNullException>();
+        act.Should().Throw<ArgumentNullException>();
     }
 
     [Fact]
@@ -26,7 +26,7 @@ public class StringDeviceIdFormatterTests
 
         Action act = () => formatter.GetDeviceId(null);
 
-        act.ShouldThrow<ArgumentNullException>();
+        act.Should().Throw<ArgumentNullException>();
     }
 
     [Fact]

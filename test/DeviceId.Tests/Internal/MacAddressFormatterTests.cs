@@ -11,7 +11,7 @@ public class MacAddressFormatterTests
     {
         var input = "Try me";
         var result = MacAddressFormatter.FormatMacAddress(input);
-        result.ShouldBeEquivalentTo(input, "Non MAC addresses are not formatted");
+        result.Should().BeEquivalentTo(input, "Non MAC addresses are not formatted");
     }
 
     [Fact]
@@ -19,7 +19,7 @@ public class MacAddressFormatterTests
     {
         var input = "AABBCCDDEEFF";
         var result = MacAddressFormatter.FormatMacAddress(input);
-        result.ShouldBeEquivalentTo("AA:BB:CC:DD:EE:FF", "MAC address should be formatted");
+        result.Should().BeEquivalentTo("AA:BB:CC:DD:EE:FF", "MAC address should be formatted");
     }
 
     [Fact]
@@ -27,6 +27,6 @@ public class MacAddressFormatterTests
     {
         var input = "AABBCCDDEEFF0011";
         var result = MacAddressFormatter.FormatMacAddress(input);
-        result.ShouldBeEquivalentTo("AA:BB:CC:DD:EE:FF:00:11", "MAC address should be formatted");
+        result.Should().BeEquivalentTo("AA:BB:CC:DD:EE:FF:00:11", "MAC address should be formatted");
     }
 }

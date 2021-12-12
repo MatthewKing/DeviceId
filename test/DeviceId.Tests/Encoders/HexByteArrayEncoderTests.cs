@@ -14,7 +14,7 @@ public class HexByteArrayEncoderTests
 
         Action act = () => encoder.Encode(null);
 
-        act.ShouldThrow<ArgumentNullException>();
+        act.Should().Throw<ArgumentNullException>();
     }
 
     [Fact]
