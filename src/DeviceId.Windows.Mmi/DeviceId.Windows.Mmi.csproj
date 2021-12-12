@@ -19,12 +19,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Management.Infrastructure" Version="2.0.0" />
+    <ProjectReference Include="..\DeviceId\DeviceId.csproj" />
+    <ProjectReference Include="..\DeviceId.Windows\DeviceId.Windows.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DeviceId\DeviceId.csproj" />
-    <ProjectReference Include="..\DeviceId.Windows\DeviceId.Windows.csproj" />
+    <PackageReference Include="Microsoft.Management.Infrastructure" Version="2.0.0" />
   </ItemGroup>
 
 </Project>
