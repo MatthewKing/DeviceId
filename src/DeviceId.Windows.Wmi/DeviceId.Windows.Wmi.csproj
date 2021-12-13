@@ -13,11 +13,6 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
-  <PropertyGroup>
-    <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>..\DeviceId.snk</AssemblyOriginatorKeyFile>
-  </PropertyGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\DeviceId\DeviceId.csproj" />
     <ProjectReference Include="..\DeviceId.Windows\DeviceId.Windows.csproj" />
