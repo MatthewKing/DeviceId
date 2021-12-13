@@ -10,5 +10,5 @@ $projects = @(
 )
 
 foreach ($project in $projects) {
-    dotnet pack $project --configuration Release --output $output
+    dotnet pack $project --configuration Release --output $output -p:ContinuousIntegrationBuild=true
 }

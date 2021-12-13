@@ -12,5 +12,5 @@ $projects = @(
 $timestamp = git log -1 --format=%ct
 
 foreach ($project in $projects) {
-    dotnet pack $project --configuration Release --output $output --version-suffix "alpha.$timestamp"
+    dotnet pack $project --configuration Release --output $output --version-suffix "alpha.$timestamp" -p:ContinuousIntegrationBuild=true
 }
