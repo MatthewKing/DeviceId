@@ -31,3 +31,6 @@ dotnet_style_require_accessibility_modifiers = for_non_interface_members
 dotnet_diagnostic.IDE0005.severity = warning # Remove unnecessary import
 dotnet_diagnostic.IDE0017.severity = none # Use object initializers
 dotnet_diagnostic.IDE0161.severity = warning # File-scoped namespaces
+
+[Directory.Build.props]
+indent_size = 2
