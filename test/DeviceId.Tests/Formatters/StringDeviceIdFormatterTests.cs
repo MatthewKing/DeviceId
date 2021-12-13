@@ -14,9 +14,9 @@ public class StringDeviceIdFormatterTests
     [Fact]
     public void Constructor_EncoderIsNull_ThrowsArgumentNullException()
     {
-        Action act = () => new StringDeviceIdFormatter(null);
+        var action = () => new StringDeviceIdFormatter(null);
 
-        act.Should().Throw<ArgumentNullException>();
+        action.Should().Throw<ArgumentNullException>();
     }
 
     [Fact]
@@ -24,9 +24,9 @@ public class StringDeviceIdFormatterTests
     {
         var formatter = new StringDeviceIdFormatter(new HashDeviceIdComponentEncoder(() => MD5.Create(), new HexByteArrayEncoder()));
 
-        Action act = () => formatter.GetDeviceId(null);
+        var action = () => formatter.GetDeviceId(null);
 
-        act.Should().Throw<ArgumentNullException>();
+        action.Should().Throw<ArgumentNullException>();
     }
 
     [Fact]

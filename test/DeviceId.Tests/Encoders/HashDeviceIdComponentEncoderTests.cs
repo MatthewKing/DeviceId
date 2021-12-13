@@ -12,17 +12,17 @@ public class HashDeviceIdComponentEncoderTests
     [Fact]
     public void Constructor_HashAlgorithmIsNull_ThrowsArgumentNullException()
     {
-        Action act = () => new HashDeviceIdComponentEncoder(null, new HexByteArrayEncoder());
+        var action = () => new HashDeviceIdComponentEncoder(null, new HexByteArrayEncoder());
 
-        act.Should().Throw<ArgumentNullException>();
+        action.Should().Throw<ArgumentNullException>();
     }
 
     [Fact]
     public void Constructor_ByteArrayEncoderIsNull_ThrowsArgumentNullException()
     {
-        Action act = () => new HashDeviceIdComponentEncoder(() => MD5.Create(), null);
+        var action = () => new HashDeviceIdComponentEncoder(() => MD5.Create(), null);
 
-        act.Should().Throw<ArgumentNullException>();
+        action.Should().Throw<ArgumentNullException>();
     }
 
     [Fact]

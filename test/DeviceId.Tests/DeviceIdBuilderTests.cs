@@ -12,7 +12,7 @@ public class DeviceIdBuilderTests
         var builder = new DeviceIdBuilder();
         builder.Formatter = null;
 
-        Action act = () => builder.ToString();
-        act.Should().Throw<InvalidOperationException>().WithMessage("The Formatter property must not be null in order for ToString to be called.");
+        var action = () => builder.ToString();
+        action.Should().Throw<InvalidOperationException>().WithMessage("The Formatter property must not be null in order for ToString to be called.");
     }
 }
