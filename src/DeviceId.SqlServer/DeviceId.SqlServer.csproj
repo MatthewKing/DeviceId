@@ -4,7 +4,7 @@
     <PackageId>DeviceId.SqlServer</PackageId>
     <Title>DeviceId (SQL Server)</Title>
     <Description>Provides SQL Server components for the DeviceId package.</Description>
-    <VersionPrefix>6.0.0</VersionPrefix>
+    <VersionPrefix>6.2.0</VersionPrefix>
   </PropertyGroup>
 
   <PropertyGroup>
