@@ -14,6 +14,7 @@ As of version 6, the packages have been split up so that users can pick-and-choo
 * The [DeviceId.Windows.Mmi](https://www.nuget.org/packages/DeviceId.Windows.Mmi) package adds the same components as above, but using MMI instead of WMI for those instances where WMI isn't appropriate (such as where no .NET Framework is present on the machine).
 * The [DeviceId.Linux](https://www.nuget.org/packages/DeviceId.Linux) package adds a few Linux-specific components.
 * The [DeviceId.Mac](https://www.nuget.org/packages/DeviceId.Mac) package adds a few Mac-specific components.
+* The [DeviceId.SqlServer](https://www.nuget.org/packages/DeviceId.SqlServer) package adds support for generating a database ID for SQL Server databases.
 
 You can pick-and-choose which packages to use based on your use case.
 
@@ -75,6 +76,20 @@ string deviceId = new DeviceIdBuilder()
     .ToString();
 ```
 
+You can also generate a unique identifier for a database instance.
+Currently, only SQL Server is supported, but more may be added if there is demand and/or community support:
+
+```csharp
+using SqlConnection connection = new SqlConnection(connectionString);
+connection.Open();
+string databaseId = new DeviceIdBuilder()
+    .AddSqlServer(connection, sql => sql
+        .AddServerName()
+        .AddDatabaseName()
+        .AddDatabaseId())
+    .ToString();
+```
+
 ### What can you include in a device identifier
 
 The following extension methods are available out of the box to suit some common use cases:
@@ -112,6 +127,14 @@ From `DeviceId.Mac`:
 
 * `AddSystemDriveSerialNumber` adds the system drive's serial number to the device identifier.
 * `AddPlatformSerialNumber` adds IOPlatformSerialNumber to the device identifier.
+
+From `DeviceId.SqlServer`:
+
+* `AddServerName` adds the server name to the device identifier.
+* `AddDatabaseName` adds the server name to the device identifier.
+* `AddDatabaseId` adds the database ID to the device identifier.
+* `AddServerProperty` adds a specified server property to the device identifier.
+* `AddServerProperty` adds a specified extended property to the device identifier.
 
 #### Dealing with MAC Address randomization and virtual network adapters
 
