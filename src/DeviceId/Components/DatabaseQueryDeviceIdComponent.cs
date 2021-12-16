@@ -1,17 +1,17 @@
 ﻿using System;
-using System.Data.SqlClient;
+using System.Data.Common;
 
-namespace DeviceId.SqlServer;
+namespace DeviceId.Components;
 
 /// <summary>
-/// An implementation of <see cref="IDeviceIdComponent"/> that executes a SQL Server command.
+/// An implementation of <see cref="IDeviceIdComponent"/> that gets its value from the result of a database command.
 /// </summary>
-public class SqlDeviceIdComponent : IDeviceIdComponent
+public class DatabaseQueryDeviceIdComponent : IDeviceIdComponent
 {
     /// <summary>
-    /// A factory used to get a connection to the SQL Server database.
+    /// A factory used to get a connection to the database.
     /// </summary>
-    private readonly Func<SqlConnection> _connectionFactory;
+    private readonly Func<DbConnection> _connectionFactory;
 
     /// <summary>
     /// SQL query that returns a single value to be added to the device identifier.
@@ -24,12 +24,12 @@ public class SqlDeviceIdComponent : IDeviceIdComponent
     private readonly Func<object, string> _valueTransformer;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="SqlDeviceIdComponent"/> class.
+    /// Initializes a new instance of the <see cref="DatabaseQueryDeviceIdComponent"/> class.
     /// </summary>
-    /// <param name="connectionFactory">A factory used to get a connection to the SQL Server database.</param>
+    /// <param name="connectionFactory">A factory used to get a connection to the database.</param>
     /// <param name="sql">SQL query that returns a single value to be added to the device identifier.</param>
     /// <param name="valueTransformer">A function that transforms the result of the query into a string.</param>
-    public SqlDeviceIdComponent(Func<SqlConnection> connectionFactory, string sql, Func<object, string> valueTransformer)
+    public DatabaseQueryDeviceIdComponent(Func<DbConnection> connectionFactory, string sql, Func<object, string> valueTransformer)
     {
         _connectionFactory = connectionFactory;
         _sql = sql;

@@ -1,5 +1,6 @@
 ﻿using System;
-using System.Data.SqlClient;
+using System.Data.Common;
+using DeviceId.Components;
 
 namespace DeviceId.SqlServer;
 
@@ -16,14 +17,14 @@ public class SqlServerDeviceIdBuilder
     /// <summary>
     /// A factory used to get a connection to the SQL Server database.
     /// </summary>
-    private readonly Func<SqlConnection> _connectionFactory;
+    private readonly Func<DbConnection> _connectionFactory;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="SqlServerDeviceIdBuilder"/> class.
     /// </summary>
     /// <param name="baseBuilder">The base device identifier builder.</param>
     /// <param name="connection">A connection to the SQL Server database.</param>
-    public SqlServerDeviceIdBuilder(DeviceIdBuilder baseBuilder, SqlConnection connection)
+    public SqlServerDeviceIdBuilder(DeviceIdBuilder baseBuilder, DbConnection connection)
         : this(baseBuilder, () => connection) { }
 
     /// <summary>
@@ -31,7 +32,7 @@ public class SqlServerDeviceIdBuilder
     /// </summary>
     /// <param name="baseBuilder">The base device identifier builder.</param>
     /// <param name="connectionFactory">A factory used to get a connection to the SQL Server database.</param>
-    public SqlServerDeviceIdBuilder(DeviceIdBuilder baseBuilder, Func<SqlConnection> connectionFactory)
+    public SqlServerDeviceIdBuilder(DeviceIdBuilder baseBuilder, Func<DbConnection> connectionFactory)
     {
         _baseBuilder = baseBuilder ?? throw new ArgumentNullException(nameof(baseBuilder));
         _connectionFactory = connectionFactory ?? throw new ArgumentNullException(nameof(connectionFactory));
@@ -57,7 +58,7 @@ public class SqlServerDeviceIdBuilder
     /// <returns>The <see cref="SqlServerDeviceIdBuilder"/> instance.</returns>
     public SqlServerDeviceIdBuilder AddQueryResult(string componentName, string sql, Func<object, string> valueTransformer)
     {
-        _baseBuilder.Components.Add(componentName, new SqlDeviceIdComponent(_connectionFactory, sql, valueTransformer));
+        _baseBuilder.Components.Add(componentName, new DatabaseQueryDeviceIdComponent(_connectionFactory, sql, valueTransformer));
 
         return this;
     }

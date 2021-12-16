@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Data.SqlClient;
+using System.Data.Common;
 
 namespace DeviceId.SqlServer;
 
@@ -15,7 +15,7 @@ public static class DeviceIdBuilderExtensions
     /// <param name="connection">A connection to the SQL Server database.</param>
     /// <param name="sqlServerBuilderConfiguration">An action that adds the SQL Server components.</param>
     /// <returns>The device ID builder.</returns>
-    public static DeviceIdBuilder AddSqlServer(this DeviceIdBuilder builder, SqlConnection connection, Action<SqlServerDeviceIdBuilder> sqlServerBuilderConfiguration)
+    public static DeviceIdBuilder AddSqlServer(this DeviceIdBuilder builder, DbConnection connection, Action<SqlServerDeviceIdBuilder> sqlServerBuilderConfiguration)
     {
         return AddSqlServer(builder, () => connection, sqlServerBuilderConfiguration);
     }
@@ -27,7 +27,7 @@ public static class DeviceIdBuilderExtensions
     /// <param name="connectionFactory">A factory used to get a connection to the SQL Server database.</param>
     /// <param name="sqlServerBuilderConfiguration">An action that adds the SQL Server components.</param>
     /// <returns>The device ID builder.</returns>
-    public static DeviceIdBuilder AddSqlServer(this DeviceIdBuilder builder, Func<SqlConnection> connectionFactory, Action<SqlServerDeviceIdBuilder> sqlServerBuilderConfiguration)
+    public static DeviceIdBuilder AddSqlServer(this DeviceIdBuilder builder, Func<DbConnection> connectionFactory, Action<SqlServerDeviceIdBuilder> sqlServerBuilderConfiguration)
     {
         if (sqlServerBuilderConfiguration is not null)
         {

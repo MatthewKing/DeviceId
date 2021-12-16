@@ -41,7 +41,7 @@ public static class SqlServerDeviceIdBuilderExtensions
     /// </summary>
     /// <param name="builder">The <see cref="SqlServerDeviceIdBuilder"/> to add the component to.</param>
     /// <returns>The <see cref="SqlServerDeviceIdBuilder"/> instance.</returns>
-    public static SqlServerDeviceIdBuilder AddSqlServerDatabaseId(this SqlServerDeviceIdBuilder builder)
+    public static SqlServerDeviceIdBuilder AddDatabaseId(this SqlServerDeviceIdBuilder builder)
     {
         var name = "SqlServerDatabaseId";
         var sql = "select db_id();";
@@ -55,7 +55,7 @@ public static class SqlServerDeviceIdBuilderExtensions
     /// <param name="builder">The <see cref="SqlServerDeviceIdBuilder"/> to add the component to.</param>
     /// <param name="propertyName">The property name.</param>
     /// <returns>The <see cref="SqlServerDeviceIdBuilder"/> instance.</returns>
-    public static SqlServerDeviceIdBuilder AddSqlServerProperty(this SqlServerDeviceIdBuilder builder, string propertyName)
+    public static SqlServerDeviceIdBuilder AddServerProperty(this SqlServerDeviceIdBuilder builder, string propertyName)
     {
         var name = $"SqlServerProperty:{propertyName}";
         var sql = $"select serverproperty('{propertyName.Replace("'", "''")}')";
@@ -69,7 +69,7 @@ public static class SqlServerDeviceIdBuilderExtensions
     /// <param name="builder">The <see cref="SqlServerDeviceIdBuilder"/> to add the component to.</param>
     /// <param name="propertyName">The property name.</param>
     /// <returns>The <see cref="SqlServerDeviceIdBuilder"/> instance.</returns>
-    public static SqlServerDeviceIdBuilder AddSqlServerExtendedProperty(this SqlServerDeviceIdBuilder builder, string propertyName)
+    public static SqlServerDeviceIdBuilder AddExtendedProperty(this SqlServerDeviceIdBuilder builder, string propertyName)
     {
         var name = $"SqlServerExtendedProperty:{propertyName}";
         var sql = $"select [value] from [sys].[extended_properties] where [name] = '{propertyName.Replace("'", "''")}';";
