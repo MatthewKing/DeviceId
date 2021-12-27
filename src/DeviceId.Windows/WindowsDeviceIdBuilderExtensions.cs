@@ -1,4 +1,5 @@
-﻿using DeviceId.Windows.Components;
+﻿using DeviceId.Internal;
+using DeviceId.Windows.Components;
 #if !NET35
 using Microsoft.Win32;
 #endif
@@ -60,4 +61,16 @@ public static class WindowsDeviceIdBuilderExtensions
             "MachineGuid");
 #endif
     }
+
+#if NET5_0_OR_GREATER && WINDOWS10_0_17763_0_OR_GREATER
+    /// <summary>
+    /// Adds the System ID to the device identifier.
+    /// </summary>
+    /// <param name="builder">The <see cref="WindowsDeviceIdBuilder"/> to add the component to.</param>
+    /// <returns>The <see cref="WindowsDeviceIdBuilder"/> instance.</returns>
+    public static WindowsDeviceIdBuilder AddSystemId(this WindowsDeviceIdBuilder builder)
+    {
+        return builder.AddComponent("SystemId", new SystemIdDeviceIdComponent(ByteArrayEncoders.Base32Crockford));
+    }
+#endif
 }

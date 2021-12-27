@@ -1,6 +1,7 @@
 ﻿using System.Security.Cryptography;
 using DeviceId.Encoders;
 using DeviceId.Formatters;
+using DeviceId.Internal;
 
 namespace DeviceId;
 
@@ -15,7 +16,7 @@ public static class DeviceIdFormatters
     public static IDeviceIdFormatter DefaultV5 { get; } = new HashDeviceIdFormatter(() => SHA256.Create(), new Base64UrlByteArrayEncoder());
 
     /// <summary>
-    /// Returns the default formatter used in version 4 of the DeviceId library.
+    /// Returns the default formatter used in version 6 of the DeviceId library.
     /// </summary>
-    public static IDeviceIdFormatter DefaultV6 { get; } = new HashDeviceIdFormatter(() => SHA256.Create(), new Base32ByteArrayEncoder(Base32ByteArrayEncoder.CrockfordAlphabet));
+    public static IDeviceIdFormatter DefaultV6 { get; } = new HashDeviceIdFormatter(() => SHA256.Create(), ByteArrayEncoders.Base32Crockford);
 }
