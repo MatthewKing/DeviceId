@@ -10,9 +10,9 @@ namespace DeviceId.Tests.Encoders;
 public class HashDeviceIdComponentEncoderTests
 {
     [Fact]
-    public void Constructor_HashAlgorithmIsNull_ThrowsArgumentNullException()
+    public void Constructor_ByteArrayHasherIsNull_ThrowsArgumentNullException()
     {
-        var action = () => new HashDeviceIdComponentEncoder(null, new HexByteArrayEncoder());
+        var action = () => new HashDeviceIdComponentEncoder(null as IByteArrayHasher, new HexByteArrayEncoder());
 
         action.Should().Throw<ArgumentNullException>();
     }
@@ -21,6 +21,14 @@ public class HashDeviceIdComponentEncoderTests
     public void Constructor_ByteArrayEncoderIsNull_ThrowsArgumentNullException()
     {
         var action = () => new HashDeviceIdComponentEncoder(() => MD5.Create(), null);
+
+        action.Should().Throw<ArgumentNullException>();
+    }
+
+    [Fact]
+    public void Constructor_HashAlgorithmIsNull_ThrowsArgumentNullException()
+    {
+        var action = () => new HashDeviceIdComponentEncoder(null as Func<HashAlgorithm>, new HexByteArrayEncoder());
 
         action.Should().Throw<ArgumentNullException>();
     }

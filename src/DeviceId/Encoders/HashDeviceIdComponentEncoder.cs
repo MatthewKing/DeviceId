@@ -10,9 +10,9 @@ namespace DeviceId.Encoders;
 public class HashDeviceIdComponentEncoder : IDeviceIdComponentEncoder
 {
     /// <summary>
-    /// A function that returns the hash algorithm to use.
+    /// The <see cref="IByteArrayHasher"/> to use to hash the component value.
     /// </summary>
-    private readonly Func<HashAlgorithm> _hashAlgorithm;
+    private readonly IByteArrayHasher _byteArrayHasher;
 
     /// <summary>
     /// The <see cref="IByteArrayEncoder"/> to use to encode the resulting hash.
@@ -22,13 +22,21 @@ public class HashDeviceIdComponentEncoder : IDeviceIdComponentEncoder
     /// <summary>
     /// Initializes a new instance of the <see cref="HashDeviceIdComponentEncoder"/> class.
     /// </summary>
+    /// <param name="byteArrayHasher">The <see cref="IByteArrayHasher"/> to use to hash the component value.</param>
+    /// <param name="byteArrayEncoder">The <see cref="IByteArrayEncoder"/> to use to encode the resulting hash.</param>
+    public HashDeviceIdComponentEncoder(IByteArrayHasher byteArrayHasher, IByteArrayEncoder byteArrayEncoder)
+    {
+        _byteArrayHasher = byteArrayHasher ?? throw new ArgumentNullException(nameof(byteArrayHasher));
+        _byteArrayEncoder = byteArrayEncoder ?? throw new ArgumentNullException(nameof(byteArrayEncoder));
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="HashDeviceIdComponentEncoder"/> class.
+    /// </summary>
     /// <param name="hashAlgorithm">A function that returns the hash algorithm to use.</param>
     /// <param name="byteArrayEncoder">The <see cref="IByteArrayEncoder"/> to use to encode the resulting hash.</param>
     public HashDeviceIdComponentEncoder(Func<HashAlgorithm> hashAlgorithm, IByteArrayEncoder byteArrayEncoder)
-    {
-        _hashAlgorithm = hashAlgorithm ?? throw new ArgumentNullException(nameof(hashAlgorithm));
-        _byteArrayEncoder = byteArrayEncoder ?? throw new ArgumentNullException(nameof(byteArrayEncoder));
-    }
+        : this(new ByteArrayHasher(hashAlgorithm ?? throw new ArgumentNullException(nameof(hashAlgorithm))), byteArrayEncoder) { }
 
     /// <summary>
     /// Encodes the specified <see cref="IDeviceIdComponent"/> as a string.
@@ -39,8 +47,7 @@ public class HashDeviceIdComponentEncoder : IDeviceIdComponentEncoder
     {
         var value = component.GetValue() ?? string.Empty;
         var bytes = Encoding.UTF8.GetBytes(value);
-        using var algorithm = _hashAlgorithm.Invoke();
-        var hash = algorithm.ComputeHash(bytes);
+        var hash = _byteArrayHasher.Hash(bytes);
         var output = _byteArrayEncoder.Encode(hash);
         return output;
     }

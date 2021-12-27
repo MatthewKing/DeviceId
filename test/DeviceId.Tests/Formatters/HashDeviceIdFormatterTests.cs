@@ -12,9 +12,9 @@ namespace DeviceId.Tests.Formatters;
 public class HashDeviceIdFormatterTests
 {
     [Fact]
-    public void Constructor_HashAlgorithmIsNull_ThrowsArgumentNullException()
+    public void Constructor_ByteArrayHasherIsNull_ThrowsArgumentNullException()
     {
-        var action = () => new HashDeviceIdFormatter(null, new HexByteArrayEncoder());
+        var action = () => new HashDeviceIdFormatter(null as IByteArrayHasher, new HexByteArrayEncoder());
 
         action.Should().Throw<ArgumentNullException>();
     }
@@ -23,6 +23,14 @@ public class HashDeviceIdFormatterTests
     public void Constructor_ByteArrayEncoderIsNull_ThrowsArgumentNullException()
     {
         var action = () => new HashDeviceIdFormatter(() => MD5.Create(), null);
+
+        action.Should().Throw<ArgumentNullException>();
+    }
+
+    [Fact]
+    public void Constructor_HashAlgorithmIsNull_ThrowsArgumentNullException()
+    {
+        var action = () => new HashDeviceIdFormatter(null as Func<HashAlgorithm>, new HexByteArrayEncoder());
 
         action.Should().Throw<ArgumentNullException>();
     }

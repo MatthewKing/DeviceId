@@ -1,4 +1,6 @@
-﻿using DeviceId.Internal;
+﻿#if NET5_0_OR_GREATER && WINDOWS10_0_17763_0_OR_GREATER
+using DeviceId.Internal;
+#endif
 using DeviceId.Windows.Components;
 #if !NET35
 using Microsoft.Win32;
