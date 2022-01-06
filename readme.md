@@ -196,6 +196,39 @@ There are a number of encoders that can be used customize the formatter. These i
 * [Base64ByteArrayEncoder](/src/DeviceId/Encoders/Base64ByteArrayEncoder.cs) - Encodes a byte array as a base 64 string.
 * [Base64UrlByteArrayEncoder](/src/DeviceId/Encoders/Base64UrlByteArrayEncoder.cs) - Encodes a byte array as a base 64 url-encoded string.
 
+## Migration Guide 5.x -> 6.x
+
+Some methods have been removed and if you want to keep your builde-logic you have to replace them with their os-specific versions.
+
+For migrations you can inspect the [version 5.x methods](https://github.com/MatthewKing/DeviceId/blob/fd2fb79be80cbb3130d3df94e2ceed4d03514132/src/DeviceId/DeviceIdBuilderExtensions.cs) and choose the corresponding new os-specific methods.
+
+Here are some examples.
+
+### `builder.AddOSInstallationID();`
+```
+builder.OnWindows(x => x.AddMachineGuid())
+       .OnLinux(x => x.AddMachineId())
+       .OnMac(x => x.AddSystemDriveSerialNumber());
+```
+### `builder.AddMotherboardSerialNumber()`
+```
+builder.OnWindows(x => x.AddMotherboardSerialNumber())
+       .OnLinux(x => x.AddMotherboardSerialNumber());
+       // not available on mac
+```
+### `builder.AddSystemUUID()`
+```
+builder.OnWindows(x => x.AddSystemUuid())
+       .OnLinux(x => x.AddProductUuid());
+       // not available on mac
+```
+### `builder.AddProcessorId()`
+```
+builder.OnWindows(x => x.AddProcessorId())
+       .OnLinux(x => x.AddCpuInfo());
+       // not available on mac
+```
+
 ## Strong naming
 
 From version 5 onwards, the assemblies in this package are strong named for the convenience of those users who require strong naming. Please note, however, that the key files are checked in to this repository. This means that anyone can compile their own version and strong name it with the original keys. This is a common practice with open source projects, but it does mean that you shouldn't use the strong name as a guarantee of security or identity.
