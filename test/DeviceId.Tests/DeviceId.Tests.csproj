@@ -48,4 +48,13 @@
     </None>
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Linux_4.8-4.13.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Linux_4.4.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

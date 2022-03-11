@@ -19,6 +19,16 @@ public static class LinuxDeviceIdBuilderExtensions
     }
 
     /// <summary>
+    /// Adds the docker container id to the device identifier.
+    /// </summary>
+    /// <param name="builder">The <see cref="LinuxDeviceIdBuilder"/> to add the component to.</param>
+    /// <returns>The <see cref="LinuxDeviceIdBuilder"/> instance.</returns>
+    public static LinuxDeviceIdBuilder AddDockerContainerId(this LinuxDeviceIdBuilder builder)
+    {
+        return builder.AddComponent("DockerContainerId", new DockerContainerIdComponent());
+    }
+
+    /// <summary>
     /// Adds the machine ID (from /var/lib/dbus/machine-id or /etc/machine-id) to the device identifier.
     /// </summary>
     /// <param name="builder">The <see cref="LinuxDeviceIdBuilder"/> to add the component to.</param>
