@@ -52,7 +52,7 @@ public class DockerContainerIdComponent : IDeviceIdComponent
             Match match = regex.Match(line);
             if (match.Success)
             {
-                containerId = match.Groups[4].Value;
+                containerId = match.Groups[5].Value;
                 return true;
             }
         }
