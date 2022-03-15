@@ -43,7 +43,7 @@ public class DockerContainerIdComponent : IDeviceIdComponent
         return null;
     }
 
-    private bool TryGetContainerId(StreamReader reader, out string containerId)
+    private static bool TryGetContainerId(StreamReader reader, out string containerId)
     {
         Regex regex = new("(\\d)+\\:(.)+?\\:(/.+?)??(/docker[-/])([0-9a-f]+)");
         string line;
