@@ -4,7 +4,6 @@ on:
     branches:
       - master
       - main
-      - dockerid
   pull_request:
     types: [opened, synchronize, reopened]
 jobs:
@@ -44,6 +43,6 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         shell: powershell
         run: |
-          .\.sonar\scanner\dotnet-sonarscanner begin /k:"AlexSchuetz_DeviceId" /o:"alexschuetz" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
+          .\.sonar\scanner\dotnet-sonarscanner begin /k:"AlexSchuetz_DeviceId" /o:"alexschuetz" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.xunit.reportsPaths=./test/**/TestResults/TestResults.xml /d:sonar.cs.opencover.reportsPaths=./test/**/TestResults/coverage*.lcov /d:sonar.test.inclusions=./test/**/**
           dotnet test --logger:xunit /p:CollectCoverage=true /p:CoverletOutput=./TestResults/coverage.lcov /p:CoverletOutputFormat=opencover
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
