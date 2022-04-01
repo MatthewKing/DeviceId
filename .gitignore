@@ -3,3 +3,6 @@ bin/
 obj/
 artifacts/
 *.user
+TestResults/
+*.nupkg
+*.snupkg
