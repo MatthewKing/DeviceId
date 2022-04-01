@@ -9,7 +9,19 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: Sonar env
-        run: echo "SONAR_PROJECT_KEY=${GITHUB_REPOSITORY/\//_}" >> $GITHUB_ENV
+        run: |
+          echo "Repo: $Env:GITHUB_REPOSITORY"
+          echo "Owner: $Env:GITHUB_REPOSITORY_OWNER"
+          $sonarKey = $Env:GITHUB_REPOSITORY -replace '/', '_'
+          $sonarOwner = $Env:GITHUB_REPOSITORY_OWNER.ToLower()
+          echo "Sonar-Key: ${sonarKey}"
+          echo "Sonar-Owner: ${sonarOwner}"
+          echo "SONAR_PROJECT_KEY=${sonarKey}" >> $Env:GITHUB_ENV
+          echo "SONAR_OWNER=${sonarOwner}" >> $Env:GITHUB_ENV
+      - name: Test sonarkey
+        run: |
+          echo "Sonar-key: $Env:SONAR_PROJECT_KEY"
+          echo "Sonar-Owner: $Env:SONAR_OWNER"
       - name: Set up JDK 11
         uses: actions/setup-java@v1
         with:
@@ -42,6 +54,6 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         shell: powershell
         run: |
-          .\.sonar\scanner\dotnet-sonarscanner begin /k:"${{ env.SONAR_PROJECT_KEY }}" /o:"${{ env.GITHUB_REPOSITORY_OWNER }}" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.xunit.reportsPaths=./test/**/TestResults/TestResults.xml /d:sonar.cs.opencover.reportsPaths=./test/**/TestResults/coverage*.lcov /d:sonar.test.inclusions=./test/**/**
+          .\.sonar\scanner\dotnet-sonarscanner begin /k:"$Env:SONAR_PROJECT_KEY" /o:"$Env:SONAR_OWNER" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.xunit.reportsPaths=./test/**/TestResults/TestResults.xml /d:sonar.cs.opencover.reportsPaths=./test/**/TestResults/coverage*.lcov /d:sonar.test.inclusions=./test/**/**
           dotnet test --logger:xunit /p:CollectCoverage=true /p:CoverletOutput=./TestResults/coverage.lcov /p:CoverletOutputFormat=opencover
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
