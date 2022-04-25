@@ -54,6 +54,12 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         shell: powershell
         run: |
-          .\.sonar\scanner\dotnet-sonarscanner begin /k:"$Env:SONAR_PROJECT_KEY" /o:"$Env:SONAR_OWNER" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.xunit.reportsPaths=./test/**/TestResults/TestResults.xml /d:sonar.cs.opencover.reportsPaths=./test/**/TestResults/coverage*.lcov /d:sonar.test.inclusions=./test/**/**
+          .\.sonar\scanner\dotnet-sonarscanner begin /k:"$Env:SONAR_PROJECT_KEY" /o:"$Env:SONAR_OWNER" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.xunit.reportsPaths=./test/**/TestResults/TestResults.xml /d:sonar.cs.opencover.reportsPaths=./test/**/TestResults/coverage*.lcov /d:sonar.test.inclusions=./test/**/** /d:sonar.qualitygate.wait=true
           dotnet test --logger:xunit /p:CollectCoverage=true /p:CoverletOutput=./TestResults/coverage.lcov /p:CoverletOutputFormat=opencover
+          $testResultCode = $?
+          echo "TestResultCode: ${testResultCode}"
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
+          if( -not ${testResultCode}) {
+            echo "There are test failures!"
+            exit 1
+          }
