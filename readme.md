@@ -121,7 +121,8 @@ From `DeviceId.Linux`:
 * `AddMotherboardSerialNumber` adds the motherboard serial number to the device identifier.
 * `AddMachineId` adds the machine ID (from `/var/lib/dbus/machine-id` or `/etc/machine-id`) to the device identifier.
 * `AddProductUuid` adds the product UUID (from `/sys/class/dmi/id/product_uuid`) to the device identifier.
-* `AddCpuInfo` adds  CPU info (from `/proc/cpuinfo`) to the device identifier.
+* `AddCpuInfo` adds CPU info (from `/proc/cpuinfo`) to the device identifier.
+* `AddDockerContainerId` adds the Docker container identifier (from `/proc/1/cgroup`) to the device identifier.
 
 From `DeviceId.Mac`:
 
