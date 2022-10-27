@@ -25,7 +25,7 @@ public static class LinuxDeviceIdBuilderExtensions
     /// <returns>The <see cref="LinuxDeviceIdBuilder"/> instance.</returns>
     public static LinuxDeviceIdBuilder AddDockerContainerId(this LinuxDeviceIdBuilder builder)
     {
-        return builder.AddComponent("DockerContainerId", new DockerContainerIdComponent());
+        return builder.AddComponent("DockerContainerId", new DockerContainerIdComponent("/proc/1/cgroup"));
     }
 
     /// <summary>

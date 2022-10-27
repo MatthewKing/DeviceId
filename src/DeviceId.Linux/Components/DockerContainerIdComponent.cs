@@ -4,21 +4,20 @@ using System.Text.RegularExpressions;
 namespace DeviceId.Linux.Components;
 
 /// <summary>
-/// An implementation of <see cref="IDeviceIdComponent"/> that uses the cgroup to read the docker container id.
+/// An implementation of <see cref="IDeviceIdComponent"/> that uses the cgroup to read the Docker container id.
 /// </summary>
 public class DockerContainerIdComponent : IDeviceIdComponent
 {
+    /// <summary>
+    /// The cgroup file.
+    /// </summary>
     private readonly string _cGroupFile;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="DockerContainerIdComponent"/> class.
     /// </summary>
-    public DockerContainerIdComponent()
-        :this("/proc/1/cgroup")
-    {
-    }
-
-    internal DockerContainerIdComponent(string cGroupFile)
+    /// <param name="cGroupFile">The cgroup file.</param>
+    public DockerContainerIdComponent(string cGroupFile)
     {
         _cGroupFile = cGroupFile;
     }
@@ -33,29 +32,32 @@ public class DockerContainerIdComponent : IDeviceIdComponent
         {
             return null;
         }
-        using (var file = File.OpenText(_cGroupFile))
+
+        using var file = File.OpenText(_cGroupFile);
+
+        if (TryGetContainerId(file, out string containerId))
         {
-            if (TryGetContainerId(file, out string containerId))
-            {
-                return containerId;
-            }
+            return containerId;
         }
+
         return null;
     }
 
     private static bool TryGetContainerId(StreamReader reader, out string containerId)
     {
-        Regex regex = new("(\\d)+\\:(.)+?\\:(/.+?)??(/docker[-/])([0-9a-f]+)");
+        var regex = new Regex("(\\d)+\\:(.)+?\\:(/.+?)??(/docker[-/])([0-9a-f]+)");
+
         string line;
         while ((line = reader?.ReadLine()) != null)
         {
-            Match match = regex.Match(line);
+            var match = regex.Match(line);
             if (match.Success)
             {
                 containerId = match.Groups[5].Value;
                 return true;
             }
         }
+
         containerId = default;
         return false;
     }

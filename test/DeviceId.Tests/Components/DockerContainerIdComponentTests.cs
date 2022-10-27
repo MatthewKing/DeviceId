@@ -6,7 +6,6 @@ namespace DeviceId.Tests.Components;
 
 public class DockerContainerIdComponentTests
 {
-
     [InlineData("non-existing", null)]
     [InlineData("", null)]
     [InlineData(null, null)]
@@ -16,10 +15,9 @@ public class DockerContainerIdComponentTests
     [Theory]
     public void TestGetValue(string file, string expected)
     {
-        DockerContainerIdComponent component = new DockerContainerIdComponent(file);
+        var component = new DockerContainerIdComponent(file);
         var componentValue = component.GetValue();
 
         componentValue.Should().Be(expected);
     }
-
 }
