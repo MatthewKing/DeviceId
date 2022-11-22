@@ -199,35 +199,52 @@ There are a number of encoders that can be used customize the formatter. These i
 
 ## Migration Guide 5.x -> 6.x
 
-Some methods have been removed and if you want to keep your builde-logic you have to replace them with their os-specific versions.
+There were a few breaking changes going from v5 to v6.
 
-For migrations you can inspect the [version 5.x methods](https://github.com/MatthewKing/DeviceId/blob/fd2fb79be80cbb3130d3df94e2ceed4d03514132/src/DeviceId/DeviceIdBuilderExtensions.cs) and choose the corresponding new os-specific methods.
+* As mentioned above in the "What packages are needed" section, DeviceId was split into multiple packages, so you may need to add a reference to the packages for your platform (such as `DeviceId.Windows`, `DeviceId.Windows.Wmi`, `DeviceId.Linux`, etc.).
 
-Here are some examples.
+* As mentioned above in the "Controlling how the device identifier is formatted" section, the default formatter changed between version 5 and version 6. If you're using version 6 but want to revert to the version 5 formatter, you can do so via `.UseFormatter(DeviceIdFormatters.DefaultV5)`
 
-### `builder.AddOSInstallationID();`
-```
+* Some methods have been renamed or restricted to certain platforms. You can inspect the [version 5.x methods](https://github.com/MatthewKing/DeviceId/blob/fd2fb79be80cbb3130d3df94e2ceed4d03514132/src/DeviceId/DeviceIdBuilderExtensions.cs) and choose the corresponding new OS-specific methods. Remember, if something is missing you can always re-add it yourself via a custom component. Here are some examples of changes:
+
+```csharp
+// V5:
+builder.AddOSInstallationID();
+
+// V6:
 builder.OnWindows(x => x.AddMachineGuid())
        .OnLinux(x => x.AddMachineId())
        .OnMac(x => x.AddSystemDriveSerialNumber());
 ```
-### `builder.AddMotherboardSerialNumber()`
-```
+
+```csharp
+// V5:
+builder.AddMotherboardSerialNumber();
+
+// V6:
 builder.OnWindows(x => x.AddMotherboardSerialNumber())
        .OnLinux(x => x.AddMotherboardSerialNumber());
-       // not available on mac
+       // not available on Mac
 ```
-### `builder.AddSystemUUID()`
-```
+
+```csharp
+// V5:
+builder.AddSystemUUID();
+
+// V6:
 builder.OnWindows(x => x.AddSystemUuid())
        .OnLinux(x => x.AddProductUuid());
-       // not available on mac
+       // not available on Mac
 ```
-### `builder.AddProcessorId()`
-```
+
+```csharp
+// V5:
+builder.AddSystemUUID();
+
+// V6:
 builder.OnWindows(x => x.AddProcessorId())
        .OnLinux(x => x.AddCpuInfo());
-       // not available on mac
+       // not available on Mac
 ```
 
 ## Strong naming
