@@ -22,7 +22,11 @@
     <Reference Include="System.Management" />
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' != 'net35' and '$(TargetFramework)' != 'net40' ">
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net5.0' ">
+    <PackageReference Include="System.Management" Version="6.0.0" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' or '$(TargetFramework)' == 'net6.0' or '$(TargetFramework)' == 'net7.0' ">
     <PackageReference Include="System.Management" Version="7.0.0" />
   </ItemGroup>
 

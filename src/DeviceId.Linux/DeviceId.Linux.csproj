@@ -17,7 +17,11 @@
     <ProjectReference Include="..\DeviceId\DeviceId.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net5.0' ">
+    <PackageReference Include="System.Text.Json" Version="6.0.0" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' != 'net5.0' ">
     <PackageReference Include="System.Text.Json" Version="7.0.0" />
   </ItemGroup>
 
