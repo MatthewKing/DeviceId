@@ -205,7 +205,7 @@ There were a few breaking changes going from v5 to v6.
 
 * As mentioned above in the "Controlling how the device identifier is formatted" section, the default formatter changed between version 5 and version 6. If you're using version 6 but want to revert to the version 5 formatter, you can do so via `.UseFormatter(DeviceIdFormatters.DefaultV5)`
 
-* Some methods have been renamed or restricted to certain platforms. You can inspect the [version 5.x methods](https://github.com/MatthewKing/DeviceId/blob/fd2fb79be80cbb3130d3df94e2ceed4d03514132/src/DeviceId/DeviceIdBuilderExtensions.cs) and choose the corresponding new OS-specific methods. Remember, if something is missing you can always re-add it yourself via a custom component. Here are some examples of changes:
+* Some methods have been renamed or restricted to certain platforms. You can inspect the [version 5.x methods](https://github.com/MatthewKing/DeviceId/blob/fd2fb79be80cbb3130d3df94e2ceed4d03514132/src/DeviceId/DeviceIdBuilderExtensions.cs) and choose the corresponding new OS-specific methods. Note that these still may not be backwards compatible with a v5 device identifier due to the changes in the component names. Remember, if something is missing in v6 that you had in v5, you can always re-add it yourself via a custom component. Here are some examples of changes:
 
 ```csharp
 // V5:
@@ -214,7 +214,7 @@ builder.AddOSInstallationID();
 // V6:
 builder.OnWindows(x => x.AddMachineGuid())
        .OnLinux(x => x.AddMachineId())
-       .OnMac(x => x.AddSystemDriveSerialNumber());
+       .OnMac(x => x.AddPlatformSerialNumber());
 ```
 
 ```csharp
