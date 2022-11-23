@@ -7,7 +7,7 @@ namespace DeviceId;
 /// <summary>
 /// Provides functionality to manage the generation and validation of multiple device identifier formats.
 /// </summary>
-public sealed class DeviceIdManager
+public class DeviceIdManager
 {
     /// <summary>
     /// A dictionary mapping the version numbers to the device ID builders.

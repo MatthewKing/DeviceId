@@ -5,7 +5,7 @@ namespace DeviceId;
 /// <summary>
 /// The default implementation of <see cref="IDeviceIdVersionEncoder"/>.
 /// </summary>
-public sealed class DeviceIdVersionEncoder : IDeviceIdVersionEncoder
+public class DeviceIdVersionEncoder : IDeviceIdVersionEncoder
 {
     /// <summary>
     /// Encodes a device identifier and a version number into a string.
