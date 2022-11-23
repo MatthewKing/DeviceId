@@ -32,7 +32,7 @@ public class DeviceIdManagerTests
                 .AddComponent("C1", new DeviceIdComponent("C1V"))
                 .AddComponent("C3", new DeviceIdComponent("C3V")));
 
-        Assert.Throws<ArgumentOutOfRangeException>(() => manager.GetDeviceId(27));
+        manager.GetDeviceId().Should().BeNull();
     }
 
     [Fact]
