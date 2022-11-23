@@ -197,6 +197,46 @@ There are a number of encoders that can be used customize the formatter. These i
 * [Base64ByteArrayEncoder](/src/DeviceId/Encoders/Base64ByteArrayEncoder.cs) - Encodes a byte array as a base 64 string.
 * [Base64UrlByteArrayEncoder](/src/DeviceId/Encoders/Base64UrlByteArrayEncoder.cs) - Encodes a byte array as a base 64 url-encoded string.
 
+### Supporting/validating multiple device ID formats with backwards compatibility
+
+Let's say you shipped an app, and were using DeviceId to perform license checks. You may have done something like:
+
+```csharp
+var currentDeviceId = new DeviceIdBuilder()
+    .AddMachineName()
+    .AddUserName()
+    .AddMacAddress()
+    .ToString();
+
+var savedDeviceIdFromLicenseFile = ReadDeviceIdFromLicenseFile();
+
+var isLicenseValid = currentDeviceId == savedDeviceIdFromLicenseFile;
+```
+
+Say you now want to release a new version of your app, and want to change how new device identifiers are generated (maybe just use MAC address and a file token), but you don't want to invalidate every single license file that currently exists. In other words, you want backwards compatible device ID validation.
+
+In the latest version of DeviceId, you can use the `DeviceIdManager` to do so:
+
+```csharp
+
+var deviceIdManager = new DeviceIdManager()
+    .AddBuilder(1, builder => builder
+        .AddMachineName()
+        .AddUserName()
+        .AddMacAddress())
+    .AddBuilder(2, builder => builder
+        .AddMacAddress()
+        .AddFileToken(TokenFilePath));
+
+var savedDeviceIdFromLicenseFile = ReadDeviceIdFromLicenseFile();
+
+var isLicenseValid = deviceIdManager.Validate(savedDeviceIdFromLicenseFile);
+```
+
+The device ID manager will work out which builder to use, and generate the current device ID in the correct format so that it can be sensibly compared to the device ID being validated.
+
+*Note that this functionality all works well but I'm not entirely happy with the naming or the API. I've currently built it so that there are no breaking changes for v6. In the future (v7 for example) I may rename some classes and break the API. In any case though I will keep the functionality, so it's safe to use this stuff.*
+
 ## Migration Guide 5.x -> 6.x
 
 There were a few breaking changes going from v5 to v6.
