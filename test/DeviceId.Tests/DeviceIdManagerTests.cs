@@ -20,7 +20,7 @@ public class DeviceIdManagerTests
     [Fact]
     public void InvalidBuilderSpecified()
     {
-        var formatter = new StringDeviceIdFormatter(new PlainTextDeviceIdComponentEncoder(), ":");
+        var formatter = new StringDeviceIdFormatter(new PlainTextDeviceIdComponentEncoder(), string.Empty);
 
         var manager = new DeviceIdManager()
             .AddBuilder(1, builder => builder
@@ -32,7 +32,7 @@ public class DeviceIdManagerTests
                 .AddComponent("C1", new DeviceIdComponent("C1V"))
                 .AddComponent("C3", new DeviceIdComponent("C3V")));
 
-        manager.GetDeviceId().Should().BeNull();
+        manager.GetDeviceId(-1).Should().BeNull();
     }
 
     [Fact]
