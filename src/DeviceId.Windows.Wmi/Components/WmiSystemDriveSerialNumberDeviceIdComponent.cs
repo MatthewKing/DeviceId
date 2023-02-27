@@ -20,7 +20,16 @@ public class WmiSystemDriveSerialNumberDeviceIdComponent : IDeviceIdComponent
     /// <returns>The component value.</returns>
     public string GetValue()
     {
-        var systemLogicalDiskDeviceId = Environment.GetFolderPath(Environment.SpecialFolder.System).Substring(0, 2);
+        var systemDirectory = Environment.GetFolderPath(Environment.SpecialFolder.System);
+
+        // SystemDirectory can sometimes be null or empty.
+        // See: https://github.com/dotnet/runtime/issues/21430 and https://github.com/MatthewKing/DeviceId/issues/64
+        if (string.IsNullOrEmpty(systemDirectory) || systemDirectory.Length < 2)
+        {
+            return null;
+        }
+
+        var systemLogicalDiskDeviceId = systemDirectory.Substring(0, 2);
 
         var queryString = $"SELECT * FROM Win32_LogicalDisk where DeviceId = '{systemLogicalDiskDeviceId}'";
         using var searcher = new ManagementObjectSearcher(queryString);
