@@ -295,3 +295,11 @@ From version 5 onwards, the assemblies in this package are strong named for the 
 
 Copyright Matthew King 2015-2021.
 Distributed under the [MIT License](http://opensource.org/licenses/MIT). Refer to license.txt for more information.
+
+## Support DeviceId
+
+Community support is greatly appreciated. You can help in the following ways:
+
+* Tackle some of our open issues that are flagged as ['help wanted'](https://github.com/MatthewKing/DeviceId/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22)
+* [Become a sponsor on GitHub](https://github.com/sponsors/MatthewKing)
+* [Buy me a coffee](https://ko-fi.com/matthewking)
