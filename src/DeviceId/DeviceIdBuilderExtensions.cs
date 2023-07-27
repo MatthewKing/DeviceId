@@ -56,10 +56,11 @@ public static class DeviceIdBuilderExtensions
     /// </summary>
     /// <param name="builder">The <see cref="DeviceIdBuilder"/> to add the component to.</param>
     /// <param name="excludeWireless">A value indicating whether wireless adapters should be excluded.</param>
+    /// <param name="excludeDockerBridge">A value determining whether docker bridge should be excluded.</param>
     /// <returns>The <see cref="DeviceIdBuilder"/> instance.</returns>
-    public static DeviceIdBuilder AddMacAddress(this DeviceIdBuilder builder, bool excludeWireless = false)
+    public static DeviceIdBuilder AddMacAddress(this DeviceIdBuilder builder, bool excludeWireless = false, bool excludeDockerBridge = false)
     {
-        return builder.AddComponent("MACAddress", new MacAddressDeviceIdComponent(excludeWireless));
+        return builder.AddComponent("MACAddress", new MacAddressDeviceIdComponent(excludeWireless, excludeDockerBridge));
     }
 
     /// <summary>
