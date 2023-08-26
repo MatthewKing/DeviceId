@@ -43,6 +43,52 @@ public static class WindowsDeviceIdBuilderExtensions
 #endif
 
     /// <summary>
+    /// Adds the Windows Device ID (also known as Machine ID or Advertising ID) to the device identifier.
+    /// This value is the one displayed as "Device ID" in the Windows Device Specifications UI.
+    /// </summary>
+    /// <param name="builder">The <see cref="WindowsDeviceIdBuilder"/> to add the component to.</param>
+    /// <returns>The <see cref="WindowsDeviceIdBuilder"/> instance.</returns>
+    public static WindowsDeviceIdBuilder AddWindowsDeviceId(this WindowsDeviceIdBuilder builder)
+    {
+#if NET35
+        return AddRegistryValue(builder,
+            "WindowsDeviceId",
+            @"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\SQMClient",
+            "MachineId");
+#else
+        return AddRegistryValue(builder,
+            "WindowsDeviceId",
+            RegistryView.Default,
+            RegistryHive.LocalMachine,
+            @"SOFTWARE\Microsoft\SQMClient",
+            "MachineId");
+#endif
+    }
+
+    /// <summary>
+    /// Adds the Windows Product ID to the device identifier.
+    /// This value is the one displayed as "Product ID" in the Windows Device Specifications UI.
+    /// </summary>
+    /// <param name="builder">The <see cref="WindowsDeviceIdBuilder"/> to add the component to.</param>
+    /// <returns>The <see cref="WindowsDeviceIdBuilder"/> instance.</returns>
+    public static WindowsDeviceIdBuilder AddWindowsProductId(this WindowsDeviceIdBuilder builder)
+    {
+#if NET35
+        return AddRegistryValue(builder,
+            "WindowsProductId",
+            @"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion",
+            "ProductId");
+#else
+        return AddRegistryValue(builder,
+            "WindowsProductId",
+            RegistryView.Default,
+            RegistryHive.LocalMachine,
+            @"SOFTWARE\Microsoft\Windows NT\CurrentVersion",
+            "ProductId");
+#endif
+    }
+
+    /// <summary>
     /// Adds the Machine GUID (from HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Cryptography\MachineGuid) to the device identifier.
     /// </summary>
     /// <param name="builder">The <see cref="WindowsDeviceIdBuilder"/> to add the component to.</param>

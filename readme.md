@@ -34,13 +34,21 @@ If you're using version 5 or below, everything is available in the [DeviceId](ht
 
 Use the `DeviceIdBuilder` class to build up a device ID.
 
+Here's a Windows-specific device ID, using the `DeviceId.Windows` package to get the built-in Windows Device ID and Product ID values.
+
+```csharp
+string deviceId = new DeviceIdBuilder()
+    .OnWindows(windows => windows.AddWindowsDeviceId().AddWindowsProductId())
+    .ToString();
+```
+
 Here's a simple cross-platform one, using only the `DeviceId` package, which is valid for both version 5 and version 6 of the library:
 
 ```csharp
 string deviceId = new DeviceIdBuilder()
     .AddMachineName()
     .AddOsVersion()
-    .AddFileToken(@"C:\example-device-token.txt")
+    .AddFileToken("example-device-token.txt")
     .ToString();
 ```
 
@@ -104,6 +112,8 @@ From `DeviceId`:
 
 From `DeviceId.Windows`:
 
+* `AddWindowsDeviceId` adds the Windows Device ID (also known as Machine ID or Advertising ID) to the device identifier. This value is the one displayed as "Device ID" in the Windows Device Specifications UI.
+* `AddWindowsProductId` adds the Windows Product ID (also known as Machine ID or Advertising ID) to the device identifier. This value is the one displayed as "Product ID" in the Windows Device Specifications UI.
 * `AddRegistryValue` adds a specified registry value to the device identifier.
 * `AddMachineGuid` adds the machine GUID from `HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Cryptography` to the device identifier.
 
