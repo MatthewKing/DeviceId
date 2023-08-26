@@ -18,27 +18,22 @@ As of version 6, the packages have been split up so that users can pick-and-choo
 
 You can pick-and-choose which packages to use based on your use case.
 
-For a standard Windows app, the recommended packages are: `DeviceId`, `DeviceId.Windows`, and `DeviceId.Windows.Wmi`.
+For a standard Windows app, the recommended packages are: `DeviceId` and `DeviceId.Windows`. If you want some extra advanced components you can also add `DeviceId.Windows.Wmi`.
 
 ```
 PM> Install-Package DeviceId
 PM> Install-Package DeviceId.Windows
-PM> Install-Package DeviceId.Windows.Wmi
 ```
-
-Alternatively, you can just start with `DeviceId.Windows.Wmi`, as it itself references `DeviceId.Windows` and `DeviceId`.
-
-If you're using version 5 or below, everything is available in the [DeviceId](https://www.nuget.org/packages/DeviceId) package.
 
 ### Building a device identifier
 
 Use the `DeviceIdBuilder` class to build up a device ID.
 
-Here's a Windows-specific device ID, using the `DeviceId.Windows` package to get the built-in Windows Device ID and Product ID values.
+Here's a Windows-specific device ID, using the `DeviceId.Windows` package to get the built-in Windows Device ID.
 
 ```csharp
 string deviceId = new DeviceIdBuilder()
-    .OnWindows(windows => windows.AddWindowsDeviceId().AddWindowsProductId())
+    .OnWindows(windows => windows.AddWindowsDeviceId())
     .ToString();
 ```
 
@@ -113,7 +108,7 @@ From `DeviceId`:
 From `DeviceId.Windows`:
 
 * `AddWindowsDeviceId` adds the Windows Device ID (also known as Machine ID or Advertising ID) to the device identifier. This value is the one displayed as "Device ID" in the Windows Device Specifications UI.
-* `AddWindowsProductId` adds the Windows Product ID (also known as Machine ID or Advertising ID) to the device identifier. This value is the one displayed as "Product ID" in the Windows Device Specifications UI.
+* `AddWindowsProductId` adds the Windows Product ID to the device identifier. This value is the one displayed as "Product ID" in the Windows Device Specifications UI.
 * `AddRegistryValue` adds a specified registry value to the device identifier.
 * `AddMachineGuid` adds the machine GUID from `HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Cryptography` to the device identifier.
 
