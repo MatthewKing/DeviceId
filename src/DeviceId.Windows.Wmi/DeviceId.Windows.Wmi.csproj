@@ -4,7 +4,7 @@
     <PackageId>DeviceId.Windows.Wmi</PackageId>
     <Title>DeviceId (Windows / WMI)</Title>
     <Description>Provides extra Windows-specific components (using WMI) for the DeviceId package.</Description>
-    <VersionPrefix>6.2.1</VersionPrefix>
+    <VersionPrefix>6.4.0</VersionPrefix>
   </PropertyGroup>
 
   <PropertyGroup>
