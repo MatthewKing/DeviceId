@@ -1,4 +1,5 @@
-﻿using Microsoft.Win32;
+﻿using System;
+using Microsoft.Win32;
 
 namespace DeviceId.Windows.Components;
 
@@ -29,6 +30,11 @@ public class RegistryValueDeviceIdComponent : IDeviceIdComponent
     /// </summary>
     private readonly string _valueName;
 
+    /// <summary>
+    /// An optional function to use to format the value before returning it.
+    /// </summary>
+    private readonly Func<string, string> _formatter;
+
 #if NET35
     /// <summary>
     /// Initializes a new instance of the <see cref="RegistryValueDeviceIdComponent"/> class.
@@ -36,9 +42,19 @@ public class RegistryValueDeviceIdComponent : IDeviceIdComponent
     /// <param name="keyName">The name of the registry key.</param>
     /// <param name="valueName">The name of the registry value.</param>
     public RegistryValueDeviceIdComponent(string keyName, string valueName)
+        : this(keyName, valueName, null) { }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="RegistryValueDeviceIdComponent"/> class.
+    /// </summary>
+    /// <param name="keyName">The name of the registry key.</param>
+    /// <param name="valueName">The name of the registry value.</param>
+    /// <param name="formatter">An optional function to use to format the value before returning it.</param>
+    public RegistryValueDeviceIdComponent(string keyName, string valueName, Func<string, string> formatter)
     {
         _keyName = keyName;
         _valueName = valueName;
+        _formatter = formatter;
     }
 #else
     /// <summary>
@@ -49,11 +65,23 @@ public class RegistryValueDeviceIdComponent : IDeviceIdComponent
     /// <param name="keyName">The name of the registry key.</param>
     /// <param name="valueName">The name of the registry value.</param>
     public RegistryValueDeviceIdComponent(RegistryView registryView, RegistryHive registryHive, string keyName, string valueName)
+        : this(registryView, registryHive, keyName, valueName, null) { }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="RegistryValueDeviceIdComponent"/> class.
+    /// </summary>
+    /// <param name="registryView">The registry view.</param>
+    /// <param name="registryHive">The registry hive.</param>
+    /// <param name="keyName">The name of the registry key.</param>
+    /// <param name="valueName">The name of the registry value.</param>
+    /// <param name="formatter">An optional function to use to format the value before returning it.</param>
+    public RegistryValueDeviceIdComponent(RegistryView registryView, RegistryHive registryHive, string keyName, string valueName, Func<string, string> formatter)
     {
         _registryHive = registryHive;
         _registryView = registryView;
         _keyName = keyName;
         _valueName = valueName;
+        _formatter = formatter;
     }
 #endif
 
@@ -66,7 +94,14 @@ public class RegistryValueDeviceIdComponent : IDeviceIdComponent
 #if NET35
         try
         {
-            return Registry.GetValue(_keyName, _valueName, null)?.ToString();
+            var value = Registry.GetValue(_keyName, _valueName, null);
+            var valueAsString = value?.ToString();
+            if (valueAsString is null)
+            {
+                return null;
+            }
+
+            return _formatter?.Invoke(valueAsString) ?? valueAsString;
         }
         catch { }
 #else
@@ -77,7 +112,13 @@ public class RegistryValueDeviceIdComponent : IDeviceIdComponent
             if (subKey != null)
             {
                 var value = subKey.GetValue(_valueName);
-                return value?.ToString();
+                var valueAsString = value?.ToString();
+                if (valueAsString is null)
+                {
+                    return null;
+                }
+
+                return _formatter?.Invoke(valueAsString) ?? valueAsString;
             }
         }
         catch { }

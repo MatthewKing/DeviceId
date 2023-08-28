@@ -51,18 +51,21 @@ public static class WindowsDeviceIdBuilderExtensions
     public static WindowsDeviceIdBuilder AddWindowsDeviceId(this WindowsDeviceIdBuilder builder)
     {
 #if NET35
-        return AddRegistryValue(builder,
-            "WindowsDeviceId",
-            @"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\SQMClient",
-            "MachineId");
+        var component = new RegistryValueDeviceIdComponent(
+           keyName: @"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\SQMClient",
+           valueName: "MachineId",
+           formatter: value => value.TrimStart('{').TrimEnd('}'));
 #else
-        return AddRegistryValue(builder,
-            "WindowsDeviceId",
-            RegistryView.Default,
-            RegistryHive.LocalMachine,
-            @"SOFTWARE\Microsoft\SQMClient",
-            "MachineId");
+
+        var component = new RegistryValueDeviceIdComponent(
+            registryView: RegistryView.Default,
+            registryHive: RegistryHive.LocalMachine,
+            keyName: @"SOFTWARE\Microsoft\SQMClient",
+            valueName: "MachineId",
+            formatter: value => value.TrimStart('{').TrimEnd('}'));
 #endif
+
+        return builder.AddComponent("WindowsDeviceId", component);
     }
 
     /// <summary>
