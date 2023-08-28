@@ -1,5 +1,4 @@
-﻿using System;
-using DeviceId.Components;
+﻿using DeviceId.Components;
 using DeviceId.Encoders;
 using DeviceId.Formatters;
 using FluentAssertions;
