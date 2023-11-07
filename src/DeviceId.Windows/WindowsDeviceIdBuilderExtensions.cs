@@ -13,6 +13,10 @@ namespace DeviceId;
 /// </summary>
 public static class WindowsDeviceIdBuilderExtensions
 {
+#if !NET35
+    private static RegistryView[] Both32BitAnd64BitRegistryViews { get; } = new[] { RegistryView.Registry32, RegistryView.Registry64 };
+#endif
+
 #if NET35
     /// <summary>
     /// Adds a registry value to the device identifier.
@@ -58,7 +62,7 @@ public static class WindowsDeviceIdBuilderExtensions
 #else
 
         var component = new RegistryValueDeviceIdComponent(
-            registryView: RegistryView.Default,
+            registryViews: Both32BitAnd64BitRegistryViews,
             registryHive: RegistryHive.LocalMachine,
             keyName: @"SOFTWARE\Microsoft\SQMClient",
             valueName: "MachineId",
@@ -77,18 +81,19 @@ public static class WindowsDeviceIdBuilderExtensions
     public static WindowsDeviceIdBuilder AddWindowsProductId(this WindowsDeviceIdBuilder builder)
     {
 #if NET35
-        return AddRegistryValue(builder,
-            "WindowsProductId",
-            @"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion",
-            "ProductId");
+        var component = new RegistryValueDeviceIdComponent(
+            keyName: @"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion",
+            valueName: "ProductId");
 #else
-        return AddRegistryValue(builder,
-            "WindowsProductId",
-            RegistryView.Default,
-            RegistryHive.LocalMachine,
-            @"SOFTWARE\Microsoft\Windows NT\CurrentVersion",
-            "ProductId");
+        var component = new RegistryValueDeviceIdComponent(
+            registryViews: Both32BitAnd64BitRegistryViews,
+            registryHive: RegistryHive.LocalMachine,
+            keyName: @"SOFTWARE\Microsoft\Windows NT\CurrentVersion",
+            valueName: "ProductId",
+            formatter: null);
 #endif
+
+        return builder.AddComponent("WindowsProductId", component);
     }
 
     /// <summary>
@@ -99,18 +104,19 @@ public static class WindowsDeviceIdBuilderExtensions
     public static WindowsDeviceIdBuilder AddMachineGuid(this WindowsDeviceIdBuilder builder)
     {
 #if NET35
-        return AddRegistryValue(builder,
-            "MachineGuid",
-            @"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Cryptography",
-            "MachineGuid");
+        var component = new RegistryValueDeviceIdComponent(
+            keyName: @"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Cryptography",
+            valueName: "MachineGuid");
 #else
-        return AddRegistryValue(builder,
-            "MachineGuid",
-            RegistryView.Registry64,
-            RegistryHive.LocalMachine,
-            @"SOFTWARE\Microsoft\Cryptography",
-            "MachineGuid");
+        var component = new RegistryValueDeviceIdComponent(
+            registryViews: Both32BitAnd64BitRegistryViews,
+            registryHive: RegistryHive.LocalMachine,
+            keyName: @"SOFTWARE\Microsoft\Cryptography",
+            valueName: "MachineGuid",
+            formatter: null);
 #endif
+
+        return builder.AddComponent("MachineGuid", component);
     }
 
 #if NET5_0_OR_GREATER && WINDOWS10_0_17763_0_OR_GREATER
