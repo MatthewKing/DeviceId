@@ -8,6 +8,7 @@
     <RepositoryUrl>https://github.com/MatthewKing/DeviceId</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>deviceid;unique;device;identifier</PackageTags>
+    <PackageReadmeFile>readme.md</PackageReadmeFile>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -24,6 +25,12 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\readme.md" Pack="true" PackagePath="\">
+      <Visible>false</Visible>
+    </None>
   </ItemGroup>
 
 </Project>
