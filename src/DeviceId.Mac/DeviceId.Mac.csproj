@@ -4,7 +4,7 @@
     <PackageId>DeviceId.Mac</PackageId>
     <Title>DeviceId (Mac)</Title>
     <Description>Provides Mac-specific components for the DeviceId package.</Description>
-    <VersionPrefix>6.2.0</VersionPrefix>
+    <VersionPrefix>6.2.1</VersionPrefix>
   </PropertyGroup>
 
   <PropertyGroup>
