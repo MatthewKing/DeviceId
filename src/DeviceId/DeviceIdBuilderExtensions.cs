@@ -28,7 +28,24 @@ public static class DeviceIdBuilderExtensions
     /// <returns>The <see cref="DeviceIdBuilder"/> instance.</returns>
     public static DeviceIdBuilder AddUserName(this DeviceIdBuilder builder)
     {
-        return builder.AddComponent("UserName", new DeviceIdComponent(Environment.UserName));
+        // Default to false for backwards compatibility. May consider changing this to true in the next major version.
+
+        return AddUserName(builder, false);
+    }
+
+    /// <summary>
+    /// Adds the current user name to the device identifier.
+    /// </summary>
+    /// <param name="builder">The <see cref="DeviceIdBuilder"/> to add the component to.</param>
+    /// <param name="normalize">A value determining whether the user name should be normalized or not.</param>
+    /// <returns>The <see cref="DeviceIdBuilder"/> instance.</returns>
+    public static DeviceIdBuilder AddUserName(this DeviceIdBuilder builder, bool normalize)
+    {
+        var userName = normalize
+            ? Environment.UserName?.ToLowerInvariant()
+            : Environment.UserName;
+
+        return builder.AddComponent("UserName", new DeviceIdComponent(userName));
     }
 
     /// <summary>
