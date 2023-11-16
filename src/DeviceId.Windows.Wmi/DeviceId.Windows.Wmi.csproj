@@ -1,10 +1,10 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <PackageId>DeviceId.Windows.Wmi</PackageId>
     <Title>DeviceId (Windows / WMI)</Title>
     <Description>Provides extra Windows-specific components (using WMI) for the DeviceId package.</Description>
-    <VersionPrefix>6.5.1</VersionPrefix>
+    <VersionPrefix>6.6.0</VersionPrefix>
   </PropertyGroup>
 
   <PropertyGroup>
