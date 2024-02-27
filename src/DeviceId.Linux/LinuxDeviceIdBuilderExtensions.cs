@@ -55,7 +55,7 @@ public static class LinuxDeviceIdBuilderExtensions
     /// <returns>The <see cref="LinuxDeviceIdBuilder"/> instance.</returns>
     public static LinuxDeviceIdBuilder AddCpuInfo(this LinuxDeviceIdBuilder builder)
     {
-        return builder.AddComponent("CPUInfo", new FileContentsDeviceIdComponent("/proc/cpuinfo", true));
+        return builder.AddComponent("CPUInfo", new CpuInfoIdComponent());
     }
 
     /// <summary>
