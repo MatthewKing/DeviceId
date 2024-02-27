@@ -54,7 +54,7 @@ public class MmiMacAddressDeviceIdComponent : IDeviceIdComponent
         catch { }
 
         // Finally, try the fallback component:
-        var fallback = new MacAddressDeviceIdComponent(_excludeWireless);
+        var fallback = new MacAddressDeviceIdComponent(_excludeWireless, false);
         return fallback.GetValue();
     }
 
