@@ -5,6 +5,7 @@
     <Title>DeviceId (Windows / MMI)</Title>
     <Description>Provides extra Windows-specific components (using MMI) for the DeviceId package.</Description>
     <VersionPrefix>6.2.1</VersionPrefix>
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
   </PropertyGroup>
 
   <PropertyGroup>

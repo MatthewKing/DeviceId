@@ -5,6 +5,7 @@
     <Title>DeviceId (Windows)</Title>
     <Description>Provides Windows-specific components for the DeviceId package.</Description>
     <VersionPrefix>6.2.0</VersionPrefix>
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
   </PropertyGroup>
 
   <PropertyGroup>
