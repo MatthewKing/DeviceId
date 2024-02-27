@@ -6,10 +6,11 @@
     <Description>Provides extra Windows-specific components (using MMI) for the DeviceId package.</Description>
     <VersionPrefix>6.2.1</VersionPrefix>
     <EnableWindowsTargeting>true</EnableWindowsTargeting>
+    <VersionPrefix>6.5.0</VersionPrefix>
   </PropertyGroup>
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net5.0;net6.0;net7.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;net5.0;net6.0;net7.0;net8.0</TargetFrameworks>
     <LangVersion>latest</LangVersion>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
@@ -20,7 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Management.Infrastructure" Version="2.0.0" />
+    <PackageReference Include="Microsoft.Management.Infrastructure" Version="3.0.0" />
   </ItemGroup>
 
 </Project>

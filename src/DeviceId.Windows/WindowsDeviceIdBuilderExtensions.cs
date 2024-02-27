@@ -13,6 +13,10 @@ namespace DeviceId;
 /// </summary>
 public static class WindowsDeviceIdBuilderExtensions
 {
+#if !NET35
+    private static RegistryView[] Both32BitAnd64BitRegistryViews { get; } = new[] { RegistryView.Registry32, RegistryView.Registry64 };
+#endif
+
 #if NET35
     /// <summary>
     /// Adds a registry value to the device identifier.
@@ -43,6 +47,56 @@ public static class WindowsDeviceIdBuilderExtensions
 #endif
 
     /// <summary>
+    /// Adds the Windows Device ID (also known as Machine ID or Advertising ID) to the device identifier.
+    /// This value is the one displayed as "Device ID" in the Windows Device Specifications UI.
+    /// </summary>
+    /// <param name="builder">The <see cref="WindowsDeviceIdBuilder"/> to add the component to.</param>
+    /// <returns>The <see cref="WindowsDeviceIdBuilder"/> instance.</returns>
+    public static WindowsDeviceIdBuilder AddWindowsDeviceId(this WindowsDeviceIdBuilder builder)
+    {
+#if NET35
+        var component = new RegistryValueDeviceIdComponent(
+           keyName: @"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\SQMClient",
+           valueName: "MachineId",
+           formatter: value => value.TrimStart('{').TrimEnd('}'));
+#else
+
+        var component = new RegistryValueDeviceIdComponent(
+            registryViews: Both32BitAnd64BitRegistryViews,
+            registryHive: RegistryHive.LocalMachine,
+            keyName: @"SOFTWARE\Microsoft\SQMClient",
+            valueName: "MachineId",
+            formatter: value => value.TrimStart('{').TrimEnd('}'));
+#endif
+
+        return builder.AddComponent("WindowsDeviceId", component);
+    }
+
+    /// <summary>
+    /// Adds the Windows Product ID to the device identifier.
+    /// This value is the one displayed as "Product ID" in the Windows Device Specifications UI.
+    /// </summary>
+    /// <param name="builder">The <see cref="WindowsDeviceIdBuilder"/> to add the component to.</param>
+    /// <returns>The <see cref="WindowsDeviceIdBuilder"/> instance.</returns>
+    public static WindowsDeviceIdBuilder AddWindowsProductId(this WindowsDeviceIdBuilder builder)
+    {
+#if NET35
+        var component = new RegistryValueDeviceIdComponent(
+            keyName: @"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion",
+            valueName: "ProductId");
+#else
+        var component = new RegistryValueDeviceIdComponent(
+            registryViews: Both32BitAnd64BitRegistryViews,
+            registryHive: RegistryHive.LocalMachine,
+            keyName: @"SOFTWARE\Microsoft\Windows NT\CurrentVersion",
+            valueName: "ProductId",
+            formatter: null);
+#endif
+
+        return builder.AddComponent("WindowsProductId", component);
+    }
+
+    /// <summary>
     /// Adds the Machine GUID (from HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Cryptography\MachineGuid) to the device identifier.
     /// </summary>
     /// <param name="builder">The <see cref="WindowsDeviceIdBuilder"/> to add the component to.</param>
@@ -50,18 +104,19 @@ public static class WindowsDeviceIdBuilderExtensions
     public static WindowsDeviceIdBuilder AddMachineGuid(this WindowsDeviceIdBuilder builder)
     {
 #if NET35
-        return AddRegistryValue(builder,
-            "MachineGuid",
-            @"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Cryptography",
-            "MachineGuid");
+        var component = new RegistryValueDeviceIdComponent(
+            keyName: @"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Cryptography",
+            valueName: "MachineGuid");
 #else
-        return AddRegistryValue(builder,
-            "MachineGuid",
-            RegistryView.Registry64,
-            RegistryHive.LocalMachine,
-            @"SOFTWARE\Microsoft\Cryptography",
-            "MachineGuid");
+        var component = new RegistryValueDeviceIdComponent(
+            registryViews: Both32BitAnd64BitRegistryViews,
+            registryHive: RegistryHive.LocalMachine,
+            keyName: @"SOFTWARE\Microsoft\Cryptography",
+            valueName: "MachineGuid",
+            formatter: null);
 #endif
+
+        return builder.AddComponent("MachineGuid", component);
     }
 
 #if NET5_0_OR_GREATER && WINDOWS10_0_17763_0_OR_GREATER

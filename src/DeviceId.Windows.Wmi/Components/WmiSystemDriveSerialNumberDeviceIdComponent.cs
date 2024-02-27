@@ -20,32 +20,39 @@ public class WmiSystemDriveSerialNumberDeviceIdComponent : IDeviceIdComponent
     /// <returns>The component value.</returns>
     public string GetValue()
     {
-        var systemDirectory = Environment.GetFolderPath(Environment.SpecialFolder.System);
-
-        // SystemDirectory can sometimes be null or empty.
-        // See: https://github.com/dotnet/runtime/issues/21430 and https://github.com/MatthewKing/DeviceId/issues/64
-        if (string.IsNullOrEmpty(systemDirectory) || systemDirectory.Length < 2)
+        try
         {
-            return null;
-        }
+            var systemDirectory = Environment.GetFolderPath(Environment.SpecialFolder.System);
 
-        var systemLogicalDiskDeviceId = systemDirectory.Substring(0, 2);
-
-        var queryString = $"SELECT * FROM Win32_LogicalDisk where DeviceId = '{systemLogicalDiskDeviceId}'";
-        using var searcher = new ManagementObjectSearcher(queryString);
-
-        foreach (var disk in searcher.Get().OfType<ManagementObject>())
-        {
-            foreach (var partition in disk.GetRelated("Win32_DiskPartition").OfType<ManagementObject>())
+            // SystemDirectory can sometimes be null or empty.
+            // See: https://github.com/dotnet/runtime/issues/21430 and https://github.com/MatthewKing/DeviceId/issues/64
+            if (string.IsNullOrEmpty(systemDirectory) || systemDirectory.Length < 2)
             {
-                foreach (var drive in partition.GetRelated("Win32_DiskDrive").OfType<ManagementObject>())
+                return null;
+            }
+
+            var systemLogicalDiskDeviceId = systemDirectory.Substring(0, 2);
+
+            var queryString = $"SELECT * FROM Win32_LogicalDisk where DeviceId = '{systemLogicalDiskDeviceId}'";
+            using var searcher = new ManagementObjectSearcher(queryString);
+
+            foreach (var disk in searcher.Get().OfType<ManagementObject>())
+            {
+                foreach (var partition in disk.GetRelated("Win32_DiskPartition").OfType<ManagementObject>())
                 {
-                    if (drive["SerialNumber"] is string serialNumber)
+                    foreach (var drive in partition.GetRelated("Win32_DiskDrive").OfType<ManagementObject>())
                     {
-                        return serialNumber;
+                        if (drive["SerialNumber"] is string serialNumber)
+                        {
+                            return serialNumber;
+                        }
                     }
                 }
             }
+        }
+        catch
+        {
+            // Swallow exceptions.
         }
 
         return null;

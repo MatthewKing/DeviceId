@@ -24,6 +24,19 @@ public class MacAddressDeviceIdComponent : IDeviceIdComponent
     /// <summary>
     /// Initializes a new instance of the <see cref="MacAddressDeviceIdComponent"/> class.
     /// </summary>
+    public MacAddressDeviceIdComponent()
+        : this(false, false) { }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="MacAddressDeviceIdComponent"/> class.
+    /// </summary>
+    /// <param name="excludeWireless">A value determining whether wireless devices should be excluded.</param>
+    public MacAddressDeviceIdComponent(bool excludeWireless)
+        : this(excludeWireless, false) { }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="MacAddressDeviceIdComponent"/> class.
+    /// </summary>
     /// <param name="excludeWireless">A value determining whether wireless devices should be excluded.</param>
     /// <param name="excludeDockerBridge">A value determining whether docker bridge should be excluded.</param>
     public MacAddressDeviceIdComponent(bool excludeWireless, bool excludeDockerBridge)
