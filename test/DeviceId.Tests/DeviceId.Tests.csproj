@@ -26,6 +26,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\DeviceId.Windows.Mmi\DeviceId.Windows.Mmi.csproj" />
+    <ProjectReference Include="..\..\src\DeviceId.Windows.WmiLight\DeviceId.Windows.WmiLight.csproj" />
     <ProjectReference Include="..\..\src\DeviceId.Windows.Wmi\DeviceId.Windows.Wmi.csproj" />
     <ProjectReference Include="..\..\src\DeviceId\DeviceId.csproj" />
     <ProjectReference Include="..\..\src\DeviceId.Linux\DeviceId.Linux.csproj" />
