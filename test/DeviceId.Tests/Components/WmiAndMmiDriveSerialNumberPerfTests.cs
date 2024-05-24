@@ -30,7 +30,7 @@ public class WmiAndMmiDriveSerialNumberPerfTests
         deviceId.Should().NotBeEmpty();
         sw.ElapsedMilliseconds.Should().BeLessOrEqualTo(500);
     }
-    
+
     [Fact]
     public void WmiLightDriveSerialNumberPerfShouldBeAcceptable()
     {

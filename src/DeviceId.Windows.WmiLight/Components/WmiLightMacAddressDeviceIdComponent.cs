@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using WmiLight;
 using DeviceId.Components;
 using DeviceId.Internal;
+using WmiLight;
 
 namespace DeviceId.Windows.WmiLight.Components;
 
@@ -48,11 +48,11 @@ public class WmiLightMacAddressDeviceIdComponent(bool excludeWireless, bool excl
     private static string GetValueUsingMsftNetAdapter(bool excludeWireless, bool excludeNonPhysical)
     {
         var values = new List<string>();
-        
+
         values.Sort();
-        
+
         using var wmiConnection = new WmiConnection(@"\\.\root\StandardCimv2");
-        
+
         foreach (var wmiObject in wmiConnection.CreateQuery("SELECT * FROM MSFT_NetAdapter"))
         {
             try
@@ -65,7 +65,7 @@ public class WmiLightMacAddressDeviceIdComponent(bool excludeWireless, bool excl
                         continue;
                     }
                 }
-                
+
                 // Skip wireless adapters if instructed to do so.
                 if (wmiObject["NdisPhysicalMedium"] is uint ndisPhysicalMedium)
                 {
@@ -91,8 +91,8 @@ public class WmiLightMacAddressDeviceIdComponent(bool excludeWireless, bool excl
             ? string.Join(",", values.ToArray())
             : null;
     }
-    
-     /// <summary>
+
+    /// <summary>
     /// Gets the component value using Win32_NetworkAdapter.
     /// </summary>
     /// <param name="excludeWireless">A value determining whether wireless devices should be excluded.</param>
