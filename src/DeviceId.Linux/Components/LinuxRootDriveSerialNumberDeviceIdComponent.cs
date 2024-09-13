@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
+using System.Text.Json.Serialization.Metadata;
 using DeviceId.Internal.CommandExecutors;
 
 namespace DeviceId.Linux.Components;
@@ -35,6 +36,23 @@ public class LinuxRootDriveSerialNumberDeviceIdComponent : IDeviceIdComponent
         _commandExecutor = commandExecutor;
         _jsonSerializerOptions = new JsonSerializerOptions();
         _jsonSerializerOptions.PropertyNameCaseInsensitive = true;
+        _jsonSerializerOptions.TypeInfoResolver = new DefaultJsonTypeInfoResolver
+        {
+            Modifiers =
+            {
+                typeInfo =>
+                {
+                    if (typeInfo.Type == typeof(LsblkOutput))
+                    {
+                        typeInfo.CreateObject = () => new LsblkOutput();
+                    }
+                    else if (typeInfo.Type == typeof(LsblkDevice))
+                    {
+                        typeInfo.CreateObject = () => new LsblkDevice();
+                    }
+                }
+            }
+        };
     }
 
     /// <summary>
