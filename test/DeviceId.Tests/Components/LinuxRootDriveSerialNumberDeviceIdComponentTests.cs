@@ -141,10 +141,40 @@ public class LinuxRootDriveSerialNumberDeviceIdComponentTests
         componentValue.Should().BeNull();
     }
 
+    [Fact]
+    public void OnlyNameAndMountPointColumn()
+    {
+        const string deviceName = "nvme0n1";
+        
+        const string lsblkOutput = @"
+        {
+           ""blockdevices"": [
+                { ""name"": ""loop0"", ""mountpoint"": ""/snap/bare/5"" },
+                { ""name"": ""loop1"", ""mountpoint"": ""/snap/core22/1612"" },
+                { ""name"": ""loop2"", ""mountpoint"": ""/snap/firefox/4848"" },
+                { ""name"": ""loop3"", ""mountpoint"": ""/snap/gnome-42-2204/176"" },
+                { ""name"": ""loop4"", ""mountpoint"": ""/snap/gtk-common-themes/1535"" },
+                { ""name"": ""loop5"", ""mountpoint"": ""/snap/snapd/21759"" },
+                { ""name"": ""nvme0n1"", ""mountpoint"": null,
+                 ""children"": [
+                    {  ""name"": ""nvme0n1p1"", ""mountpoint"": ""/boot/efi"" },
+                    {  ""name"": ""nvme0n1p2"", ""mountpoint"": ""/"" }
+                 ]
+              }
+           ]
+        }";
+        
+        const string udevadmOutput = "E: ID_SERIAL=WDC_PC_SN520_SDAPNUW-128G-1006_191855800528_1";
+        
+        var componentValue = GetComponentValue(deviceName, lsblkOutput, udevadmOutput);
+
+        componentValue.Should().Be("WDC_PC_SN520_SDAPNUW-128G-1006_191855800528_1");
+    }
+
     private static string GetComponentValue(string rootParentDeviceName, string lsblkOutput, string udevadmOutput)
     {
         var commandExecutorMock = Substitute.For<ICommandExecutor>();
-        commandExecutorMock.Execute("lsblk -f -J").Returns(lsblkOutput);
+        commandExecutorMock.Execute("lsblk -f -J -o Name,MountPoint").Returns(lsblkOutput);
         commandExecutorMock.Execute($"udevadm info --query=all --name=/dev/{rootParentDeviceName} | grep ID_SERIAL=").Returns(udevadmOutput);
 
         var component = new LinuxRootDriveSerialNumberDeviceIdComponent(commandExecutorMock);
