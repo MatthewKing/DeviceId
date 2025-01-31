@@ -17,7 +17,13 @@ public static class DeviceIdBuilderExtensions
     /// <returns>The device ID builder.</returns>
     public static DeviceIdBuilder AddSqlServer(this DeviceIdBuilder builder, DbConnection connection, Action<SqlServerDeviceIdBuilder> sqlServerBuilderConfiguration)
     {
-        return AddSqlServer(builder, () => connection, sqlServerBuilderConfiguration);
+        if (sqlServerBuilderConfiguration is not null)
+        {
+            var sqlServerBuilder = new SqlServerDeviceIdBuilder(builder, connection);
+            sqlServerBuilderConfiguration.Invoke(sqlServerBuilder);
+        }
+
+        return builder;
     }
 
     /// <summary>

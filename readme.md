@@ -11,6 +11,7 @@ As of version 6, the packages have been split up so that users can pick-and-choo
 * The main [DeviceId](https://www.nuget.org/packages/DeviceId) package contains the core functionality and a number of cross-platform components.
 * The [DeviceId.Windows](https://www.nuget.org/packages/DeviceId.Windows) package adds a few Windows-specific components.
 * The [DeviceId.Windows.Wmi](https://www.nuget.org/packages/DeviceId.Windows.Wmi) package adds even more Windows-specific components, using WMI.
+* The [DeviceId.Windows.WmiLight](https://www.nuget.org/packages/DeviceId.Windows.WmiLight) package adds the same components as above, but using [WmiLight](https://github.com/MartinKuschnik/WmiLight) instead of WMI.
 * The [DeviceId.Windows.Mmi](https://www.nuget.org/packages/DeviceId.Windows.Mmi) package adds the same components as above, but using MMI instead of WMI for those instances where WMI isn't appropriate (such as where no .NET Framework is present on the machine).
 * The [DeviceId.Linux](https://www.nuget.org/packages/DeviceId.Linux) package adds a few Linux-specific components.
 * The [DeviceId.Mac](https://www.nuget.org/packages/DeviceId.Mac) package adds a few Mac-specific components.
@@ -112,7 +113,7 @@ From `DeviceId.Windows`:
 * `AddRegistryValue` adds a specified registry value to the device identifier.
 * `AddMachineGuid` adds the machine GUID from `HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Cryptography` to the device identifier.
 
-From `DeviceId.Windows.Wmi` and `DeviceId.Windows.Mmi`:
+From `DeviceId.Windows.Wmi` / `DeviceId.Windows.WmiLight` / `DeviceId.Windows.Mmi`:
 
 * `AddMacAddressFromWmi` / `AddMacAddressFromMmi` adds the MAC address to the device identifier. These use the improved query functionality from WMI/MMI to provide additional functionality over the basic `AddMacAddress` method (such as being able to exclude non-physical device).
 * `AddProcessorId` adds the processor ID to the device identifier.

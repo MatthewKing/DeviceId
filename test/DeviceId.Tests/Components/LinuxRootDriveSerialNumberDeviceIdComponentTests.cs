@@ -1,7 +1,7 @@
 ﻿using DeviceId.Internal.CommandExecutors;
 using DeviceId.Linux.Components;
 using FluentAssertions;
-using Moq;
+using NSubstitute;
 using Xunit;
 
 namespace DeviceId.Tests.Components;
@@ -143,11 +143,11 @@ public class LinuxRootDriveSerialNumberDeviceIdComponentTests
 
     private static string GetComponentValue(string rootParentDeviceName, string lsblkOutput, string udevadmOutput)
     {
-        var commandExecutorMock = new Mock<ICommandExecutor>();
-        commandExecutorMock.Setup(x => x.Execute("lsblk -f -J")).Returns(lsblkOutput);
-        commandExecutorMock.Setup(x => x.Execute($"udevadm info --query=all --name=/dev/{rootParentDeviceName} | grep ID_SERIAL=")).Returns(udevadmOutput);
+        var commandExecutorMock = Substitute.For<ICommandExecutor>();
+        commandExecutorMock.Execute("lsblk -f -J").Returns(lsblkOutput);
+        commandExecutorMock.Execute($"udevadm info --query=all --name=/dev/{rootParentDeviceName} | grep ID_SERIAL=").Returns(udevadmOutput);
 
-        var component = new LinuxRootDriveSerialNumberDeviceIdComponent(commandExecutorMock.Object);
+        var component = new LinuxRootDriveSerialNumberDeviceIdComponent(commandExecutorMock);
 
         var value = component.GetValue();
 

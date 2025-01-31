@@ -4,11 +4,11 @@
     <PackageId>DeviceId.Linux</PackageId>
     <Title>DeviceId (Linux)</Title>
     <Description>Provides Linux-specific components for the DeviceId package.</Description>
-    <VersionPrefix>6.4.0</VersionPrefix>
+    <VersionPrefix>6.8.0</VersionPrefix>
   </PropertyGroup>
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net5.0;net6.0;net7.0;net8.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;net8.0;net9.0</TargetFrameworks>
     <LangVersion>latest</LangVersion>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
@@ -17,12 +17,8 @@
     <ProjectReference Include="..\DeviceId\DeviceId.csproj" />
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net5.0' ">
-    <PackageReference Include="System.Text.Json" Version="6.0.0" />
-  </ItemGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' != 'net5.0' ">
-    <PackageReference Include="System.Text.Json" Version="7.0.0" />
+  <ItemGroup>
+    <PackageReference Include="System.Text.Json" Version="9.0.0" />
   </ItemGroup>
 
 </Project>

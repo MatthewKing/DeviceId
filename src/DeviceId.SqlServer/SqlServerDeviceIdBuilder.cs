@@ -20,12 +20,31 @@ public class SqlServerDeviceIdBuilder
     private readonly Func<DbConnection> _connectionFactory;
 
     /// <summary>
+    /// A value determining whether the connection should be disposed after use.
+    /// </summary>
+    private readonly bool _disposeConnection;
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="SqlServerDeviceIdBuilder"/> class.
     /// </summary>
     /// <param name="baseBuilder">The base device identifier builder.</param>
     /// <param name="connection">A connection to the SQL Server database.</param>
     public SqlServerDeviceIdBuilder(DeviceIdBuilder baseBuilder, DbConnection connection)
-        : this(baseBuilder, () => connection) { }
+    {
+        if (baseBuilder is null)
+        {
+            throw new ArgumentNullException(nameof(baseBuilder));
+        }
+
+        if (connection is null)
+        {
+            throw new ArgumentNullException(nameof(connection));
+        }
+
+        _baseBuilder = baseBuilder;
+        _connectionFactory = () => connection;
+        _disposeConnection = false;
+    }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="SqlServerDeviceIdBuilder"/> class.
@@ -34,8 +53,19 @@ public class SqlServerDeviceIdBuilder
     /// <param name="connectionFactory">A factory used to get a connection to the SQL Server database.</param>
     public SqlServerDeviceIdBuilder(DeviceIdBuilder baseBuilder, Func<DbConnection> connectionFactory)
     {
-        _baseBuilder = baseBuilder ?? throw new ArgumentNullException(nameof(baseBuilder));
-        _connectionFactory = connectionFactory ?? throw new ArgumentNullException(nameof(connectionFactory));
+        if (baseBuilder is null)
+        {
+            throw new ArgumentNullException(nameof(baseBuilder));
+        }
+
+        if (connectionFactory is null)
+        {
+            throw new ArgumentNullException(nameof(connectionFactory));
+        }
+
+        _baseBuilder = baseBuilder;
+        _connectionFactory = connectionFactory;
+        _disposeConnection = true;
     }
 
     /// <summary>
@@ -58,7 +88,7 @@ public class SqlServerDeviceIdBuilder
     /// <returns>The <see cref="SqlServerDeviceIdBuilder"/> instance.</returns>
     public SqlServerDeviceIdBuilder AddQueryResult(string componentName, string sql, Func<object, string> valueTransformer)
     {
-        _baseBuilder.Components.Add(componentName, new DatabaseQueryDeviceIdComponent(_connectionFactory, sql, valueTransformer));
+        _baseBuilder.Components.Add(componentName, new DatabaseQueryDeviceIdComponent(_connectionFactory, sql, valueTransformer, _disposeConnection));
 
         return this;
     }
