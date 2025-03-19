@@ -9,6 +9,7 @@
     <RepositoryType>git</RepositoryType>
     <PackageTags>deviceid;unique;device;identifier</PackageTags>
     <PackageReadmeFile>readme.md</PackageReadmeFile>
+    <VersionPrefix>6.8.0</VersionPrefix>
   </PropertyGroup>
 
   <PropertyGroup>
