@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Text.Json;
 using DeviceId.Internal.CommandExecutors;
+using DeviceId.Linux.Serialization;
 
 namespace DeviceId.Linux.Components;
 
@@ -16,11 +17,6 @@ public class LinuxRootDriveSerialNumberDeviceIdComponent : IDeviceIdComponent
     private readonly ICommandExecutor _commandExecutor;
 
     /// <summary>
-    /// JSON serializer options.
-    /// </summary>
-    private readonly JsonSerializerOptions _jsonSerializerOptions;
-
-    /// <summary>
     /// Initializes a new instance of the <see cref="LinuxRootDriveSerialNumberDeviceIdComponent"/> class.
     /// </summary>
     public LinuxRootDriveSerialNumberDeviceIdComponent()
@@ -33,8 +29,6 @@ public class LinuxRootDriveSerialNumberDeviceIdComponent : IDeviceIdComponent
     internal LinuxRootDriveSerialNumberDeviceIdComponent(ICommandExecutor commandExecutor)
     {
         _commandExecutor = commandExecutor;
-        _jsonSerializerOptions = new JsonSerializerOptions();
-        _jsonSerializerOptions.PropertyNameCaseInsensitive = true;
     }
 
     /// <summary>
@@ -44,7 +38,7 @@ public class LinuxRootDriveSerialNumberDeviceIdComponent : IDeviceIdComponent
     public string GetValue()
     {
         var outputJson = _commandExecutor.Execute("lsblk -f -J");
-        var output = JsonSerializer.Deserialize<LsblkOutput>(outputJson, _jsonSerializerOptions);
+        var output = JsonSerializer.Deserialize(outputJson, SourceGenerationContext.Default.LsblkOutput);
 
         var device = FindRootParent(output);
         if (device == null)
@@ -85,17 +79,5 @@ public class LinuxRootDriveSerialNumberDeviceIdComponent : IDeviceIdComponent
         }
 
         return device.Children.Any(x => DeviceContainsRoot(x));
-    }
-
-    internal sealed class LsblkOutput
-    {
-        public List<LsblkDevice> BlockDevices { get; set; } = new List<LsblkDevice>();
-    }
-
-    internal sealed class LsblkDevice
-    {
-        public string Name { get; set; } = string.Empty;
-        public string MountPoint { get; set; } = string.Empty;
-        public List<LsblkDevice> Children { get; set; } = new List<LsblkDevice>();
     }
 }
