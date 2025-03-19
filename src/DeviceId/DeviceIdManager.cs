@@ -68,6 +68,16 @@ public class DeviceIdManager
     }
 
     /// <summary>
+    /// Gets the current builder version.
+    /// </summary>
+    /// <returns>The current builder version.</returns>
+    public int GetCurrentVersion()
+    {
+        var version = _builders.Keys.Max(); // Always use the latest version.
+        return version;
+    }
+
+    /// <summary>
     /// Gets the device identifier from the builder with the highest version number.
     /// </summary>
     /// <returns>A device identifier.</returns>
@@ -75,7 +85,7 @@ public class DeviceIdManager
     {
         if (_builders.Count > 0)
         {
-            var version = _builders.Keys.Max(); // Always use the latest version.
+            var version = GetCurrentVersion();
             return GetDeviceId(version);
         }
 
