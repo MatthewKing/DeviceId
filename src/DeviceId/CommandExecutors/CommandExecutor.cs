@@ -1,9 +1,9 @@
-﻿namespace DeviceId.Internal.CommandExecutors;
+﻿namespace DeviceId.CommandExecutors;
 
 /// <summary>
 /// Enumerate the various command executors that are available.
 /// </summary>
-internal static class CommandExecutor
+public static class CommandExecutor
 {
     /// <summary>
     /// Gets a command executor that uses /bin/bash to execute commands.

@@ -1,7 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.ComponentModel;
 using System.Linq;
 using System.Text.Json;
-using DeviceId.Internal.CommandExecutors;
+using DeviceId.CommandExecutors;
 using DeviceId.Linux.Serialization;
 
 namespace DeviceId.Linux.Components;
@@ -19,6 +20,8 @@ public class LinuxRootDriveSerialNumberDeviceIdComponent : IDeviceIdComponent
     /// <summary>
     /// Initializes a new instance of the <see cref="LinuxRootDriveSerialNumberDeviceIdComponent"/> class.
     /// </summary>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    [Obsolete("This constructor is obsolete and will be removed in a future version. Use the constructor that accepts an ICommandExecutor instead.")]
     public LinuxRootDriveSerialNumberDeviceIdComponent()
         : this(CommandExecutor.Bash) { }
 
@@ -26,7 +29,7 @@ public class LinuxRootDriveSerialNumberDeviceIdComponent : IDeviceIdComponent
     /// Initializes a new instance of the <see cref="LinuxRootDriveSerialNumberDeviceIdComponent"/> class.
     /// </summary>
     /// <param name="commandExecutor">The command executor to use.</param>
-    internal LinuxRootDriveSerialNumberDeviceIdComponent(ICommandExecutor commandExecutor)
+    public LinuxRootDriveSerialNumberDeviceIdComponent(ICommandExecutor commandExecutor)
     {
         _commandExecutor = commandExecutor;
     }

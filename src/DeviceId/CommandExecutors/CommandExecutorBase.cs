@@ -1,11 +1,11 @@
 ﻿using System.Diagnostics;
 
-namespace DeviceId.Internal.CommandExecutors;
+namespace DeviceId.CommandExecutors;
 
 /// <summary>
 /// A base implementation of <see cref="ICommandExecutor"/>.
 /// </summary>
-internal abstract class CommandExecutorBase : ICommandExecutor
+public abstract class CommandExecutorBase : ICommandExecutor
 {
     /// <summary>
     /// Executes the specified command.

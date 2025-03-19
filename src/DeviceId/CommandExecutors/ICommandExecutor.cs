@@ -1,9 +1,9 @@
-﻿namespace DeviceId.Internal.CommandExecutors;
+﻿namespace DeviceId.CommandExecutors;
 
 /// <summary>
 /// Provides functionality to execute a command.
 /// </summary>
-internal interface ICommandExecutor
+public interface ICommandExecutor
 {
     /// <summary>
     /// Executes the specified command.

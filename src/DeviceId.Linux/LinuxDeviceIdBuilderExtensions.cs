@@ -1,4 +1,5 @@
-﻿using DeviceId.Components;
+﻿using DeviceId.CommandExecutors;
+using DeviceId.Components;
 using DeviceId.Linux.Components;
 
 namespace DeviceId;
@@ -15,7 +16,18 @@ public static class LinuxDeviceIdBuilderExtensions
     /// <returns>The <see cref="LinuxDeviceIdBuilder"/> instance.</returns>
     public static LinuxDeviceIdBuilder AddSystemDriveSerialNumber(this LinuxDeviceIdBuilder builder)
     {
-        return builder.AddComponent("SystemDriveSerialNumber", new LinuxRootDriveSerialNumberDeviceIdComponent());
+        return AddSystemDriveSerialNumber(builder, CommandExecutor.Bash);
+    }
+
+    /// <summary>
+    /// Adds the system drive serial number to the device identifier.
+    /// </summary>
+    /// <param name="builder">The <see cref="LinuxDeviceIdBuilder"/> to add the component to.</param>
+    /// <param name="commandExecutor">The command executor to use.</param>
+    /// <returns>The <see cref="LinuxDeviceIdBuilder"/> instance.</returns>
+    public static LinuxDeviceIdBuilder AddSystemDriveSerialNumber(this LinuxDeviceIdBuilder builder, ICommandExecutor commandExecutor)
+    {
+        return builder.AddComponent("SystemDriveSerialNumber", new LinuxRootDriveSerialNumberDeviceIdComponent(commandExecutor));
     }
 
     /// <summary>

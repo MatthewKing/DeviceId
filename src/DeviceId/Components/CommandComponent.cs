@@ -1,4 +1,4 @@
-﻿using DeviceId.Internal.CommandExecutors;
+﻿using DeviceId.CommandExecutors;
 
 namespace DeviceId.Components;
 
@@ -22,7 +22,7 @@ public class CommandComponent : IDeviceIdComponent
     /// </summary>
     /// <param name="command">The command executed by the component.</param>
     /// <param name="commandExecutor">The command executor.</param>
-    internal CommandComponent(string command, ICommandExecutor commandExecutor)
+    public CommandComponent(string command, ICommandExecutor commandExecutor)
     {
         _command = command;
         _commandExecutor = commandExecutor;

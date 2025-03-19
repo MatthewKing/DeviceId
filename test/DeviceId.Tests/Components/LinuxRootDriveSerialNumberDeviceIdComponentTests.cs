@@ -1,4 +1,4 @@
-﻿using DeviceId.Internal.CommandExecutors;
+﻿using DeviceId.CommandExecutors;
 using DeviceId.Linux.Components;
 using FluentAssertions;
 using NSubstitute;
