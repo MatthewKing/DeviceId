@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
+    <TargetFrameworks>net10.0;net9.0</TargetFrameworks>
     <LangVersion>latest</LangVersion>
     <IsPackable>false</IsPackable>
     <SignAssembly>true</SignAssembly>
