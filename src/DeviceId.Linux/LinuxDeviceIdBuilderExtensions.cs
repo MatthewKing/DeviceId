@@ -52,12 +52,18 @@ public static class LinuxDeviceIdBuilderExtensions
 
     /// <summary>
     /// Adds the product UUID (from /sys/class/dmi/id/product_uuid) to the device identifier.
+    /// On ARM systems where DMI is not available, it falls back to the Device Tree serial number.
     /// </summary>
     /// <param name="builder">The <see cref="LinuxDeviceIdBuilder"/> to add the component to.</param>
     /// <returns>The <see cref="LinuxDeviceIdBuilder"/> instance.</returns>
     public static LinuxDeviceIdBuilder AddProductUuid(this LinuxDeviceIdBuilder builder)
     {
-        return builder.AddComponent("ProductUUID", new FileContentsDeviceIdComponent("/sys/class/dmi/id/product_uuid", false));
+        return builder.AddComponent("ProductUUID", new FileContentsDeviceIdComponent(new[]
+        {
+            "/sys/class/dmi/id/product_uuid",
+            "/sys/firmware/devicetree/base/serial-number",
+            "/proc/device-tree/serial-number"
+        }, false));
     }
 
     /// <summary>
@@ -72,11 +78,47 @@ public static class LinuxDeviceIdBuilderExtensions
 
     /// <summary>
     /// Adds the motherboard serial number (from /sys/class/dmi/id/board_serial) to the device identifier.
+    /// On ARM systems where DMI is not available, it falls back to the Device Tree model.
     /// </summary>
     /// <param name="builder">The <see cref="LinuxDeviceIdBuilder"/> to add the component to.</param>
     /// <returns>The <see cref="LinuxDeviceIdBuilder"/> instance.</returns>
     public static LinuxDeviceIdBuilder AddMotherboardSerialNumber(this LinuxDeviceIdBuilder builder)
     {
-        return builder.AddComponent("MotherboardSerialNumber", new FileContentsDeviceIdComponent("/sys/class/dmi/id/board_serial", false));
+        return builder.AddComponent("MotherboardSerialNumber", new FileContentsDeviceIdComponent(new[]
+        {
+            "/sys/class/dmi/id/board_serial",
+            "/sys/firmware/devicetree/base/model",
+            "/proc/device-tree/model"
+        }, false));
+    }
+
+    /// <summary>
+    /// Adds the Device Tree serial number to the device identifier.
+    /// This is typically available on ARM-based Linux systems.
+    /// </summary>
+    /// <param name="builder">The <see cref="LinuxDeviceIdBuilder"/> to add the component to.</param>
+    /// <returns>The <see cref="LinuxDeviceIdBuilder"/> instance.</returns>
+    public static LinuxDeviceIdBuilder AddDeviceTreeSerialNumber(this LinuxDeviceIdBuilder builder)
+    {
+        return builder.AddComponent("DeviceTreeSerialNumber", new FileContentsDeviceIdComponent(new[]
+        {
+            "/sys/firmware/devicetree/base/serial-number",
+            "/proc/device-tree/serial-number"
+        }, false));
+    }
+
+    /// <summary>
+    /// Adds the Device Tree model to the device identifier.
+    /// This is typically available on ARM-based Linux systems.
+    /// </summary>
+    /// <param name="builder">The <see cref="LinuxDeviceIdBuilder"/> to add the component to.</param>
+    /// <returns>The <see cref="LinuxDeviceIdBuilder"/> instance.</returns>
+    public static LinuxDeviceIdBuilder AddDeviceTreeModel(this LinuxDeviceIdBuilder builder)
+    {
+        return builder.AddComponent("DeviceTreeModel", new FileContentsDeviceIdComponent(new[]
+        {
+            "/sys/firmware/devicetree/base/model",
+            "/proc/device-tree/model"
+        }, false));
     }
 }

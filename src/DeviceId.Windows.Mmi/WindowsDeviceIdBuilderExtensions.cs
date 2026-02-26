@@ -23,12 +23,14 @@ public static class WindowsDeviceIdBuilderExtensions
 
     /// <summary>
     /// Adds the processor ID to the device identifier.
+    /// On ARM64 systems where ProcessorId is not available, it falls back to a combination of
+    /// Manufacturer, Name, and NumberOfCores.
     /// </summary>
     /// <param name="builder">The <see cref="WindowsDeviceIdBuilder"/> to add the component to.</param>
     /// <returns>The <see cref="WindowsDeviceIdBuilder"/> instance.</returns>
     public static WindowsDeviceIdBuilder AddProcessorId(this WindowsDeviceIdBuilder builder)
     {
-        return builder.AddComponent("ProcessorId", new MmiWqlDeviceIdComponent("Win32_Processor", "ProcessorId"));
+        return builder.AddComponent("ProcessorId", new MmiProcessorIdDeviceIdComponent());
     }
 
     /// <summary>

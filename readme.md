@@ -116,7 +116,7 @@ From `DeviceId.Windows`:
 From `DeviceId.Windows.Wmi` / `DeviceId.Windows.WmiLight` / `DeviceId.Windows.Mmi`:
 
 * `AddMacAddressFromWmi` / `AddMacAddressFromMmi` adds the MAC address to the device identifier. These use the improved query functionality from WMI/MMI to provide additional functionality over the basic `AddMacAddress` method (such as being able to exclude non-physical device).
-* `AddProcessorId` adds the processor ID to the device identifier.
+* `AddProcessorId` adds the processor ID to the device identifier. On ARM64 systems where ProcessorId is not available, it automatically falls back to a combination of Manufacturer, Name, and NumberOfCores.
 * `AddSystemDriveSerialNumber` adds the system drive's serial number to the device identifier.
 * `AddMotherboardSerialNumber` adds the motherboard serial number to the device identifier.
 * `AddSystemUuid` adds the system UUID to the device identifier.
@@ -124,11 +124,13 @@ From `DeviceId.Windows.Wmi` / `DeviceId.Windows.WmiLight` / `DeviceId.Windows.Mm
 From `DeviceId.Linux`:
 
 * `AddSystemDriveSerialNumber` adds the system drive's serial number to the device identifier.
-* `AddMotherboardSerialNumber` adds the motherboard serial number to the device identifier.
+* `AddMotherboardSerialNumber` adds the motherboard serial number to the device identifier. On ARM systems where DMI is not available, it falls back to the Device Tree model.
 * `AddMachineId` adds the machine ID (from `/var/lib/dbus/machine-id` or `/etc/machine-id`) to the device identifier.
-* `AddProductUuid` adds the product UUID (from `/sys/class/dmi/id/product_uuid`) to the device identifier.
+* `AddProductUuid` adds the product UUID (from `/sys/class/dmi/id/product_uuid`) to the device identifier. On ARM systems where DMI is not available, it falls back to the Device Tree serial number.
 * `AddCpuInfo` adds CPU info (from `/proc/cpuinfo`) to the device identifier.
 * `AddDockerContainerId` adds the Docker container identifier (from `/proc/1/cgroup`) to the device identifier.
+* `AddDeviceTreeSerialNumber` adds the Device Tree serial number to the device identifier. This is typically available on ARM-based Linux systems.
+* `AddDeviceTreeModel` adds the Device Tree model to the device identifier. This is typically available on ARM-based Linux systems.
 
 From `DeviceId.Mac`:
 
@@ -291,6 +293,37 @@ builder.AddSystemUUID();
 builder.OnWindows(x => x.AddProcessorId())
        .OnLinux(x => x.AddCpuInfo());
        // not available on Mac
+```
+
+## ARM Architecture Support
+
+DeviceId provides ARM64 compatibility for both Windows and Linux platforms:
+
+### Windows ARM64
+
+On Windows ARM64 systems, the `AddProcessorId` method automatically handles the absence of the x86-specific ProcessorId by falling back to a combination of processor attributes (Manufacturer, Name, and NumberOfCores).
+
+```csharp
+string deviceId = new DeviceIdBuilder()
+    .OnWindows(windows => windows.AddProcessorId()) // Works on both x86/x64 and ARM64
+    .ToString();
+```
+
+### Linux ARM
+
+On ARM-based Linux systems (such as Raspberry Pi, ARM servers, etc.), DMI (Desktop Management Interface) is typically not available. The following methods automatically fall back to Device Tree information:
+
+* `AddProductUuid` falls back to `/sys/firmware/devicetree/base/serial-number`
+* `AddMotherboardSerialNumber` falls back to `/sys/firmware/devicetree/base/model`
+
+Additionally, you can use the ARM-specific Device Tree methods directly:
+
+```csharp
+string deviceId = new DeviceIdBuilder()
+    .OnLinux(linux => linux
+        .AddDeviceTreeSerialNumber()  // ARM Device Tree serial number
+        .AddDeviceTreeModel())        // ARM Device Tree model
+    .ToString();
 ```
 
 ## Strong naming
