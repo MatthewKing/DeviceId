@@ -63,7 +63,7 @@ public class FileContentsDeviceIdComponent : IDeviceIdComponent
                     contents = file.ReadToEnd(); // File.ReadAllBytes() fails for special files such as /sys/class/dmi/id/product_uuid
                 }
 
-                contents = contents.Trim();
+                contents = contents.Trim((char)0).Trim();
 
                 if (!_hashContents)
                 {
