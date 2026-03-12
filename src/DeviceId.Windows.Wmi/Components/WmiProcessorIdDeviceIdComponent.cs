@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Management;
 
 namespace DeviceId.Windows.Wmi.Components;
@@ -54,7 +55,11 @@ public class WmiProcessorIdDeviceIdComponent : IDeviceIdComponent
 
                         if (fallbackParts.Count > 0)
                         {
+#if NET40_OR_GREATER
                             values.Add(string.Join("|", fallbackParts));
+#else
+                            values.Add(string.Join("|", fallbackParts.ToArray()));
+#endif
                         }
                     }
                 }
