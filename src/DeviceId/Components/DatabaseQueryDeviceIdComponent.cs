@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using System.Data.Common;
 
 namespace DeviceId.Components;
@@ -63,7 +64,10 @@ public class DatabaseQueryDeviceIdComponent : IDeviceIdComponent
             var connection = _connectionFactory.Invoke();
             try
             {
-                connection.Open();
+                if (connection.State is not ConnectionState.Open)
+                {
+                    connection.Open();
+                }
 
                 using var command = connection.CreateCommand();
                 command.CommandText = _sql;
